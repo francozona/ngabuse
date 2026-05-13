@@ -64,6 +64,12 @@
           <span class="text-[11px] font-display font-700 px-2.5 py-0.5 rounded-full bg-nira-light text-nira-dark" x-text="filteredReports.length + ' records'"></span>
         </div>
         <div class="flex items-center gap-2">
+          <!-- Search -->
+        <div class="relative hidden md:block">
+          <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" x-model="searchQuery" placeholder="Search reports, domains…"
+            class="pl-9 pr-4 py-2 rounded-xl bg-slate-50 border border-slate-200 text-sm text-gray-700 focus:outline-none focus:border-nira-green focus:ring-2 focus:ring-nira-green/20 w-64 transition-all">
+        </div>
           <!-- Status filter tabs -->
           <div class="hidden sm:flex items-center gap-1 bg-slate-50 rounded-xl p-1">
             <button @click="tableStatusFilter='all'"

@@ -570,11 +570,11 @@ function abuseForm() {
     tlds: ['.ng', '.com.ng', '.org.ng', '.gov.ng', '.edu.ng', '.net.ng', '.sch.ng', '.name.ng', '.mobi.ng', '.mil.ng', '.i.ng'],
     categories: ['Malware', 'Botnets', 'Phishing', 'Pharming', 'Spam', 'Other forms of DNS Abuse'],
     categoryMeta: {
-      'Malware':   { bg: 'bg-red-50 text-red-700',    icon: '🦠', desc: 'Malicious software' },
+      'Malware':   { bg: 'bg-red-50 text-red-700',       icon: '🦠', desc: 'Malicious software' },
       'Botnets':   { bg: 'bg-orange-50 text-orange-700', icon: '🤖', desc: 'Botnet infrastructure' },
       'Phishing':  { bg: 'bg-yellow-50 text-yellow-700', icon: '🎣', desc: 'Credential phishing' },
       'Pharming':  { bg: 'bg-purple-50 text-purple-700', icon: '🔀', desc: 'DNS redirection' },
-      'Spam':      { bg: 'bg-blue-50 text-blue-700',   icon: '📨', desc: 'Unsolicited bulk email' },
+      'Spam':      { bg: 'bg-blue-50 text-blue-700',     icon: '📨', desc: 'Unsolicited bulk email' },
       'Other forms of DNS Abuse': { bg: 'bg-gray-100 text-gray-700', icon: '⚠️', desc: 'Other DNS Abuse' },
     },
     form: {
@@ -584,22 +584,27 @@ function abuseForm() {
     },
     files: [],
     errors: {},
+
     init() {},
+
+    // ── Validation ───────────────────────────────────────────────
+
     validateStep1() {
       this.errors = {};
-      if (!this.form.name.trim())        this.errors.name = 'Full name is required';
+      if (!this.form.name.trim())         this.errors.name = 'Full name is required';
       const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!this.form.email.trim())       this.errors.email = 'Email is required';
+      if (!this.form.email.trim())        this.errors.email = 'Email is required';
       else if (!emailRe.test(this.form.email)) this.errors.email = 'Enter a valid email address';
-      if (!this.form.domain_name.trim()) this.errors.domain_name = 'Domain name is required';
-      if (!this.form.tld)                this.errors.tld = 'Select a TLD';
-      if (!this.form.url.trim())         this.errors.url = 'URL is required';
+      if (!this.form.domain_name.trim())  this.errors.domain_name = 'Domain name is required';
+      if (!this.form.tld)                 this.errors.tld = 'Select a TLD';
+      if (!this.form.url.trim())          this.errors.url = 'URL is required';
       else if (!this.form.url.startsWith('https://')) this.errors.url = 'URL must begin with https://';
       if (!this.form.date_first_observed) this.errors.date_first_observed = 'Date is required';
-      if (!this.form.abuse_category)     this.errors.abuse_category = 'Select an abuse category';
-      if (!this.form.description.trim()) this.errors.description = 'Please describe the abuse';
+      if (!this.form.abuse_category)      this.errors.abuse_category = 'Select an abuse category';
+      if (!this.form.description.trim())  this.errors.description = 'Please describe the abuse';
       return Object.keys(this.errors).length === 0;
     },
+
     validateStep2() {
       this.errors = {};
       if (this.files.length === 0) {
@@ -613,12 +618,21 @@ function abuseForm() {
       }
       return true;
     },
+
     nextStep() {
       if (this.validateStep1()) this.step = 2;
-      else { this.$nextTick(() => { const el = document.querySelector('.border-red-400'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }); }
+      else {
+        this.$nextTick(() => {
+          const el = document.querySelector('.border-red-400');
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+      }
     },
+
+    // ── File helpers ─────────────────────────────────────────────
+
     handleFiles(fileList) {
-      const allowed = ['application/pdf','image/png','image/jpeg'];
+      const allowed = ['application/pdf', 'image/png', 'image/jpeg'];
       const incoming = Array.from(fileList).filter(f => allowed.includes(f.type));
       const remaining = 3 - this.files.length;
       this.files = [...this.files, ...incoming.slice(0, remaining)];
@@ -630,34 +644,139 @@ function abuseForm() {
     },
     removeFile(i) { this.files.splice(i, 1); },
     formatSize(bytes) {
-      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024)    return bytes + ' B';
       if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
       return (bytes / 1048576).toFixed(1) + ' MB';
     },
+
+    // ── Submit ───────────────────────────────────────────────────
+
     async submitForm() {
       if (!this.validateStep2()) return;
+
       this.isSubmitting = true;
-      await new Promise(r => setTimeout(r, 1800));
-      const now = new Date();
-      const pad = n => String(n).padStart(4,'0');
-      this.ticketId = `NiRA-ABUSE-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}-${pad(Math.floor(Math.random()*9999)+1)}`;
-      this.isSubmitting = false;
-      this.step = 3;
+      this.errors = {};
+
+      try {
+        // Build a multipart FormData payload that matches the
+        // field names expected by AbuseReportController::store()
+        const fd = new FormData();
+
+        // Text fields
+        fd.append('name',                         this.form.name.trim());
+        fd.append('email',                        this.form.email.trim());
+        fd.append('domain_name',                  this.form.domain_name.trim());
+        fd.append('tld',                          this.form.tld);
+        fd.append('url',                          this.form.url.trim());
+        fd.append('date_first_observed',          this.form.date_first_observed);
+        fd.append('abuse_category',               this.form.abuse_category);
+        fd.append('description',                  this.form.description.trim());
+
+        if (this.form.registrar_notified.trim()) {
+          fd.append('registrar_notified',         this.form.registrar_notified.trim());
+        }
+        if (this.form.registrar_notification_date) {
+          fd.append('registrar_notification_date', this.form.registrar_notification_date);
+        }
+
+        // Evidence files — all sent under the key "files[]"
+        this.files.forEach(file => fd.append('files[]', file));
+
+        const response = await fetch('/api/abuse-reports', {
+          method: 'POST',
+          body: fd,
+          // Do NOT set Content-Type manually; the browser sets it
+          // automatically with the correct multipart boundary.
+          headers: {
+            // CodeIgniter CSRF: if CSRF protection is enabled,
+            // read the cookie and pass its value here.
+            // 'X-CSRF-TOKEN': this.getCsrfToken(),
+          },
+        });
+
+        const json = await response.json();
+
+        if (!response.ok) {
+          // Server returned 4xx / 5xx
+          if (json.errors) {
+            // Map server-side field errors back to the UI
+            this.errors = this.mapServerErrors(json.errors);
+
+            // If there are step-1 errors, take the user back
+            const step1Keys = ['name','email','domain_name','tld','url',
+                               'date_first_observed','abuse_category','description'];
+            const hasStep1Error = step1Keys.some(k => this.errors[k]);
+            if (hasStep1Error) this.step = 1;
+          } else {
+            alert(json.message || 'Submission failed. Please try again.');
+          }
+          return;
+        }
+
+        // ✅ Success
+        this.ticketId = json.ticket_id;
+        this.step = 3;
+
+      } catch (err) {
+        console.error('Submission error:', err);
+        alert('A network error occurred. Please check your connection and try again.');
+      } finally {
+        this.isSubmitting = false;
+      }
     },
+
+    /**
+     * Map server error keys to the form.errors object.
+     * The CI controller uses the same field names as the form,
+     * except 'files[]' → 'files'.
+     */
+    mapServerErrors(serverErrors) {
+      const map = {};
+      for (const [key, msg] of Object.entries(serverErrors)) {
+        const normalised = key.replace('[]', '');
+        map[normalised] = msg;
+      }
+      return map;
+    },
+
+    // ── CSRF helper (enable if CI CSRF is on) ───────────────────
+    // getCsrfToken() {
+    //   const match = document.cookie.match(/csrf_cookie_name=([^;]+)/);
+    //   return match ? decodeURIComponent(match[1]) : '';
+    // },
+
+    // ── Copy ticket ID ───────────────────────────────────────────
+
     copyTicket() {
-      navigator.clipboard.writeText(this.ticketId).then(() => {
-        alert('Ticket ID copied to clipboard');
-      });
+      navigator.clipboard.writeText(this.ticketId)
+        .then(() => alert('Ticket ID copied to clipboard'))
+        .catch(() => {
+          // Fallback for browsers that block clipboard without https
+          const el = document.createElement('textarea');
+          el.value = this.ticketId;
+          document.body.appendChild(el);
+          el.select();
+          document.execCommand('copy');
+          document.body.removeChild(el);
+          alert('Ticket ID copied to clipboard');
+        });
     },
+
+    // ── Reset ────────────────────────────────────────────────────
+
     resetForm() {
       this.step = 1;
       this.files = [];
       this.errors = {};
       this.ticketId = '';
       this.showRegistrar = false;
-      this.form = { name:'', email:'', domain_name:'', tld:'', url:'', date_first_observed:'', abuse_category:'', description:'', registrar_notified:'', registrar_notification_date:'' };
+      this.form = {
+        name: '', email: '', domain_name: '', tld: '', url: '',
+        date_first_observed: '', abuse_category: '', description: '',
+        registrar_notified: '', registrar_notification_date: ''
+      };
     }
-  }
+  };
 }
 </script>
 </body>
