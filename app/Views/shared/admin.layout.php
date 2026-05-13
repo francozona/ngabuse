@@ -213,8 +213,6 @@ tailwind.config = {
       Export
     </button>
 
-    <!-- Avatar -->
-    <div class="w-8 h-8 rounded-full bg-nira-green flex items-center justify-center text-white font-display font-700 text-sm cursor-pointer ml-1">A</div>
   </header>
 
   <?= $this->renderSection('content') ?>
