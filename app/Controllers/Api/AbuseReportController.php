@@ -242,7 +242,7 @@ class AbuseReportController extends BaseController
         $files       = array_filter($files, fn($f) => $f->isValid() && ! $f->hasMoved());
         $storedPaths = [];
 
-        $destPath = WRITEPATH . self::UPLOAD_DIR;
+        $destPath = FCPATH . self::UPLOAD_DIR;
 
         if (! is_dir($destPath)) {
             mkdir($destPath, 0755, true);
