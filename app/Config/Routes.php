@@ -25,7 +25,7 @@ $routes->get('admin/login',   'AuthController::login');
 $routes->post('admin/login',  'AuthController::attempt');
 $routes->get('admin/logout',  'AuthController::logout');
 
-$routes->group('admin', ['filter' => 'auth'], function($routes) {
+$routes->group('', ['namespace' => 'App\Controllers','filter' => 'auth'], function($routes) {
     /**Admin */
     $routes->get('/dashboard', 'AbuseController::dashboard');
     $routes->get('/reports', 'AbuseController::all_reports');

@@ -38,9 +38,9 @@ class AuthController extends BaseController
         }
 
         // Only allow admin role
-        if ($user['role'] !== 'admin' || $user['role'] !== 'user') {
-            return view('admin/login.php', [
-                'errors' => ['You do not have permission to access this area.'],
+       if ($user['role'] != 'admin' && $user['role'] != 'user') {
+            return redirect()->back()->with('errors', [
+                'You do not have permission to access this area.'
             ]);
         }
 

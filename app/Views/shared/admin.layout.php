@@ -1,3 +1,12 @@
+<?php
+$image = session()->get('admin_image');
+$name  = session()->get('admin_name') ?? 'Admin';
+$email = session()->get('admin_email') ?? '';
+ $uri = service('uri')->getSegment(1); 
+function active($path, $uri) {
+    return $path === $uri ? 'active' : '';
+}
+?>
 <!DOCTYPE html>
 <html lang="en" x-data="dashboard()" x-init="init()">
 <head>
@@ -147,14 +156,14 @@ tailwind.config = {
 
   <!-- Nav -->
   <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
-    <p class="text-[9px] font-display font-700 uppercase tracking-widest px-3 mb-2" style="color:rgba(255,255,255,0.5)">Main</p>
+      <p class="text-[9px] font-display font-700 uppercase tracking-widest px-3 mb-2" style="color:rgba(255,255,255,0.5)">Main</p>
 
-    <a href="/dashboard" class="sidebar-item active">
+    <a href="/dashboard" class="sidebar-item  <?= active('dashboard', $uri) ?>">
       <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
       Overview
-</a>
+    </a>
 
-    <a href="/reports" class="sidebar-item">
+    <a href="/reports" class="sidebar-item <?= active('reports', $uri) ?>">
       <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
       All Reports
       <span class="ml-auto text-[10px] font-display font-700 px-2 py-0.5 rounded-full" style="background:rgba(255,255,255,0.2);color:#fff" x-text="reports.length"></span>
@@ -171,7 +180,7 @@ tailwind.config = {
     </template>
 
     <p class="text-[9px] font-display font-700 uppercase tracking-widest px-3 mt-4 mb-2" style="color:#9dbda8">Admin</p>
-    <a href="/admin/users" class="sidebar-item">
+    <a href="/admin/users" class="sidebar-item  <?= active('admin', $uri) ?>">
       <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
       Users
     </a>
@@ -182,13 +191,32 @@ tailwind.config = {
   </nav>
 
   <!-- User card -->
-  <div class="px-3 py-4" style="border-color:#e8f0eb">
+  <div class="px-3 py-4">
     <div class="flex items-center gap-3 px-2 py-2 rounded-xl cursor-pointer transition-all bg-slate-50">
-      <div class="w-8 h-8 rounded-full bg-nira-green flex items-center justify-center text-white font-display font-700 text-sm flex-shrink-0">A</div>
-      <div class="flex-1 min-w-0">
-        <p class="text-gray-800 text-xs font-display font-600 truncate">Admin User</p>
-        <p class="text-[10px] truncate" style="color:#5a7a65">admin@nira.org.ng</p>
+
+      <!-- Avatar -->
+      <div class="w-8 h-8 rounded-full overflow-hidden bg-nira-green flex items-center justify-center flex-shrink-0">
+
+        <?php if (!empty($image)): ?>
+          <img src="/uploads/users/<?= esc($image) ?>" class="w-full h-full object-cover" />
+        <?php else: ?>
+          <span class="text-white font-bold text-sm">
+            <?= strtoupper(substr($name, 0, 1)) ?>
+          </span>
+        <?php endif; ?>
+
       </div>
+
+      <!-- Info -->
+      <div class="flex-1 min-w-0">
+        <p class="text-gray-800 text-xs font-display font-semibold truncate">
+          <?= esc($name) ?>
+        </p>
+        <p class="text-[10px] truncate" style="color:#5a7a65">
+          <?= esc($email) ?>
+        </p>
+      </div>
+
     </div>
   </div>
 </aside>
