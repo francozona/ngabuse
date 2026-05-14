@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>NiRA — Abuse Reports Dashboard</title>
-<link rel="icon" href="logo.png" type="image/png" />
+<link rel="icon" href="/logo.png" type="image/png" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
@@ -93,7 +93,7 @@ tailwind.config = {
 
 /* Detail panel */
 .detail-panel{
-  position:fixed;top:0;right:0;bottom:0;width:420px;z-index:50;
+  position:fixed;top:0;right:0;bottom:0;width:820px;z-index:50;
   background:#fff;box-shadow:-8px 0 40px rgba(0,0,0,.12);
   display:flex;flex-direction:column;
   transition:transform .3s cubic-bezier(.4,0,.2,1);
@@ -105,8 +105,8 @@ tailwind.config = {
   background:#179e4f;border-radius:4px 4px 0 0;
   transition:height .6s cubic-bezier(.4,0,.2,1);
   min-height:4px;
-}
-
+} 
+ 
 /* Animations */
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .fade-in{animation:fadeIn .3s ease both}
@@ -136,7 +136,7 @@ tailwind.config = {
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center flex-shrink-0" style="box-shadow:0 2px 12px rgba(0,0,0,0.12)">
         <!-- NiRA "N" monogram -->
-          <img class="w-6 h-6" src="logo.png"/>
+          <img class="w-6 h-6" src="/logo.png"/>
       </div>
       <div>
         <p class="font-display font-900 text-white leading-tight">NiRA .ng</p>
@@ -171,14 +171,14 @@ tailwind.config = {
     </template>
 
     <p class="text-[9px] font-display font-700 uppercase tracking-widest px-3 mt-4 mb-2" style="color:#9dbda8">Admin</p>
-    <div class="sidebar-item">
+    <a href="/admin/users" class="sidebar-item">
       <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
       Users
-    </div>
-    <div class="sidebar-item">
+    </a>
+    <a href="/admin/logout" class="sidebar-item">
    <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
     Logout
-    </div>
+</a>
   </nav>
 
   <!-- User card -->
@@ -189,7 +189,6 @@ tailwind.config = {
         <p class="text-gray-800 text-xs font-display font-600 truncate">Admin User</p>
         <p class="text-[10px] truncate" style="color:#5a7a65">admin@nira.org.ng</p>
       </div>
-      <svg class="w-4 h-4 flex-shrink-0" style="color:#9dbda8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
     </div>
   </div>
 </aside>

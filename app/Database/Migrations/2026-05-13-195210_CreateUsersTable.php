@@ -15,12 +15,27 @@ class CreateUsersTable extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'full_name' => [
+            'image' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 150,
+                'null'       => false,
+            ],
+             'full_name' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 150,
                 'null'       => false,
             ],
             'email' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 200,
+                'null'       => false,
+            ],
+            'password' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 1000,
+                'null'       => false,
+            ],
+            'role' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 200,
                 'null'       => false,

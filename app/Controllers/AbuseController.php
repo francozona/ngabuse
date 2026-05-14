@@ -3,7 +3,7 @@
 namespace App\Controllers;
 use App\Models\AbuseReportModel;
 
-class Abuse extends BaseController
+class AbuseController extends BaseController
 {
     public function home(): string
     {
@@ -111,5 +111,15 @@ class Abuse extends BaseController
             'weekly'     => $weekly,
             'categories' => $categories,
         ]);
+    }
+
+    public function login(): string
+    {
+        return view('admin/login.php');
+    }
+
+    public function logout(): string
+    {
+        return view('admin/home.php');
     }
 }

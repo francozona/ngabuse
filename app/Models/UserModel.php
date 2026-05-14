@@ -15,6 +15,9 @@ class UserModel extends Model
     protected $allowedFields = [
         'full_name',
         'email',
+        'image',
+        'role',
+        'password',
     ];
 
     // Timestamps
@@ -52,16 +55,7 @@ class UserModel extends Model
     {
         $user = $this->where('email', $email)->first();
 
-        if ($user !== null) {
-            return $user;
-        }
-
-        $id = $this->insert([
-            'full_name' => $fullName,
-            'email'     => $email,
-        ], true);
-
-        return $this->find($id);
+        return $user;
     }
 
     /**
