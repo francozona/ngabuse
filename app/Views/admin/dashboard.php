@@ -13,8 +13,7 @@
               <span x-html="s.icon" class="text-lg leading-none"></span>
             </div>
             <span class="text-xs font-display font-700 flex items-center gap-1" :class="s.trend > 0 ? 'text-nira-green' : 'text-red-500'">
-              <span x-text="s.trend > 0 ? '↑' : '↓'"></span>
-              <span x-text="Math.abs(s.trend) + '%'"></span>
+              
             </span>
           </div>
           <p class="font-display font-800 text-3xl text-gray-900 leading-none mb-1" x-text="s.value"></p>

@@ -16,7 +16,7 @@ class UserController extends BaseController
     public function users(): string
     {
         return view('admin/users.php', [
-            'users'    => $this->userModel->orderBy('created_at', 'DESC')->findAll(),
+            'users'    => $this->userModel->where('role !=', 'visitor')->orderBy('created_at', 'DESC')->findAll(),
             'editUser' => null,
             'errors'   => [],
         ]);

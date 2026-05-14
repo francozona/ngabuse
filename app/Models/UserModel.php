@@ -55,7 +55,17 @@ class UserModel extends Model
     {
         $user = $this->where('email', $email)->first();
 
-        return $user;
+        if ($user) {
+            return $user;
+        }
+
+        $id = $this->insert([
+            'email'     => $email,
+            'full_name' => $fullName,
+            'role' => 'visitor'
+        ], true);
+
+        return $this->find($id);
     }
 
     /**

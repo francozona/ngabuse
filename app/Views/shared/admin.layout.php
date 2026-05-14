@@ -139,7 +139,7 @@ tailwind.config = {
 <body class="bg-slate-100 h-screen overflow-hidden flex">
 
 <!-- ════════ SIDEBAR ════════ -->
-<aside class="w-64 flex-shrink-0 flex flex-col h-screen overflow-hidden" style="background:#179e4f">
+<aside x-data="appData()" class="w-64 flex-shrink-0 flex flex-col h-screen overflow-hidden" style="background:#179e4f">
   <!-- Logo -->
   <div class="px-5 py-6 border-b" style="border-color:rgba(255,255,255,0.2)">
     <div class="flex items-center gap-3">
@@ -169,15 +169,58 @@ tailwind.config = {
       <span class="ml-auto text-[10px] font-display font-700 px-2 py-0.5 rounded-full" style="background:rgba(255,255,255,0.2);color:#fff" x-text="reports.length"></span>
      </a>
 
-    <p class="text-[9px] font-display font-700 uppercase tracking-widest px-3 mt-4 mb-2" style="color:rgba(255,255,255,0.5)">Status</p>
+    <p  class="text-[9px] font-display font-700 uppercase tracking-widest px-3 mt-4 mb-2" style="color:rgba(255,255,255,0.5)">Status</p>
 
-    <template x-for="s in statusNav" :key="s.key">
-      <div class="sidebar-item" @click="filterStatus(s.key)">
-        <span class="w-2 h-2 rounded-full flex-shrink-0" :style="`background:${s.color}`"></span>
-        <span x-text="s.label"></span>
-        <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full" style="background:#e4f5ec;color:#0d6b35" x-text="reports.filter(r=>r.status===s.key).length"></span>
-      </div>
-    </template>
+   <a href="/reports?status=OPEN" class="sidebar-item cursor-pointer flex items-center gap-2">
+
+      <!-- Color dot -->
+      <span class="w-2 h-2 rounded-full flex-shrink-0" style="background:#f59e0b"></span>
+
+      <!-- Label -->
+      <span>Open</span>
+
+      <!-- Count -->
+      <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full" style="background:#e4f5ec;color:#0d6b35">0</span>
+
+    </a>
+    <a href="/reports?status=UNDER_REVIEW"  class="sidebar-item cursor-pointer flex items-center gap-2">
+
+      <!-- Color dot -->
+      <span class="w-2 h-2 rounded-full flex-shrink-0"  style="background:#3b82f6"></span>
+
+      <!-- Label -->
+      <span>In Review</span>
+
+      <!-- Count -->
+      <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full" style="background:#e4f5ec;color:#0d6b35" >0</span>
+
+</a>
+    <a href="/reports?status=ACTIONED"  class="sidebar-item cursor-pointer flex items-center gap-2" >
+
+      <!-- Color dot -->
+      <span class="w-2 h-2 rounded-full flex-shrink-0"  style="background:#10b981"></span>
+
+      <!-- Label -->
+      <span>Actioned</span>
+
+      <!-- Count -->
+      <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full" style="background:#e4f5ec;color:#0d6b35" >0</span>
+
+</a>
+    <a href="/reports?status=CLOSED"  class="sidebar-item cursor-pointer flex items-center gap-2">
+
+      <!-- Color dot -->
+      <span class="w-2 h-2 rounded-full flex-shrink-0"  style="background:#6b7280"></span>
+
+      <!-- Label -->
+      <span>Closed</span>
+
+      <!-- Count -->
+      <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full" style="background:#e4f5ec;color:#0d6b35" >0</span>
+
+</a>
+    
+   
 
     <p class="text-[9px] font-display font-700 uppercase tracking-widest px-3 mt-4 mb-2" style="color:#9dbda8">Admin</p>
     <a href="/admin/users" class="sidebar-item  <?= active('admin', $uri) ?>">
@@ -246,7 +289,40 @@ tailwind.config = {
   
 </div>
 <!-- end main -->
+<script>
+function appData() {
+  return {
+    reports: [],
 
+    statusNav: [
+      {
+        key: 'open',
+        label: 'Open',
+        color: '#f59e0b'
+      },
+      {
+        key: 'in_review',
+        label: 'In Review',
+        color: '#3b82f6'
+      },
+      {
+        key: 'actioned',
+        label: 'Actioned',
+        color: '#10b981'
+      },
+      {
+        key: 'closed',
+        label: 'Closed',
+        color: '#6b7280'
+      }
+    ],
+
+    filterStatus(status) {
+      console.log(status)
+    }
+  }
+}
+</script>
 
 </body>
 </html>
