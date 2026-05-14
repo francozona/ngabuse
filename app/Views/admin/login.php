@@ -128,7 +128,18 @@
                         Use your administrator credentials to continue.
                     </p>
                 </div>
-
+                    <?php if (!empty($errors)): ?>
+                        <div class="mb-5 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-red-700 text-sm space-y-1">
+                        <?php foreach ($errors as $error): ?>
+                            <p class="flex items-center gap-2">
+                            <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                            <?= esc($error) ?>
+                            </p>
+                        <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
                 <form action="/admin/login" method="post" class="space-y-5">
                     <?= csrf_field() ?>
 
