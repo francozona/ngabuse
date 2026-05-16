@@ -172,7 +172,7 @@ tailwind.config = {
 
     <p  class="text-[9px]  font-display font-700 uppercase tracking-widest py-2 mt-3 mb-2" style="color:rgba(255,255,255,0.5)">Status</p>
 
-   <a href="/reports?status=OPEN" class="sidebar-item cursor-pointer flex items-center gap-2">
+   <a href="/reports?status=pending" class="sidebar-item cursor-pointer flex items-center gap-2">
 
       <!-- Color dot -->
       <span class="w-2 h-2 rounded-full flex-shrink-0" style="background:#f59e0b"></span>
@@ -184,7 +184,7 @@ tailwind.config = {
       <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full" style="background:#e4f5ec;color:#0d6b35">0</span>
 
     </a>
-    <a href="/reports?status=UNDER_REVIEW"  class="sidebar-item cursor-pointer flex items-center gap-2">
+    <a href="/reports?status=under_review"  class="sidebar-item cursor-pointer flex items-center gap-2">
 
       <!-- Color dot -->
       <span class="w-2 h-2 rounded-full flex-shrink-0"  style="background:#3b82f6"></span>
@@ -196,7 +196,7 @@ tailwind.config = {
       <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full" style="background:#e4f5ec;color:#0d6b35" >0</span>
 
     </a>
-    <a href="/reports?status=ACTIONED"  class="sidebar-item cursor-pointer flex items-center gap-2" >
+    <a href="/reports?status=resolved"  class="sidebar-item cursor-pointer flex items-center gap-2" >
 
       <!-- Color dot -->
       <span class="w-2 h-2 rounded-full flex-shrink-0"  style="background:#10b981"></span>
@@ -208,13 +208,13 @@ tailwind.config = {
       <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full" style="background:#e4f5ec;color:#0d6b35" >0</span>
 
     </a>
-    <a href="/reports?status=CLOSED"  class="sidebar-item cursor-pointer flex items-center gap-2">
+    <a href="/reports?status=rejected"  class="sidebar-item cursor-pointer flex items-center gap-2">
 
       <!-- Color dot -->
       <span class="w-2 h-2 rounded-full flex-shrink-0"  style="background:#6b7280"></span>
 
       <!-- Label -->
-      <span>Closed</span>
+      <span>Rejected</span>
 
       <!-- Count -->
       <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full" style="background:#e4f5ec;color:#0d6b35" >0</span>

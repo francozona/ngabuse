@@ -45,7 +45,7 @@
         </button>
         <div x-show="open" @click.outside="open = false"
              class="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-xl shadow-lg z-10 overflow-hidden">
-          <?php foreach (['pending' => 'Open', 'under_review' => 'Under Review', 'resolved' => 'Closed', 'rejected' => 'Rejected'] as $val => $label): ?>
+          <?php foreach (['pending' => 'Open', 'under_review' => 'Under Review', 'resolved' => 'Actioned', 'rejected' => 'Rejected'] as $val => $label): ?>
           <form method="POST" action="/admin/reports/<?= esc($report['id'] ?? '') ?>/status">
             <?= csrf_field() ?>
             <input type="hidden" name="status" value="<?= $val ?>">

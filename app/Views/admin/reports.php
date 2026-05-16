@@ -5,7 +5,7 @@
 <div class="flex-1 overflow-y-auto px-6 py-5">
 
     <!-- ─── REPORTS TABLE ─── -->
-    <div class="bg-white rounded-2xl border border-slate-100 shadow-card fade-in overflow-hidden" style="animation-delay:.25s">
+    <div x-data="{ tableStatusFilter: '<?= esc($status ?? 'all') ?>' }" class="bg-white rounded-2xl border border-slate-100 shadow-card fade-in overflow-hidden" style="animation-delay:.25s">
       <!-- Table header -->
       <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
         <div class="flex items-center gap-3">
@@ -40,6 +40,11 @@
               class="text-[11px] font-display font-700 px-3 py-1.5 rounded-lg transition-all"
               :class="tableStatusFilter==='ACTIONED' ? 'bg-white text-nira-green shadow-sm' : 'text-gray-400 hover:text-gray-600'">
               Actioned
+            </button>
+             <button @click="tableStatusFilter='CLOSED'"
+              class="text-[11px] font-display font-700 px-3 py-1.5 rounded-lg transition-all"
+              :class="tableStatusFilter==='CLOSED' ? 'bg-white text-nira-green shadow-sm' : 'text-gray-400 hover:text-gray-600'">
+              Rejected
             </button>
           </div>
         </div>
@@ -267,25 +272,17 @@
         <p class="text-[10px] font-display font-700 text-gray-400 uppercase tracking-wider mb-3">Update Status</p>
         <div class="grid grid-cols-2 gap-2">
   
-        <a :href="`/report/UNDER_REVIEW/${selectedReport.id}`" target="_blank"
+        <a :href="`/report/OPEN/${selectedReport.id}`" target="_blank"
           class="text-xs font-display font-700 px-3 py-2.5 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 transition-all border border-blue-200/50">
-          Mark In Review
+          See More
         </a>
 
-        <a :href="`/report/ACTIONED/${selectedReport.id}`" target="_blank"
+        <button @click="selectedReport = null" target="_blank"
           class="text-xs font-display font-700 px-3 py-2.5 rounded-xl bg-nira-light text-nira-dark hover:bg-green-100 transition-all border border-nira-green/20">
-          Mark Actioned
-        </a>
+          Cancel
+        </button>
 
-        <a :href="`/report/CLOSED/${selectedReport.id}`" target="_blank"
-          class="text-xs font-display font-700 px-3 py-2.5 rounded-xl bg-slate-100 text-gray-600 hover:bg-slate-200 transition-all">
-          Close Report
-        </a>
-
-        <a :href="`/report/ESCALATE/${selectedReport.id}`" target="_blank"
-          class="text-xs font-display font-700 px-3 py-2.5 rounded-xl bg-red-50 text-red-700 hover:bg-red-100 transition-all border border-red-200/50">
-          Escalate
-        </a>
+       
 
       </div>
          
@@ -359,11 +356,7 @@ function dashboard() {
               'size' => '—',
               'url'  => base_url($path),
           ], $files),
-            'timeline'      => array_filter([
-                                    ['event' => 'Report submitted',   'time' => date('d M Y, H:i', strtotime($r['created_at'])),  'color' => '#16a34a'],
-                                    $r['status'] !== 'pending' ? ['event' => 'Assigned to investigator', 'time' => date('d M Y, H:i', strtotime($r['updated_at'])), 'color' => '#2563eb'] : null,
-                                    in_array($r['status'], ['resolved','rejected']) ? ['event' => 'Action taken — domain suspended', 'time' => date('d M Y, H:i', strtotime($r['updated_at'])), 'color' => '#dc2626'] : null,
-                               ]),
+            'timeline'      => $r['timeline'] ?? [],
         ];
     }, $reports ?? [])) ?>,
 

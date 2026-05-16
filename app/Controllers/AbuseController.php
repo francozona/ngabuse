@@ -64,7 +64,9 @@ class AbuseController extends BaseController
 
     public function all_reports(): string
     {
+        $status = $this->request->getGet('status');
         $model = model(AbuseReportModel::class);
+        $responseModel = model(\App\Models\AbuseReportResponseModel::class);
 
         // Stat counts
         $stats = [
@@ -74,6 +76,13 @@ class AbuseController extends BaseController
             'actioned'    => $model->where('status', 'resolved')->countAllResults(false),
         ];
 
+        $statusMap = [
+             'pending'      => 'OPEN',
+             'under_review' => 'UNDER_REVIEW',
+             'resolved'     => 'ACTIONED',
+             'rejected'     => 'CLOSED',
+        ];
+
         // Reports table — latest 200, joined with reporter
         $reports = $model->db
             ->table('abuse_reports ar')
@@ -81,11 +90,43 @@ class AbuseController extends BaseController
             ->join('users u', 'u.id = ar.user_id')
             ->where('ar.deleted_at', null)
             ->orderBy('ar.created_at', 'DESC')
-            ->limit(200)
             ->get()
             ->getResultArray();
 
-        // Weekly submissions — last 8 weeks
+            foreach ($reports as &$report) {
+
+                $responses = $responseModel
+                    ->select('abuse_report_responses.*, users.full_name, users.role')
+                    ->join('users', 'users.id = abuse_report_responses.user_id', 'left')
+                    ->where('abuse_report_responses.report_id', $report['id'])
+                    ->orderBy('abuse_report_responses.created_at', 'ASC')
+                    ->findAll();
+
+                $timeline = [];
+                $userModel = model(\App\Models\UserModel::class);
+                $reporter = $userModel->find($report['user_id']);
+                $timeline[] = [
+                    'event' => 'Report submitted by ' . ($reporter['full_name'] ?? 'User'),
+                    'time'  => date('M d, Y H:i', strtotime($report['created_at'])),
+                    'color' => '#16a34a',
+                ];
+
+                foreach ($responses as $r) {
+
+                    $isAdmin = ($r['role'] ?? '') === 'admin';
+
+                    $timeline[] = [
+                        'event' => ($isAdmin ? 'Admin response' : 'Staff response') . ': ' . strip_tags($r['message']),
+                        'time'  => date('M d, Y H:i', strtotime($r['created_at'])),
+                        'color' => $isAdmin ? '#111827' : '#179e4f',
+                    ];
+                }
+
+                $report['timeline'] = $timeline;
+            }
+            unset($report);
+        
+            // Weekly submissions — last 8 weeks
         $weekly = $model->db->query("
             SELECT
                 CONCAT('W', WEEK(created_at) - WEEK(DATE_SUB(NOW(), INTERVAL 8 WEEK)) + 1) AS label,
@@ -111,6 +152,7 @@ class AbuseController extends BaseController
             'reports'    => $reports,
             'weekly'     => $weekly,
             'categories' => $categories,
+            'status'     => $statusMap[$status] ?? 'all',
         ]);
     }
 
