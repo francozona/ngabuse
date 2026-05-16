@@ -501,7 +501,7 @@
         </div>
 
         <h2 class="font-display text-2xl font-800 text-gray-900 mb-2">Report Submitted!</h2>
-        <p class="text-sm text-gray-500 mb-6">NiRA has received your abuse report and will investigate promptly.</p>
+        <p class="text-sm text-gray-500 mb-6">NiRA has received your abuse report and will investigate promptly.Kindly use the reference number below to track your report attaching this reference in your mail subject. </p>
 
         <!-- Ticket ID -->
         <div class="inline-flex items-center gap-3 px-5 py-3.5 rounded-xl bg-nira-light border border-nira-green/20 mb-6">

@@ -11,6 +11,7 @@ function active($path, $uri) {
 <html lang="en" x-data="dashboard()" x-init="init()">
 <head>
 <meta charset="UTF-8"/>
+<meta name="csrf-token" content="<?= csrf_hash() ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>NiRA — Abuse Reports Dashboard</title>
 <link rel="icon" href="/logo.png" type="image/png" />
@@ -241,7 +242,7 @@ tailwind.config = {
       <div class="w-8 h-8 rounded-full overflow-hidden bg-nira-green flex items-center justify-center flex-shrink-0">
 
         <?php if (!empty($image)): ?>
-          <img src="/uploads/users/<?= esc($image) ?>" class="w-full h-full object-cover" />
+          <img src="<?= esc($image) ?>" class="w-full h-full object-cover" />
         <?php else: ?>
           <span class="text-white font-bold text-sm">
             <?= strtoupper(substr($name, 0, 1)) ?>

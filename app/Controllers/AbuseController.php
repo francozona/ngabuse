@@ -61,6 +61,7 @@ class AbuseController extends BaseController
             'categories' => $categories,
         ]);
     }
+
     public function all_reports(): string
     {
         $model = model(AbuseReportModel::class);
@@ -113,6 +114,121 @@ class AbuseController extends BaseController
         ]);
     }
 
+    public function view_report($type, $id): string
+    {
+        $reportModel = new \App\Models\AbuseReportModel();
+
+        $report = $reportModel->findWithReporter((int) $id);
+
+        if (! $report) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $statusMap = [
+            'UNDER_REVIEW' => 'UNDER_REVIEW',
+            'ACTIONED'     => 'ACTIONED',
+            'CLOSED'       => 'CLOSED',
+            'ESCALATE'     => 'ESCALATE', 
+        ];
+
+        $type = strtoupper($type);
+
+        if (array_key_exists($type, $statusMap)) {
+            $reportModel->update($report['id'], [
+                'status' => $statusMap[$type],
+            ]);
+
+             $report = $reportModel->findWithReporter((int) $id);
+        }
+
+        $domainReportCount = $reportModel
+            ->where('full_domain', $report['full_domain'])
+            ->countAllResults();
+
+        $lastDomainReportRow = $reportModel
+            ->select('created_at')
+            ->where('full_domain', $report['full_domain'])
+            ->where('id !=', $report['id'])
+            ->orderBy('created_at', 'DESC')
+            ->first();
+
+        $lastDomainReport = $lastDomainReportRow
+            ? date('M d, Y', strtotime($lastDomainReportRow['created_at']))
+            : 'No other reports';
+
+        return view('admin/view-report.php', [
+            'report'            => $report,
+            'responses'         => [],        
+            'domainReportCount' => $domainReportCount,
+            'lastDomainReport'  => $lastDomainReport,
+        ]);
+    }
+
+    public function add_response(int $id) 
+    {
+        $reportModel   = new \App\Models\AbuseReportModel();
+        $responseModel = new \App\Models\AbuseReportResponseModel();
+
+        // Make sure the report exists
+        $report = $reportModel->find($id);
+        if (! $report) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $message = $this->request->getPost('message');
+
+        if (empty(trim(strip_tags($message)))) {
+            return redirect()->back()->with('error', 'Response message cannot be empty.');
+        }
+
+        // Save the response
+        $responseModel->insert([
+            'report_id' => $id,
+            'user_id'   => auth()->id(),
+            'message'   => $message,  
+        ]);
+
+        if ($this->request->getPost('notify_reporter')) {
+            $reportWithReporter = $reportModel->findWithReporter($id);
+
+            if (! empty($reportWithReporter['reporter_email'])) {
+                \Config\Services::email()
+                    ->setTo($reportWithReporter['reporter_email'])
+                    ->setSubject("Update on your abuse report: {$report['ticket_id']}")
+                    ->setMessage($message)
+                    ->setMailType('html')
+                    ->send();
+            }
+        }
+
+        return redirect()->to("/report/VIEW/{$id}")->with('success', 'Response sent successfully.');
+    }
+
+    public function upload_response_image()
+    {
+        $file = $this->request->getFile('upload');
+
+        if (! $file || ! $file->isValid()) {
+            return $this->response->setJSON([
+                'error' => ['message' => 'Invalid file upload.'],
+            ]);
+        }
+
+        $allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (! in_array($file->getMimeType(), $allowed)) {
+            return $this->response->setJSON([
+                'error' => ['message' => 'Only image files are allowed.'],
+            ]);
+        }
+
+        $newName = $file->getRandomName();
+        $file->move(FCPATH . 'uploads/responses/', $newName);
+
+        return $this->response->setJSON([
+            'url' => base_url("uploads/responses/{$newName}"),
+        ]);
+    }
+    
     public function login(): string
     {
         return view('admin/login.php');

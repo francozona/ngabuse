@@ -17,6 +17,10 @@ class Security extends BaseConfig
      */
     public string $csrfProtection = 'cookie';
 
+    public $csrfExcludeUris = [
+        '/admin/upload/response-image',
+    ];
+
     /**
      * --------------------------------------------------------------------------
      * CSRF Token Randomization

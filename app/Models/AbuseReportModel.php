@@ -114,7 +114,7 @@ class AbuseReportModel extends Model
             ->select('ar.*, u.full_name AS reporter_name, u.email AS reporter_email')
             ->join('users u', 'u.id = ar.user_id')
             ->where('ar.id', $id)
-            ->whereNull('ar.deleted_at')
+            ->where('ar.deleted_at IS NULL')
             ->get()
             ->getRowArray();
     }
