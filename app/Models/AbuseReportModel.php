@@ -36,7 +36,7 @@ class AbuseReportModel extends Model
 
     // Automatically encode/decode the JSON evidence_files column
     protected array $casts = [
-        'evidence_files' => 'json-array',
+        // 'evidence_files' => '?json-array',
     ];
 
     // Validation rules

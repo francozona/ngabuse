@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
                 'email'     => 'tech_support@nira.org.ng',
                 'role'      => 'admin',
                 'password'  => password_hash('techsupport2026', PASSWORD_DEFAULT),
-                'image'     => './logo.png',
+                'image'     => '/logo.png',
                 'created_at'=> date('Y-m-d H:i:s'),
                 'updated_at'=> date('Y-m-d H:i:s'),
             ],

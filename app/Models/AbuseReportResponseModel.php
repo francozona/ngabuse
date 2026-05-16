@@ -24,13 +24,7 @@ class AbuseReportResponseModel extends Model
     protected $updatedField  = 'updated_at';
     protected $deletedField  = 'deleted_at';
 
-    // Validation
-    protected $validationRules = [
-        'report_id' => 'required|integer|is_not_unique[abuse_reports.id]',
-        'user_id'   => 'required|integer|is_not_unique[users.id]',
-        'message'   => 'required|min_length[2]|max_length[5000]',
-    ];
-
+    
    public function getForReport(int $reportId): array
     {
         return $this->db

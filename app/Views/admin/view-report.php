@@ -24,9 +24,9 @@
       <?php
         $status = $report['status'] ?? 'pending';
         $statusConfig = [
-          'pending'      => ['bg-amber-50 text-amber-700 ring-amber-200',        'bg-amber-400',   'Pending'],
+          'pending'      => ['bg-amber-50 text-amber-700 ring-amber-200',        'bg-amber-400',   'Open'],
           'under_review' => ['bg-blue-50 text-blue-700 ring-blue-200',           'bg-blue-400',    'Under Review'],
-          'resolved'     => ['bg-emerald-50 text-emerald-700 ring-emerald-200',  'bg-emerald-400', 'Resolved'],
+          'resolved'     => ['bg-emerald-50 text-emerald-700 ring-emerald-200',  'bg-emerald-400', 'Closed'],
           'rejected'     => ['bg-red-50 text-red-700 ring-red-200',              'bg-red-400',     'Rejected'],
         ];
         [$statusClass, $dotClass, $statusLabel] = $statusConfig[$status] ?? $statusConfig['pending'];
@@ -45,7 +45,7 @@
         </button>
         <div x-show="open" @click.outside="open = false"
              class="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-xl shadow-lg z-10 overflow-hidden">
-          <?php foreach (['pending' => 'Pending', 'under_review' => 'Under Review', 'resolved' => 'Resolved', 'rejected' => 'Rejected'] as $val => $label): ?>
+          <?php foreach (['pending' => 'Open', 'under_review' => 'Under Review', 'resolved' => 'Closed', 'rejected' => 'Rejected'] as $val => $label): ?>
           <form method="POST" action="/admin/reports/<?= esc($report['id'] ?? '') ?>/status">
             <?= csrf_field() ?>
             <input type="hidden" name="status" value="<?= $val ?>">
@@ -166,6 +166,8 @@
         if (!is_array($evidenceFiles)) {
             $evidenceFiles = [];
         }
+
+        
         ?>
       <?php if (!empty($evidenceFiles)): ?>
       <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
@@ -204,52 +206,83 @@
         <!-- Timeline -->
         <div class="p-5 mb-8">
           <?php if (!empty($responses)): ?>
-          <div class="space-y-0">
-            <?php foreach ($responses as $idx => $response): ?>
-            <?php
-              $isAdmin = ($response['responder_role'] ?? '') === 'admin';
-              $isLast  = $idx === array_key_last($responses);
-            ?>
-            <div class="relative flex gap-4 <?= !$isLast ? 'pb-6' : '' ?>">
-              <!-- Vertical connector line -->
-              <?php if (!$isLast): ?>
-              <div class="absolute left-4 top-10 bottom-0 w-px bg-gray-100"></div>
-              <?php endif; ?>
 
-              <!-- Avatar -->
-              <div class="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold mt-1 z-10
+          <?php $lastIndex = array_key_last($responses); ?>
+
+          <div class="relative space-y-6">
+
+            <!-- Full timeline line -->
+            <div class="absolute left-4 top-0 bottom-0 w-px bg-gray-100"></div>
+
+            <?php foreach ($responses as $idx => $response): ?>
+
+            <?php
+             $userModel = new \App\Models\UserModel();
+              $responder = $userModel->find($response['user_id']);
+              $isAdmin = ($responder['role'] ?? '') === 'admin';
+
+              $name = $responder['full_name'] ?? 'Unknown';
+              $initial = strtoupper(substr($name, 0, 1));
+
+              $date = !empty($response['created_at'])
+                ? date('M d, Y · H:i', strtotime($response['created_at']))
+                : '—';
+            ?>
+
+            <div class="relative flex gap-4">
+
+              <?php
+                $avatar = $responder['image'] ?? null;
+                $hasImage = !empty($avatar);
+              ?>
+
+              <div class="relative z-10 w-8 h-8 rounded-full overflow-hidden flex items-center justify-center text-xs font-bold
                 <?= $isAdmin ? 'bg-gray-900 text-white' : 'bg-blue-100 text-blue-700' ?>">
-                <?= strtoupper(substr($response['responder_name'] ?? 'U', 0, 1)) ?>
+
+                <?php if ($hasImage): ?>
+                  <img src="<?= base_url('uploads/avatars/' . $avatar) ?>"
+                      class="w-full h-full object-cover"
+                      alt="avatar">
+                <?php else: ?>
+                  <?= $initial ?>
+                <?php endif; ?>
+
               </div>
 
-              <!-- Bubble -->
+              <!-- Content -->
               <div class="flex-1 min-w-0">
-                <div class="flex flex-wrap items-baseline gap-2 mb-1.5">
-                  <span class="text-sm font-semibold text-gray-800"><?= esc($response['responder_name'] ?? 'Unknown') ?></span>
+
+                <!-- Header -->
+                <div class="flex items-center gap-2 mb-1.5">
+                  <span class="text-sm font-semibold text-gray-800">
+                    <?= esc($name) ?>
+                  </span>
+
                   <?php if ($isAdmin): ?>
-                  <span class="text-xs px-1.5 py-0.5 rounded bg-gray-100 text-gray-500 font-medium">Admin</span>
+                  <span class="text-xs px-1.5 py-0.5 rounded bg-gray-100 text-gray-500 font-medium">
+                    Admin
+                  </span>
                   <?php endif; ?>
-                  <span class="text-xs text-gray-400 ml-auto shrink-0">
-                    <?= esc($response['created_at'] ? date('M d, Y · H:i', strtotime($response['created_at'])) : '—') ?>
+
+                  <span class="text-xs text-gray-400 ml-auto">
+                    <?= esc($date) ?>
                   </span>
                 </div>
-                <div class="rounded-xl px-4 py-3 text-sm text-gray-700 leading-relaxed
-                  <?= $isAdmin ? 'bg-gray-50 border border-gray-200' : 'bg-blue-50 border border-blue-100' ?>">
-                  <?= nl2br(esc($response['message'] ?? '')) ?>
+
+                <!-- Message -->
+                <div class="rounded-xl px-4 py-3 text-sm leading-relaxed
+                  <?= $isAdmin ? 'bg-gray-50 border border-gray-200 text-gray-700'
+                              : 'bg-blue-50 border border-blue-100 text-gray-700' ?>">
+               <?= html_entity_decode($response['message'] ?? '') ?>
                 </div>
 
-                <!-- Status change indicator -->
-                <?php if (!empty($response['status_changed_to'])): ?>
-                <div class="mt-2 flex items-center gap-1.5 text-xs text-gray-400">
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
-                  Status changed to
-                  <span class="font-semibold text-gray-600"><?= esc(ucwords(str_replace('_', ' ', $response['status_changed_to']))) ?></span>
-                </div>
-                <?php endif; ?>
               </div>
             </div>
+
             <?php endforeach; ?>
+
           </div>
+
           <?php else: ?>
           <div class="py-8 text-center">
             <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-3">
@@ -262,12 +295,23 @@
 
           <!-- ── Reply Box ───────────────────────────────── -->
          <div class="mt-6 pt-5 border-t border-gray-100">
-            <p class="text-sm font-semibold text-gray-700 mb-3">Add a Response</p>
-            <form method="POST" action="/admin/reports/<?= esc($report['id'] ?? '') ?>/respond">
+           <form method="POST" action="/admin/reports/<?= esc($report['id'] ?? '') ?>/respond">
               <?= csrf_field() ?>
 
+            <p class="text-sm font-semibold text-gray-700 mb-3">Add CC</p>
+
+            <textarea
+              name="cc_emails"
+              class="rounded border mb-4 border-gray-300 text-gray-900 focus:ring-gray-900 focus:border-gray-900 w-full p-3 text-sm"
+              placeholder="Add additional email addresses to notify (comma-separated)"
+            ></textarea>
+              
+              <p class="text-sm font-semibold text-gray-700 mb-3">Add a Response</p>
+            
               <!-- CKEditor replaces this textarea -->
-              <textarea name="message" id="responseEditor"></textarea>
+              <textarea name="message" id="responseEditor">
+                
+              </textarea>
 
               <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
                 <label class="flex items-center gap-2 text-sm text-gray-500 cursor-pointer select-none">

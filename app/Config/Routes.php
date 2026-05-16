@@ -32,6 +32,7 @@ $routes->group('', ['namespace' => 'App\Controllers','filter' => 'auth'], functi
     $routes->get('/report/(:segment)/(:segment)', 'AbuseController::view_report/$1/$2');
     $routes->post('/admin/reports/(:num)/respond', 'AbuseController::add_response/$1');
     $routes->post('/admin/upload/response-image', 'AbuseController::upload_response_image');
+    $routes->post('/admin/reports/(:num)/status', 'AbuseController::status/$1');
     $routes->get('admin/users',          'UserController::users');
     $routes->post('admin/users/save',    'UserController::save');
     $routes->get('admin/users/edit/(:num)', 'UserController::edit/$1');

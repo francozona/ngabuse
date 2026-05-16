@@ -125,10 +125,10 @@ class AbuseController extends BaseController
         }
 
         $statusMap = [
-            'UNDER_REVIEW' => 'UNDER_REVIEW',
-            'ACTIONED'     => 'ACTIONED',
-            'CLOSED'       => 'CLOSED',
-            'ESCALATE'     => 'ESCALATE', 
+             'pending'      => 'OPEN',
+             'under_review' => 'UNDER_REVIEW',
+             'resolved'     => 'ACTIONED',
+             'rejected'     => 'CLOSED',
         ];
 
         $type = strtoupper($type);
@@ -155,46 +155,97 @@ class AbuseController extends BaseController
         $lastDomainReport = $lastDomainReportRow
             ? date('M d, Y', strtotime($lastDomainReportRow['created_at']))
             : 'No other reports';
+        
+        $responseModel = new \App\Models\AbuseReportResponseModel();
+
+        $responses = $responseModel
+            ->where('report_id', $id)
+            ->orderBy('created_at', 'ASC')
+            ->findAll();
 
         return view('admin/view-report.php', [
             'report'            => $report,
-            'responses'         => [],        
+            'responses'         => $responses,
             'domainReportCount' => $domainReportCount,
             'lastDomainReport'  => $lastDomainReport,
         ]);
     }
 
-    public function add_response(int $id) 
+    public function status($id) 
     {
-        $reportModel   = new \App\Models\AbuseReportModel();
-        $responseModel = new \App\Models\AbuseReportResponseModel();
+        $reportModel = new \App\Models\AbuseReportModel();
 
-        // Make sure the report exists
-        $report = $reportModel->find($id);
+        $report = $reportModel->find((int) $id);
+
         if (! $report) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
-        $message = $this->request->getPost('message');
+        $newStatus = $this->request->getPost('status');
 
-        if (empty(trim(strip_tags($message)))) {
+        if (! in_array($newStatus, ['pending', 'under_review', 'resolved', 'rejected'])) {
+            return redirect()->back()->with('error', 'Invalid status.');
+        }
+
+        $reportModel->update($report['id'], [
+            'status' => $newStatus,
+        ]);
+
+        return redirect()->back()->with('success', 'Status updated successfully.');
+    }
+
+    public function add_response($id) 
+    {
+        $reportModel   = new \App\Models\AbuseReportModel();
+        $responseModel = new \App\Models\AbuseReportResponseModel();
+
+        
+        // Make sure the report exists
+        $report = $reportModel->where('id', $id)->first();
+        
+        if (!$report) {
+            return redirect()->back()->with('error', 'Response message cannot be empty.');
+        }
+
+        $message = $this->request->getPost('message');
+        $ccEmails = $this->request->getPost('cc_emails');
+               
+
+        if (empty($message)) {
             return redirect()->back()->with('error', 'Response message cannot be empty.');
         }
 
         // Save the response
         $responseModel->insert([
             'report_id' => $id,
-            'user_id'   => auth()->id(),
+            'user_id'   => session()->get('admin_id'),
             'message'   => $message,  
         ]);
 
-        if ($this->request->getPost('notify_reporter')) {
-            $reportWithReporter = $reportModel->findWithReporter($id);
+            if ($this->request->getPost('notify_reporter')) {
+                
 
-            if (! empty($reportWithReporter['reporter_email'])) {
-                \Config\Services::email()
+            $emailService = \Config\Services::email();
+              
+
+            if (!empty($reportWithReporter['reporter_email'])) 
+            {
+               
+                if (!empty($ccEmails)) {
+
+                    // convert "a@x.com, b@x.com" → array
+                    $ccArray = array_map('trim', explode(',', $ccEmails));
+
+                    // remove invalid empty values
+                    $ccArray = array_filter($ccArray);
+
+                    if (!empty($ccArray)) {
+                        $emailService->setCC($ccArray);
+                    }
+                }
+                $emailService
                     ->setTo($reportWithReporter['reporter_email'])
-                    ->setSubject("Update on your abuse report: {$report['ticket_id']}")
+                    ->setSubject("{$report['ticket_id']} - Update on your abuse report")
                     ->setMessage($message)
                     ->setMailType('html')
                     ->send();
@@ -210,22 +261,29 @@ class AbuseController extends BaseController
 
         if (! $file || ! $file->isValid()) {
             return $this->response->setJSON([
-                'error' => ['message' => 'Invalid file upload.'],
+                'error' => [
+                    'message' => 'Invalid file.'
+                ]
             ]);
         }
 
         $allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
         if (! in_array($file->getMimeType(), $allowed)) {
             return $this->response->setJSON([
-                'error' => ['message' => 'Only image files are allowed.'],
+                'error' => [
+                    'message' => 'Only image files are allowed.'
+                ]
             ]);
         }
 
         $newName = $file->getRandomName();
         $file->move(FCPATH . 'uploads/responses/', $newName);
 
+        $url = base_url("uploads/responses/{$newName}");
+
         return $this->response->setJSON([
-            'url' => base_url("uploads/responses/{$newName}"),
+            'url' => $url
         ]);
     }
     

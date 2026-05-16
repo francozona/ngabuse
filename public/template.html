@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update on Your Abuse Report — NiRA</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background:#f5f5f4;
+      font-family:'DM Sans', sans-serif;
+      color:#1c1917;
+    }
+    .email-wrapper { padding:48px 16px; }
+    .email-container { max-width:600px; margin:0 auto; }
+
+    .email-header {
+      background:#0f172a;
+      border-radius:16px 16px 0 0;
+      padding:32px 40px;
+      color:white;
+    }
+
+    .logo-text { font-size:18px; font-weight:600; }
+    .logo-sub { font-size:11px; color:#94a3b8; }
+
+    .header-title { font-size:22px; margin-top:16px; }
+    .header-subtitle { font-size:14px; color:#94a3b8; margin-top:6px; }
+
+    .email-body { background:#fff; padding:36px 40px; }
+
+    .greeting {
+      font-size:15px;
+      color:#374151;
+      line-height:1.6;
+      margin-bottom:24px;
+    }
+
+    .status-banner {
+      padding:16px 20px;
+      border-radius:12px;
+      margin-bottom:24px;
+      background:#eff6ff;
+      border:1px solid #bfdbfe;
+    }
+
+    .status-label {
+      font-size:13px;
+      font-weight:600;
+    }
+
+    .report-card {
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+      border-radius:12px;
+      padding:20px;
+      margin-bottom:28px;
+    }
+
+    .report-field {
+      display:flex;
+      justify-content:space-between;
+      padding:8px 0;
+      border-bottom:1px solid #f1f5f9;
+    }
+
+    .field-label { font-size:12px; color:#94a3b8; }
+    .field-value { font-size:13px; font-weight:500; }
+
+    .response-box {
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+      border-left:3px solid #0f172a;
+      padding:20px;
+      border-radius:0 12px 12px 0;
+      margin-bottom:24px;
+    }
+
+    .help-text {
+      font-size:13px;
+      color:#6b7280;
+      background:#f9fafb;
+      padding:16px;
+      border-radius:10px;
+    }
+
+    .email-footer {
+      text-align:center;
+      padding:24px;
+      background:#f8fafc;
+      border-radius:0 0 16px 16px;
+      font-size:12px;
+      color:#94a3b8;
+    }
+  </style>
+</head>
+
+<body>
+<div class="email-wrapper">
+<div class="email-container">
+
+  <!-- HEADER -->
+  <div class="email-header">
+    <div class="logo-text">NiRA</div>
+    <div class="logo-sub">Nigeria Internet Registration Association</div>
+
+    <div class="header-title">Update on Your Abuse Report</div>
+    <div class="header-subtitle">
+      A response has been added to your report.
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="email-body">
+
+    <p class="greeting">
+      Dear <strong>{{reporter_name}}</strong>,<br><br>
+      Your abuse report has been reviewed.
+    </p>
+
+    <div class="status-banner">
+      <div class="status-label">
+        Current Status: {{status}}
+      </div>
+    </div>
+
+    <!-- REPORT -->
+    <div class="report-card">
+
+      <div class="report-field">
+        <span class="field-label">Ticket ID</span>
+        <span class="field-value">{{ticket_id}}</span>
+      </div>
+
+      <div class="report-field">
+        <span class="field-label">Domain</span>
+        <span class="field-value">{{domain}}</span>
+      </div>
+
+      <div class="report-field">
+        <span class="field-label">Category</span>
+        <span class="field-value">{{category}}</span>
+      </div>
+
+      <div class="report-field">
+        <span class="field-label">Date Submitted</span>
+        <span class="field-value">{{created_at}}</span>
+      </div>
+
+    </div>
+
+    <!-- RESPONSE -->
+    <div class="response-box">
+      {{response_message}}
+    </div>
+
+    <!-- HELP -->
+    <div class="help-text">
+      If you have questions, reply with ticket ID <strong>{{ticket_id}}</strong>.
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="email-footer">
+    NiRA Abuse Management System<br>
+    abuse@nira.gov.ng | nira.gov.ng
+  </div>
+
+</div>
+</div>
+</body>
+</html>
