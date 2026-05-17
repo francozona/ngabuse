@@ -161,7 +161,7 @@
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-9 h-9 rounded-lg border-green flex items-center justify-center shadow">
-            <img class="w-5 h-5" src="logo.png"/>
+            <img class="w-5 h-5" src="/logo.png"/>
         </div>
         <div>
           <p class="font-display font-800 text-gray-900 text-sm leading-tight tracking-tight">NiRA .ng</p>

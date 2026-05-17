@@ -7,7 +7,12 @@ class AbuseController extends BaseController
 {
     public function home(): string
     {
-        return view('pages/home.php');
+        return view('pages/welcome.php');
+    }
+
+    public function report(): string
+    {
+        return view('pages/report.php');
     }
 
     public function dashboard(): string

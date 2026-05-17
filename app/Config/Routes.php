@@ -8,6 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 
 /**Open */
 $routes->get('/', 'AbuseController::home');
+$routes->get('/report', 'AbuseController::report');
 
 $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function (RouteCollection $routes): void {
  
