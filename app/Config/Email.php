@@ -28,7 +28,7 @@ class Email extends BaseConfig
     /**
      * SMTP Server Hostname
      */
-    public string $SMTPHost = 'mail.eventbox.ng';
+    public string $SMTPHost = '';
 
     /**
      * Which SMTP authentication method to use: login, plain
@@ -38,12 +38,12 @@ class Email extends BaseConfig
     /**
      * SMTP Username
      */
-    public string $SMTPUser = 'noreply@eventbox.ng';
+    public string $SMTPUser = '';
 
     /**
      * SMTP Password
      */
-    public string $SMTPPass = 'gFWtdS4v37';
+    public string $SMTPPass = '';
 
     /**
      * SMTP Port
