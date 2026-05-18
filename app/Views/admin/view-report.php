@@ -444,7 +444,7 @@
             <span class="text-xs text-gray-600"><?= esc($lastDomainReport ?? '—') ?></span>
           </div>
           <div class="pt-2 border-t border-gray-100">
-            <a href="/admin/reports?domain=<?= urlencode($report['full_domain'] ?? '') ?>"
+            <a href="/reports?domain=<?= urlencode($report['full_domain'] ?? '') ?>"
                class="text-xs text-blue-600 hover:text-blue-800 font-medium transition-colors">
               View all reports for this domain →
             </a>

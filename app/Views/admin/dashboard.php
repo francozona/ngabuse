@@ -37,10 +37,10 @@
             <h3 class="font-display font-700 text-gray-900 text-sm">Submissions Over Time</h3>
             <p class="text-xs text-gray-400 mt-0.5">Last 8 weeks</p>
           </div>
-          <div class="flex gap-2">
+          <!-- <div class="flex gap-2">
             <button class="text-[11px] font-display font-700 px-3 py-1 rounded-full bg-nira-light text-nira-dark">Weekly</button>
             <button class="text-[11px] font-display font-700 px-3 py-1 rounded-full text-gray-400 hover:bg-slate-50">Monthly</button>
-          </div>
+          </div> -->
         </div>
         <div class="flex items-end gap-3 h-32 px-2">
           <template x-for="(w, i) in weeklyData" :key="i">

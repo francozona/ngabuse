@@ -6,7 +6,28 @@ $email = session()->get('admin_email') ?? '';
 function active($path, $uri) {
     return $path === $uri ? 'active' : '';
 }
+
+$reportModel = new \App\Models\AbuseReportModel();
+
+// Get all status counts in one query
+$statusCounts = $reportModel
+    ->select('status, COUNT(*) as total')
+    ->groupBy('status')
+    ->findAll();
+
+// Convert to easy array
+$counts = [
+    'pending' => 0,
+    'under_review' => 0,
+    'resolved' => 0,
+    'rejected' => 0,
+];
+
+foreach ($statusCounts as $row) {
+    $counts[$row['status']] = (int)$row['total'];
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en" x-data="dashboard()" x-init="init()">
 <head>
@@ -150,7 +171,7 @@ tailwind.config = {
       </div>
       <div>
         <p class="font-display font-900 text-white leading-tight">NiRA .ng</p>
-        <p class="text-[14px] leading-tight" style="color:rgba(255,255,255,0.65)">Abuse Portal Admin</p>
+        <p class="text-[14px] leading-tight" style="color:rgba(255,255,255,0.65)">Abuse Manager Admin</p>
       </div>
     </div>
   </div>
@@ -167,59 +188,69 @@ tailwind.config = {
     <a href="/reports" class="sidebar-item mb-3 <?= active('reports', $uri) ?>">
       <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
       All Reports
-      <span class="ml-auto text-[10px] font-display font-700 px-2 py-0.5 rounded-full" style="background:rgba(255,255,255,0.2);color:#fff" x-text="reports.length"></span>
      </a>
 
     <p  class="text-[9px]  font-display font-700 uppercase tracking-widest py-2 mt-3 mb-2" style="color:rgba(255,255,255,0.5)">Status</p>
 
-   <a href="/reports?status=pending" class="sidebar-item cursor-pointer flex items-center gap-2">
+        <a href="/reports?status=pending" class="sidebar-item cursor-pointer flex items-center gap-2">
 
-      <!-- Color dot -->
-      <span class="w-2 h-2 rounded-full flex-shrink-0" style="background:#f59e0b"></span>
+            <span class="w-2 h-2 rounded-full flex-shrink-0" style="background:#f59e0b"></span>
 
-      <!-- Label -->
-      <span>Open</span>
+            <span>Open</span>
 
-      <!-- Count -->
-      <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full" style="background:#e4f5ec;color:#0d6b35">0</span>
+            <?php if ($counts['pending'] > 0): ?>
+                <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full"
+                      style="background:#e4f5ec;color:#0d6b35">
+                    <?= $counts['pending'] ?>
+                </span>
+            <?php endif; ?>
 
-    </a>
-    <a href="/reports?status=under_review"  class="sidebar-item cursor-pointer flex items-center gap-2">
+        </a>
 
-      <!-- Color dot -->
-      <span class="w-2 h-2 rounded-full flex-shrink-0"  style="background:#3b82f6"></span>
+        <a href="/reports?status=under_review" class="sidebar-item cursor-pointer flex items-center gap-2">
 
-      <!-- Label -->
-      <span>In Review</span>
+            <span class="w-2 h-2 rounded-full flex-shrink-0" style="background:#3b82f6"></span>
 
-      <!-- Count -->
-      <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full" style="background:#e4f5ec;color:#0d6b35" >0</span>
+            <span>In Review</span>
 
-    </a>
-    <a href="/reports?status=resolved"  class="sidebar-item cursor-pointer flex items-center gap-2" >
+            <?php if ($counts['under_review'] > 0): ?>
+                <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full"
+                      style="background:#e4f5ec;color:#0d6b35">
+                    <?= $counts['under_review'] ?>
+                </span>
+            <?php endif; ?>
 
-      <!-- Color dot -->
-      <span class="w-2 h-2 rounded-full flex-shrink-0"  style="background:#10b981"></span>
+        </a>
 
-      <!-- Label -->
-      <span>Actioned</span>
+        <a href="/reports?status=resolved" class="sidebar-item cursor-pointer flex items-center gap-2">
 
-      <!-- Count -->
-      <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full" style="background:#e4f5ec;color:#0d6b35" >0</span>
+            <span class="w-2 h-2 rounded-full flex-shrink-0" style="background:#10b981"></span>
 
-    </a>
-    <a href="/reports?status=rejected"  class="sidebar-item cursor-pointer flex items-center gap-2">
+            <span>Actioned</span>
 
-      <!-- Color dot -->
-      <span class="w-2 h-2 rounded-full flex-shrink-0"  style="background:#6b7280"></span>
+            <?php if ($counts['resolved'] > 0): ?>
+                <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full"
+                      style="background:#e4f5ec;color:#0d6b35">
+                    <?= $counts['resolved'] ?>
+                </span>
+            <?php endif; ?>
 
-      <!-- Label -->
-      <span>Rejected</span>
+        </a>
 
-      <!-- Count -->
-      <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full" style="background:#e4f5ec;color:#0d6b35" >0</span>
+        <a href="/reports?status=rejected" class="sidebar-item cursor-pointer flex items-center gap-2">
 
-    </a>
+            <span class="w-2 h-2 rounded-full flex-shrink-0" style="background:#6b7280"></span>
+
+            <span>Rejected</span>
+
+            <?php if ($counts['rejected'] > 0): ?>
+                <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full"
+                      style="background:#e4f5ec;color:#0d6b35">
+                    <?= $counts['rejected'] ?>
+                </span>
+            <?php endif; ?>
+
+        </a>
     
    
 
@@ -272,17 +303,17 @@ tailwind.config = {
   <header class="bg-white border-b border-slate-200 flex items-center gap-4 px-6 py-3.5 flex-shrink-0">
     <!-- Title -->
     <div class="flex-1 min-w-0">
-      <h1 class="font-display font-800 text-gray-900 text-lg leading-tight" x-text="pageTitle"></h1>
-      <p class="text-xs text-gray-400" x-text="pageSubtitle"></p>
+      <h1 class="font-display font-800 text-gray-900 text-lg leading-tight">Abuse Management</h1>
+      <p class="text-xs text-gray-400">Manage and control reports</p>
     </div>
 
     
 
     <!-- Export -->
-    <button class="hidden md:flex items-center gap-2 text-sm font-display font-700 px-4 py-2 rounded-xl border border-slate-200 text-gray-600 hover:bg-slate-50 transition-all">
+    <!-- <button class="hidden md:flex items-center gap-2 text-sm font-display font-700 px-4 py-2 rounded-xl border border-slate-200 text-gray-600 hover:bg-slate-50 transition-all">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
       Export
-    </button>
+    </button> -->
 
   </header>
 

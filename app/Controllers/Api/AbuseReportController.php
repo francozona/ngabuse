@@ -30,7 +30,7 @@ class AbuseReportController extends BaseController
     private const MAX_FILES = 3;
 
     // Upload destination (relative to WRITEPATH)
-    private const UPLOAD_DIR = 'uploads/evidence';
+    private const UPLOAD_DIR = '/uploads/evidence';
 
   
     /**
@@ -124,6 +124,117 @@ class AbuseReportController extends BaseController
                     'errors'  => $reportModel->errors(),
                 ]);
         }
+
+        $emailService = \Config\Services::email();
+        $message = '
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Abuse Report Ticket</title>
+</head>
+<body style="margin:0;padding:0;background:#f4f6f8;font-family:Arial,sans-serif;">
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6f8;padding:30px 0;">
+        <tr>
+            <td align="center">
+
+                <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
+
+                    <!-- Header -->
+                    <tr>
+                        <td style="background:#179e4f;padding:30px;text-align:center;">
+
+                            <!-- LOGO SPACE -->
+                            <div style="margin-bottom:15px;background:white;padding:10px;border-radius:10px;">
+                                <img src=\'https://nira.org.ng/wp-content/uploads/2022/01/nira-logo.fw_.png\' 
+                                     alt=\'NiRA Logo\' 
+                                     style=\'max-height:70px;\'>
+                            </div>
+
+                            <h1 style="margin:0;color:#ffffff;font-size:24px;">
+                                Abuse Report Ticket Opened
+                            </h1>
+
+                        </td>
+                    </tr>
+
+                    <!-- Body -->
+                    <tr>
+                        <td style="padding:40px 35px;color:#333333;">
+
+                            <p style="margin-top:0;font-size:16px;">
+                                Dear User,
+                            </p>
+
+                            <p style="font-size:15px;line-height:1.7;">
+                                Your abuse report has been successfully received and a support ticket has been opened.
+                            </p>
+
+                            <table cellpadding="0" cellspacing="0" style="margin:25px 0;width:100%;background:#f8fafc;border-radius:8px;">
+                                <tr>
+                                    <td style="padding:18px;">
+
+                                        <p style="margin:0 0 10px 0;font-size:13px;color:#6b7280;">
+                                            TICKET ID
+                                        </p>
+
+                                        <p style="margin:0;font-size:24px;font-weight:bold;color:#179e4f;">
+                                            '.$ticketId.'
+                                        </p>
+
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="font-size:15px;line-height:1.7;">
+                                Our team will review your submission and contact you if additional information is required.
+                            </p>
+
+                            <p style="font-size:15px;line-height:1.7;">
+                                Please keep your ticket ID safe for future reference.
+                            </p>
+
+                            <div style="margin-top:35px;">
+                                <a href="https://nira.org.ng"
+                                   style="background:#179e4f;color:#ffffff;text-decoration:none;padding:14px 24px;border-radius:8px;display:inline-block;font-size:14px;font-weight:bold;">
+                                    Visit NiRA
+                                </a>
+                            </div>
+
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding:25px 35px;background:#f9fafb;border-top:1px solid #e5e7eb;">
+
+                            <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.6;">
+                                This email was sent by the Nigeria Internet Registration Association (NiRA).
+                            </p>
+
+                            <p style="margin:10px 0 0 0;font-size:12px;color:#9ca3af;">
+                                © '.date('Y').' NiRA. All rights reserved.
+                            </p>
+
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>
+';   
+        $emailService
+            ->setTo($post['email'])
+            ->setSubject("{$ticketId} - Ticket open for your abuse report")
+            ->setMessage($message)
+            ->setMailType('html')
+            ->send();
 
         // ── 6. Success response ──────────────────────────────────
         return $this->response

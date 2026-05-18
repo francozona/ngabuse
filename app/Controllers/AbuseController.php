@@ -72,7 +72,7 @@ class AbuseController extends BaseController
         $status = $this->request->getGet('status');
         $model = model(AbuseReportModel::class);
         $responseModel = model(\App\Models\AbuseReportResponseModel::class);
-
+        $domain = $this->request->getGet('domain');
         // Stat counts
         $stats = [
             'total'       => $model->countAllResults(false),
@@ -89,14 +89,33 @@ class AbuseController extends BaseController
         ];
 
         // Reports table — latest 200, joined with reporter
-        $reports = $model->db
-            ->table('abuse_reports ar')
-            ->select('ar.*, u.full_name AS reporter_name, u.email AS reporter_email')
-            ->join('users u', 'u.id = ar.user_id')
-            ->where('ar.deleted_at', null)
-            ->orderBy('ar.created_at', 'DESC')
-            ->get()
-            ->getResultArray();
+        $reports = [];
+        
+        if($domain)
+        {
+             $reports = $model->db
+                ->table('abuse_reports ar')
+                ->select('ar.*, u.full_name AS reporter_name, u.email AS reporter_email')
+                ->where('full_domain', $domain)
+                ->join('users u', 'u.id = ar.user_id')
+                ->where('ar.deleted_at', null)
+                ->orderBy('ar.created_at', 'DESC')
+                ->get()
+                ->getResultArray();
+        }
+        else
+        {
+             $reports = $model->db
+                    ->table('abuse_reports ar')
+                    ->select('ar.*, u.full_name AS reporter_name, u.email AS reporter_email')
+                    ->join('users u', 'u.id = ar.user_id')
+                    ->where('ar.deleted_at', null)
+                    ->orderBy('ar.created_at', 'DESC')
+                    ->get()
+                    ->getResultArray();
+
+        }
+       
 
             foreach ($reports as &$report) {
 
@@ -234,9 +253,146 @@ class AbuseController extends BaseController
             return redirect()->back()->with('error', 'Invalid status.');
         }
 
+
         $reportModel->update($report['id'], [
             'status' => $newStatus,
         ]);
+        
+       $statusLabels = [
+            'pending' => 'Opened',
+            'under_review' => 'Under Review',
+            'resolved' => 'Resolved',
+            'rejected' => 'Rejected',
+        ];
+
+        $statusText = $statusLabels[$newStatus] ?? ucfirst($newStatus);
+
+        $userModel = model(\App\Models\UserModel::class);
+
+        $user = $userModel
+            ->where('id', $report['user_id'])
+            ->first();
+
+        $emailService = \Config\Services::email();
+        $name = $user['full_name'];
+
+        $name = esc($user['full_name'] ?? 'User');
+
+$message = "
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+</head>
+<body style='margin:0;padding:0;background:#f4f6f8;font-family:Arial,sans-serif;'>
+
+<table width='100%' cellpadding='0' cellspacing='0' style='padding:30px 0;background:#f4f6f8;'>
+<tr>
+<td align='center'>
+
+<table width='600' cellpadding='0' cellspacing='0' style='background:#ffffff;border-radius:12px;overflow:hidden;'>
+
+    <!-- Header -->
+    <tr>
+        <td style='background:#179e4f;padding:30px;text-align:center;'>
+
+            <!-- Logo -->
+            <div style='margin-bottom:15px;background:white;padding:10px;border-radius:10px;'>
+                <img src='https://nira.org.ng/wp-content/uploads/2022/01/nira-logo.fw_.png'
+                    alt='NiRA Logo'
+                    style='max-height:70px;'>
+            </div>
+
+            <h1 style='margin:0;color:#ffffff;font-size:24px;'>
+                Abuse Report Update
+            </h1>
+
+        </td>
+    </tr>
+
+    <!-- Body -->
+    <tr>
+        <td style='padding:40px 35px;color:#333333;'>
+
+            <p style='margin-top:0;font-size:16px;'>
+                Dear {$name},
+            </p>
+
+            <p style='font-size:15px;line-height:1.7;'>
+                The status of your abuse report ticket has been updated.
+            </p>
+
+            <table cellpadding='0' cellspacing='0'
+                style='margin:25px 0;width:100%;background:#f8fafc;border-radius:8px;'>
+
+                <tr>
+                    <td style='padding:18px;'>
+
+                        <p style='margin:0 0 10px 0;font-size:13px;color:#6b7280;'>
+                            TICKET ID
+                        </p>
+
+                        <p style='margin:0;font-size:22px;font-weight:bold;color:#179e4f;'>
+                            {$report['ticket_id']}
+                        </p>
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style='padding:18px;border-top:1px solid #e5e7eb;'>
+
+                        <p style='margin:0 0 10px 0;font-size:13px;color:#6b7280;'>
+                            CURRENT STATUS
+                        </p>
+
+                        <p style='margin:0;font-size:18px;font-weight:bold;color:#111827;'>
+                            {$statusText}
+                        </p>
+
+                    </td>
+                </tr>
+
+            </table>
+
+            <p style='font-size:15px;line-height:1.7;'>
+                Please send a mail to admin@nira.org.ng with this your ABUSE ID if you wish to request additional updates or provide more information regarding this report.
+            </p>
+
+        </td>
+    </tr>
+
+    <!-- Footer -->
+    <tr>
+        <td style='padding:25px 35px;background:#f9fafb;border-top:1px solid #e5e7eb;'>
+
+            <p style='margin:0;font-size:13px;color:#6b7280;'>
+                Nigeria Internet Registration Association (NiRA)
+            </p>
+
+            <p style='margin:10px 0 0 0;font-size:12px;color:#9ca3af;'>
+                © ".date('Y')." NiRA. All rights reserved.
+            </p>
+
+        </td>
+    </tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>
+";
+
+        $emailService
+            ->setTo($user['email'])
+            ->setSubject("{$report['ticket_id']} - Ticket {$statusText}")
+            ->setMessage($message)
+            ->setMailType('html')
+            ->send();
 
         return redirect()->back()->with('success', 'Status updated successfully.');
     }
@@ -258,16 +414,16 @@ class AbuseController extends BaseController
         $ccEmails = $this->request->getPost('cc_emails');
                
 
-        if (empty($message)) {
-            return redirect()->back()->with('error', 'Response message cannot be empty.');
-        }
+            if (empty($message)) {
+                return redirect()->back()->with('error', 'Response message cannot be empty.');
+            }
 
-        // Save the response
-        $responseModel->insert([
-            'report_id' => $id,
-            'user_id'   => session()->get('admin_id'),
-            'message'   => $message,  
-        ]);
+            // Save the response
+            $responseModel->insert([
+                'report_id' => $id,
+                'user_id'   => session()->get('admin_id'),
+                'message'   => $message,  
+            ]);
 
             if ($this->request->getPost('notify_reporter')) {
                 
@@ -275,7 +431,7 @@ class AbuseController extends BaseController
             $emailService = \Config\Services::email();
               
 
-            if (!empty($reportWithReporter['reporter_email'])) 
+            if (!empty($report['reporter_email'])) 
             {
                
                 if (!empty($ccEmails)) {
@@ -290,8 +446,114 @@ class AbuseController extends BaseController
                         $emailService->setCC($ccArray);
                     }
                 }
+
+                $name = esc($report['reporter_name'] ?? 'Reporter');
+                $adminMessage = nl2br($message);  
+
+$message = "
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+</head>
+<body style='margin:0;padding:0;background:#f4f6f8;font-family:Arial,sans-serif;'>
+
+<table width='100%' cellpadding='0' cellspacing='0' style='padding:30px 0;background:#f4f6f8;'>
+<tr>
+<td align='center'>
+
+<table width='600' cellpadding='0' cellspacing='0' style='background:#ffffff;border-radius:12px;overflow:hidden;'>
+
+    <!-- HEADER -->
+    <tr>
+        <td style='background:#179e4f;padding:30px;text-align:center;'>
+
+            <!-- LOGO -->
+            <img src='https://nira.org.ng/wp-content/uploads/2022/01/nira-logo.fw_.png'
+                 alt='NiRA Logo'
+                 style='max-height:70px;margin-bottom:15px;'>
+
+            <h1 style='margin:0;color:#ffffff;font-size:22px;'>
+                Abuse Report Update
+            </h1>
+
+        </td>
+    </tr>
+
+    <!-- BODY -->
+    <tr>
+        <td style='padding:40px 35px;color:#333;'>
+
+            <p style='margin:0 0 10px 0;font-size:16px;'>
+                Dear {$name},
+            </p>
+
+            <p style='font-size:15px;line-height:1.7;margin-bottom:20px;'>
+                There is an update on your submitted abuse report. Please find the details below.
+            </p>
+
+            <!-- TICKET BOX -->
+            <table width='100%' cellpadding='0' cellspacing='0' style='background:#f8fafc;border-radius:8px;margin-bottom:25px;'>
+
+                <tr>
+                    <td style='padding:18px;border-bottom:1px solid #e5e7eb;'>
+                        <span style='font-size:12px;color:#6b7280;'>TICKET ID</span><br>
+                        <strong style='font-size:18px;color:#179e4f;'>{$report['ticket_id']}</strong>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style='padding:18px;'>
+                        <span style='font-size:12px;color:#6b7280;'>RESPONSE MESSAGE</span><br><br>
+                        <div style='font-size:14px;line-height:1.7;color:#111827;'>
+                            {$adminMessage}
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+
+            <p style='font-size:14px;line-height:1.7;color:#555;'>
+                You may log into your dashboard to view more updates or continue the conversation regarding this report.
+            </p>
+
+            <div style='margin-top:30px;'>
+                <a href='https://nira.org.ng'
+                   style='background:#179e4f;color:#fff;padding:12px 20px;border-radius:6px;text-decoration:none;font-weight:bold;display:inline-block;'>
+                    Visit NiRA Portal
+                </a>
+            </div>
+
+        </td>
+    </tr>
+
+    <!-- FOOTER -->
+    <tr>
+        <td style='padding:20px 30px;background:#f9fafb;border-top:1px solid #e5e7eb;'>
+
+            <p style='margin:0;font-size:13px;color:#6b7280;'>
+                Nigeria Internet Registration Association (NiRA)
+            </p>
+
+            <p style='margin:8px 0 0 0;font-size:12px;color:#9ca3af;'>
+                © ".date('Y')." NiRA. All rights reserved.
+            </p>
+
+        </td>
+    </tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>
+";
+
                 $emailService
-                    ->setTo($reportWithReporter['reporter_email'])
+                    ->setTo($report['reporter_email'])
                     ->setSubject("{$report['ticket_id']} - Update on your abuse report")
                     ->setMessage($message)
                     ->setMailType('html')

@@ -14,7 +14,7 @@
   --g:#179e4f;
   --gd:#0d6b35;
   --gl:#e8f7ee;
-  --ink:#0a1a10;
+  --ink:#116a35;
   --muted:#5a7060;
   --line:rgba(23,158,79,0.15);
   --off:#f5fbf7;
@@ -59,7 +59,7 @@ nav{
 }
 .nav-logo-mark svg{width:18px;height:18px;fill:#fff}
 .nav-logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;letter-spacing:-0.03em;color:var(--ink)}
-.nav-logo-sub{font-size:10px;color:var(--muted);letter-spacing:0.04em;margin-top:-1px}
+.nav-logo-sub{font-size:10px;color:#565151;letter-spacing:0.04em;margin-top:-1px}
 
 .nav-links{display:flex;align-items:center;gap:32px}
 .nav-links a{font-size:13px;font-weight:500;color:var(--muted);transition:color .2s}
@@ -684,7 +684,7 @@ footer{
     </div>
     <div class="hero-stats">
       <div class="stat-item">
-        <span class="stat-num font-display">1.2M+</span>
+        <span class="stat-num font-display">240k +</span>
         <span class="stat-label">Registered .ng Domains</span>
       </div>
       <div class="stat-item">
@@ -698,7 +698,8 @@ footer{
     </div>
   </div>
   <div class="hero-right">
-    <div class="hero-visual">
+    <img src="/bg.jpg"/>
+    <!-- <div class="hero-visual">
       <div class="globe-wrap">
         <div class="globe-ring"></div>
         <div class="globe-ring"></div>
@@ -733,7 +734,7 @@ footer{
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </section>
 
@@ -782,7 +783,7 @@ footer{
     <div class="about-aside reveal">
       <div class="about-kpi-grid">
         <div class="kpi-card">
-          <div class="kpi-num font-display">1.2M+</div>
+          <div class="kpi-num font-display">240K +</div>
           <div class="kpi-label">Total .ng domains under management</div>
         </div>
         <div class="kpi-card">
@@ -1052,11 +1053,11 @@ footer{
     <div class="footer-brand">
       <div class="nav-logo" style="margin-bottom:0">
         <div class="nav-logo-mark">
-          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+          <img class="px-1 py-1" src="/logo.png"/>
         </div>
         <div>
           <div class="nav-logo-text font-display" style="color:#fff">NiRA .ng</div>
-          <div class="nav-logo-sub">Nigeria Internet Registration Association</div>
+          <div class="nav-logo-sub" style="color:white;">Nigeria Internet Registration Association</div>
         </div>
       </div>
       <p>The official registry operator for Nigeria's .ng country-code top-level domain. Promoting a safe, stable, and open Nigerian internet since 2005.</p>

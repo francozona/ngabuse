@@ -6,8 +6,8 @@ use CodeIgniter\Config\BaseConfig;
 
 class Email extends BaseConfig
 {
-    public string $fromEmail  = '';
-    public string $fromName   = '';
+    public string $fromEmail  = 'admin@nira.org.ng';
+    public string $fromName   = 'NiRA Abuse Manager';
     public string $recipients = '';
 
     /**
@@ -18,7 +18,7 @@ class Email extends BaseConfig
     /**
      * The mail sending protocol: mail, sendmail, smtp
      */
-    public string $protocol = 'mail';
+    public string $protocol = 'smtp';
 
     /**
      * The server path to Sendmail.
@@ -28,7 +28,7 @@ class Email extends BaseConfig
     /**
      * SMTP Server Hostname
      */
-    public string $SMTPHost = '';
+    public string $SMTPHost = 'mail.eventbox.ng';
 
     /**
      * Which SMTP authentication method to use: login, plain
@@ -38,22 +38,22 @@ class Email extends BaseConfig
     /**
      * SMTP Username
      */
-    public string $SMTPUser = '';
+    public string $SMTPUser = 'noreply@eventbox.ng';
 
     /**
      * SMTP Password
      */
-    public string $SMTPPass = '';
+    public string $SMTPPass = 'gFWtdS4v37';
 
     /**
      * SMTP Port
      */
-    public int $SMTPPort = 25;
+    public int $SMTPPort = 587;
 
     /**
      * SMTP Timeout (in seconds)
      */
-    public int $SMTPTimeout = 5;
+    public int $SMTPTimeout = 15;
 
     /**
      * Enable persistent SMTP connections
@@ -67,7 +67,7 @@ class Email extends BaseConfig
      *             to the server. 'ssl' means implicit SSL. Connection on port
      *             465 should set this to ''.
      */
-    public string $SMTPCrypto = 'tls';
+    public string $SMTPCrypto = '';
 
     /**
      * Enable word-wrap
@@ -82,7 +82,7 @@ class Email extends BaseConfig
     /**
      * Type of mail, either 'text' or 'html'
      */
-    public string $mailType = 'text';
+    public string $mailType = 'html';
 
     /**
      * Character set (utf-8, iso-8859-1, etc.)
