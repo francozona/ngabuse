@@ -152,12 +152,47 @@
     .chip button { line-height: 1; cursor: pointer; }
 
     select option { color: #111; }
+    nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 6vw;
+  height:68px;
+  background:rgba(255,255,255,0.9);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line);
+}
+
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-logo-mark{
+  width:40px;height:40px;
+  background:white;
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+}
+.nav-logo-mark svg{width:18px;height:18px;fill:#fff}
+.nav-logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;letter-spacing:-0.03em;color:var(--ink)}
+.nav-logo-sub{font-size:10px;color:#565151;letter-spacing:0.04em;margin-top:-1px}
+
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{font-size:13px;font-weight:500;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:var(--g)}
+
+.nav-cta{
+  background:#179e4f;color:#fff;
+  font-family:'Syne',sans-serif;font-weight:700;font-size:13px;
+  padding:10px 22px;border-radius:8px;
+  transition:background .2s,transform .15s;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.nav-cta:hover{background:#179e4f;transform:translateY(-1px)}
+.nav-cta svg{width:14px;height:14px}
+
   </style>
 </head>
 <body class="min-h-screen bg-slate-50 relative overflow-x-hidden">
 
   <!-- Header -->
-  <header class="relative z-10 bg-white border-b border-nira-green/10 shadow-sm">
+  <!-- <header class="relative z-10 bg-white border-b border-nira-green/10 shadow-sm">
     <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-9 h-9 rounded-lg border-green flex items-center justify-center shadow">
@@ -170,7 +205,28 @@
       </div>
       <span class="hidden sm:block text-xs font-display font-semibold text-nira-green border border-nira-green/30 rounded-full px-3 py-1">DNS Abuse Portal</span>
     </div>
-  </header>
+  </header> -->
+
+  <nav class="relative">
+  <div class="nav-logo">
+    <div class="nav-logo-mark">
+        <img class="" src="/logo.png"/> 
+    </div>
+    <div>
+      <div class="nav-logo-text font-display" style="color:#179e4f;">DNS ABUSE</div>
+    </div>
+  </div>
+  <div class="nav-links">
+     
+    <a href="/#dns-abuse">DNS Abuse</a>
+    <a href="/#how">How It Works</a>
+    <a href="/#faq">FAQ</a>
+  </div>
+  <a href="/report" class="nav-cta font-display">
+    Report DNS Abuse
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+  </a>
+</nav>
 
   <!-- Main -->
   <main class="relative z-10 max-w-2xl mx-auto px-4 py-10">

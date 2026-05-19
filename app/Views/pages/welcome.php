@@ -645,18 +645,17 @@ footer{
         <img class="" src="/logo.png"/> 
     </div>
     <div>
-      <div class="nav-logo-text font-display">NiRA Abuse Manager</div>
-      <div class="nav-logo-sub">Nigeria Internet Registration Association</div>
+      <div class="nav-logo-text font-display">DNS ABUSE</div>
     </div>
   </div>
   <div class="nav-links">
-    <a href="#about">About</a>
-    <a href="#dns-abuse">DNS Abuse</a>
-    <a href="#how">How It Works</a>
-    <a href="#faq">FAQ</a>
+       
+    <a href="/#dns-abuse">DNS Abuse</a>
+    <a href="/#how">How It Works</a>
+    <a href="/#faq">FAQ</a>
   </div>
   <a href="/report" class="nav-cta font-display">
-    Report Abuse
+    Report DNS Abuse
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
   </a>
 </nav>
@@ -683,20 +682,7 @@ footer{
       </a>
     
     </div>
-    <div class="hero-stats">
-      <div class="stat-item">
-        <span class="stat-num font-display">240k +</span>
-        <span class="stat-label">Registered .ng Domains</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-num font-display">11</span>
-        <span class="stat-label">Supported TLDs</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-num font-display">24/7</span>
-        <span class="stat-label">Abuse Monitoring</span>
-      </div>
-    </div>
+  
   </div>
   <div class="hero-right">
     <img src="/bg.jpg"/>
@@ -767,64 +753,7 @@ footer{
   </div>
 </div>
 
-<!-- ══ ABOUT ══ -->
-<section id="about">
-  <div class="about-grid">
-    <div class="about-text reveal">
-      <div class="section-tag font-mono">About NiRA</div>
-      <h2 class="section-h2 font-display">Stewards of Nigeria's Digital Namespace</h2>
-      <p class="section-lead">
-        The Nigeria Internet Registration Association (NiRA) is the officially designated Registry for the .ng country-code top-level domain (ccTLD). Established to serve Nigeria's growing digital population, NiRA maintains a stable, secure, and accessible internet infrastructure under the .ng umbrella.
-      </p>
-      <div class="mission-block">
-        <p>"NiRA exists to promote an open, stable, and safe Nigerian internet — ensuring every .ng domain serves its rightful purpose without being weaponised for harm."</p>
-        <cite>NiRA Mission Statement</cite>
-      </div>
-    </div>
-    <div class="about-aside reveal">
-      <div class="about-kpi-grid">
-        <div class="kpi-card">
-          <div class="kpi-num font-display">240K +</div>
-          <div class="kpi-label">Total .ng domains under management</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-num font-display">11</div>
-          <div class="kpi-label">Active second-level TLD namespaces</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-num font-display">2005</div>
-          <div class="kpi-label">Year NiRA was established</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- ══ ROLES ══ -->
-<section class="roles-section">
-  <div class="reveal">
-    <div class="section-tag font-mono">What We Do</div>
-    <h2 class="section-h2 font-display">Registry, Policy<br>& Protection</h2>
-    <p class="section-lead" style="max-width:520px">NiRA operates across three critical pillars that collectively safeguard Nigeria's internet identity and the millions of people who rely on .ng domains daily.</p>
-  </div>
-  <div class="roles-grid">
-    <div class="role-card reveal">
-      <div class="role-icon">🌐</div>
-      <div class="role-title font-display">Domain Registry</div>
-      <p class="role-desc">NiRA maintains the authoritative registry database for all .ng second-level domains. We coordinate with accredited registrars to ensure every registration is valid, properly delegated, and correctly routed through the global DNS.</p>
-    </div>
-    <div class="role-card reveal">
-      <div class="role-icon">⚖️</div>
-      <div class="role-title font-display">Policy Governance</div>
-      <p class="role-desc">We formulate and enforce registration policies, dispute-resolution procedures, and compliance frameworks in alignment with ICANN guidelines. NiRA ensures the .ng namespace operates under a fair, transparent rules-based system.</p>
-    </div>
-    <div class="role-card reveal">
-      <div class="role-icon">🛡️</div>
-      <div class="role-title font-display">Abuse Prevention</div>
-      <p class="role-desc">Through this DNS Abuse Portal, NiRA investigates reports of malicious activity on .ng domains — including phishing, malware, botnets, and pharming — and works with registrars to suspend or remediate offending domains promptly.</p>
-    </div>
-  </div>
-</section>
 
 <!-- ══ DNS ABUSE ══ -->
 <section id="dns-abuse" class="dns-section">
@@ -856,14 +785,14 @@ footer{
           <span class="abuse-num font-mono">03</span>
           <div class="abuse-content">
             <div class="abuse-title font-display">🎣 Phishing</div>
-            <p class="abuse-desc">Fraudulent websites impersonating legitimate businesses — banks, government agencies, and popular services — to trick users into surrendering their credentials, personal data, or money.</p>
+            <p class="abuse-desc">Fraudulent websites impersonating legitimate businesses  banks, government agencies, and popular services — to trick users into surrendering their credentials, personal data, or money.</p>
           </div>
         </div>
         <div class="abuse-item reveal">
           <span class="abuse-num font-mono">04</span>
           <div class="abuse-content">
             <div class="abuse-title font-display">🔀 Pharming</div>
-            <p class="abuse-desc">Attacks that manipulate DNS resolution to silently redirect users from legitimate websites to fraudulent ones, even when the correct URL is typed — without any visible warning.</p>
+            <p class="abuse-desc">Attacks that manipulate DNS resolution to silently redirect users from legitimate websites to fraudulent ones, even when the correct URL is typed without any visible warning.</p>
           </div>
         </div>
         <div class="abuse-item reveal">
@@ -882,7 +811,7 @@ footer{
       </div>
       <div class="dns-info-card reveal">
         <h4 class="font-display"><span>🔍</span> What Happens to Reports?</h4>
-        <p>Each report is triaged by NiRA's technical team. Verified abuse leads to formal notification to the responsible registrar and — where warranted — immediate suspension of the offending domain under the .ng Registry Agreement.</p>
+        <p>Each report is triaged by NiRA's technical team. Verified abuse leads to formal notification to the responsible registrar and where warranted immediate suspension of the offending domain under the .ng Registry Agreement.</p>
       </div>
       <div class="dns-info-card reveal">
         <h4 class="font-display"><span>🔒</span> Is My Report Confidential?</h4>
@@ -892,13 +821,38 @@ footer{
   </div>
   <div class="report-cta-banner reveal">
     <div>
-      <h3 class="font-display">Seen abuse on a .ng domain?<br>Report it now.</h3>
-      <p>It takes under three minutes and directly protects Nigerian internet users.</p>
+      <h3 class="font-display">Seen abuse on a .ng domain?<br></h3>
     </div>
     <a href="/report" class="btn-white font-display">
-      Open Abuse Report Form
+      Report it now
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
     </a>
+  </div>
+</section> 
+ 
+<!-- ══ ROLES ══ -->
+<section class="roles-section">
+  <div class="reveal">
+    <div class="section-tag font-mono">What We Do</div>
+    <h2 class="section-h2 font-display">Registry, Policy<br>& Protection</h2>
+    <p class="section-lead" style="max-width:520px">NiRA operates across three critical pillars that collectively safeguard Nigeria's internet identity and the millions of people who rely on .ng domains daily.</p>
+  </div>
+  <div class="roles-grid">
+    <div class="role-card reveal">
+      <div class="role-icon">🌐</div>
+      <div class="role-title font-display">Domain Registry</div>
+      <p class="role-desc">NiRA maintains the authoritative registry database for all .ng second-level domains. We coordinate with accredited registrars to ensure every registration is valid, properly delegated, and correctly routed through the global DNS.</p>
+    </div>
+    <div class="role-card reveal">
+      <div class="role-icon">⚖️</div>
+      <div class="role-title font-display">Policy Governance</div>
+      <p class="role-desc">We formulate and enforce registration policies, dispute-resolution procedures, and compliance frameworks in alignment with ICANN guidelines. NiRA ensures the .ng namespace operates under a fair, transparent rules-based system.</p>
+    </div>
+    <div class="role-card reveal">
+      <div class="role-icon">🛡️</div>
+      <div class="role-title font-display">Abuse Prevention</div>
+      <p class="role-desc">Through this DNS Abuse Portal, NiRA investigates reports of malicious activity on .ng domains — including phishing, malware, botnets, and pharming — and works with registrars to suspend or remediate offending domains promptly.</p>
+    </div>
   </div>
 </section>
 
@@ -918,13 +872,13 @@ footer{
       <div class="step-icon">📋</div>
       <div class="step-num font-mono">01</div>
       <div class="step-title font-display">Submit Your Report</div>
-      <p class="step-body">Fill in the two-step form with the offending domain, your contact details, the category of abuse, and a description of what you observed. Attach screenshots, logs, or PDFs as supporting evidence — up to three files, 3 MB each.</p>
+      <p class="step-body">Fill in the two-step form with the offending domain, your contact details, the category of abuse, and a description of what you observed. Attach screenshots, logs, or PDFs as supporting evidence  up to three files, 3 MB each.  You receive a unique reference / ticket ID number immediately upon submission to track progress.</p>
     </div>
     <div class="step-card reveal">
       <div class="step-icon">🔍</div>
       <div class="step-num font-mono">02</div>
-      <div class="step-title font-display">NiRA Reviews &amp; Triages</div>
-      <p class="step-body">Our technical team reviews each submission, verifies the domain falls under the .ng registry, and classifies the severity of the reported abuse. You receive a unique reference number immediately upon submission to track progress.</p>
+      <div class="step-title font-display">NiRA Reviews &amp; Investigation</div>
+      <p class="step-body">Our technical team reviews each submission, verifies the domain falls under the .ng registry, and classifies the severity of the reported abuse.</p>
     </div>
     <div class="step-card reveal">
       <div class="step-icon">📬</div>
@@ -941,39 +895,7 @@ footer{
   </div>
 </section>
 
-<!-- ══ REGISTRARS ══ -->
-<section class="reg-section">
-  <div class="reveal">
-    <div class="section-tag font-mono">Ecosystem</div>
-    <h2 class="section-h2 font-display">Accredited Registrar Network</h2>
-    <p class="section-lead" style="max-width:520px;margin-top:16px">NiRA works with a network of accredited registrars across Nigeria and internationally who are contractually obligated to respond to verified DNS abuse reports within their portfolios.</p>
-  </div>
-  <div class="reg-grid reveal">
-    <div class="reg-card">
-      <div class="reg-card-icon">🏢</div>
-      <div class="reg-card-name font-display">Accredited Registrars</div>
-      <div class="reg-card-role">Domain resellers bound by NiRA's Registrar Agreement</div>
-    </div>
-    <div class="reg-card">
-      <div class="reg-card-icon">🏛️</div>
-      <div class="reg-card-name font-display">Government Entities</div>
-      <div class="reg-card-role">Federal &amp; state agencies registered under .gov.ng</div>
-    </div>
-    <div class="reg-card">
-      <div class="reg-card-icon">🎓</div>
-      <div class="reg-card-name font-display">Educational Bodies</div>
-      <div class="reg-card-role">Universities and schools under .edu.ng and .sch.ng</div>
-    </div>
-    <div class="reg-card">
-      <div class="reg-card-icon">🌍</div>
-      <div class="reg-card-name font-display">International Partners</div>
-      <div class="reg-card-role">ICANN, AfriNIC &amp; regional ccTLD organisations</div>
-    </div>
-  </div>
-  <div class="reg-note reveal">
-    <strong>For registrars:</strong> If you have received a NiRA abuse notification, please act within the timeframe specified in your Registry–Registrar Agreement. Failure to remediate verified abuse may result in escalated enforcement action, including registrar accreditation review. Contact <strong>admin@nira.org.ng </strong> with your reference number for direct liaison.
-  </div>
-</section>
+  
 
 <!-- ══ FAQ ══ -->
 <section id="faq">
@@ -988,7 +910,7 @@ footer{
           Who can submit an abuse report?
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
         </div>
-        <div class="faq-a">Anyone can file a report — members of the public, businesses, security researchers, registrars, or government agencies. You do not need to be a NiRA member or a domain registrant to report abuse on a .ng domain.</div>
+        <div class="faq-a">Anyone can file a report members of the public, businesses, security researchers, registrars, or government agencies. You do not need to be a NiRA member or a domain registrant to report abuse on a .ng domain.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q font-display">
@@ -1002,7 +924,7 @@ footer{
           How long does it take to resolve a report?
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
         </div>
-        <div class="faq-a">NiRA triages reports within one business day. Once forwarded to the registrar, the response timeline depends on the severity: critical abuse (active phishing, malware) is typically escalated for action within 24–48 hours; other cases may take up to 5 business days.</div>
+        <div class="faq-a">NiRA investigate reports within one business day. Once forwarded to the registrar, the response timeline depends on the severity: critical abuse (active phishing, malware) is typically escalated for action within 24–48 hours; other cases may take up to 5 business days.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q font-display">
@@ -1016,7 +938,7 @@ footer{
           What is a reference number used for?
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
         </div>
-        <div class="faq-a">Your reference number uniquely identifies your abuse report in NiRA's system. Include it in the subject line of any follow-up email to admin@nira.org.ng so our team can locate your case instantly without requiring you to re-enter all information.</div>
+        <div class="faq-a">Your reference / ticket ID number uniquely identifies your abuse report in NiRA's system. Include it in the subject line of any follow-up email to admin@nira.org.ng so our team can locate your case instantly without requiring you to re-enter all information.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q font-display">
@@ -1034,12 +956,12 @@ footer{
         admin@nira.org.ng 
       </div>
       <div class="contact-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3"/></svg>
-        register.ng
+          <svg class="w-6 h-6 text-nira-green" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253"/></svg>
+          nira.org.ng
       </div>
       <div class="contact-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
-        +234 (0) 700 NiRA NG
+        +234 (0) 700 22556472
       </div>
       <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--line)">
         <p style="font-size:13px;color:var(--muted);line-height:1.6">When emailing, always include your report reference number in the subject line for the fastest response.</p>
