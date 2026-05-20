@@ -44,11 +44,6 @@ class AbuseReportController extends BaseController
         $rules = [
             'name'             => 'required|min_length[2]|max_length[150]',
             'email'            => 'required|valid_email|max_length[200]',
-            'domain_name'      => 'required|max_length[253]',
-            'tld'              => [
-                'label' => 'TLD',
-                'rules' => 'required|in_list[.ng,.com.ng,.org.ng,.gov.ng,.edu.ng,.net.ng,.sch.ng,.name.ng,.mobi.ng,.mil.ng,.i.ng]',
-            ],
             'url'              => 'required|valid_url_strict',
             'date_first_observed' => 'required|valid_date',
             'abuse_category'   => 'required|in_list[Malware,Botnets,Phishing,Pharming,Spam,Other forms of DNS Abuse]',
@@ -92,8 +87,24 @@ class AbuseReportController extends BaseController
         // ── 5. Build and persist the abuse report ────────────────
         $reportModel = model(AbuseReportModel::class);
         $ticketId    = $reportModel->generateTicketId();
-        $domainName  = trim($post['domain_name']);
-        $tld         = $post['tld'];
+        $domainName  = '';
+        $tld         = '';
+
+        $url = trim($post['url']);
+
+        $host = parse_url($url, PHP_URL_HOST) ?: $url;
+
+        $host = preg_replace('/^www\./', '', $host);
+
+        $parts = explode('.', $host);
+
+        if (count($parts) >= 3) {
+            $tld = implode('.', array_slice($parts, -2)); // co.uk
+            $domainName = implode('.', array_slice($parts, 0, -2)); // google
+        } else {
+            $tld = array_pop($parts);
+            $domainName = implode('.', $parts);
+        }
 
         $reportData = [
             'ticket_id'                   => $ticketId,

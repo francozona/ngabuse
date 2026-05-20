@@ -640,14 +640,14 @@ footer{
 <body>
 
 <nav>
-  <div class="nav-logo">
+  <a href="/" class="nav-logo">
     <div class="nav-logo-mark">
         <img class="" src="/logo.png"/> 
     </div>
     <div>
       <div class="nav-logo-text font-display">DNS ABUSE</div>
     </div>
-  </div>
+  </a>
   <div class="nav-links">
        
     <a href="/#dns-abuse">DNS Abuse</a>
@@ -770,35 +770,35 @@ footer{
         <div class="abuse-item reveal">
           <span class="abuse-num font-mono">01</span>
           <div class="abuse-content">
-            <div class="abuse-title font-display">🦠 Malware Distribution</div>
-            <p class="abuse-desc">Domains that host, distribute, or command malicious software designed to compromise the security or privacy of users' systems, steal data, or cause financial damage.</p>
+            <div class="abuse-title font-display"> Malware Distribution</div>
+            <p class="abuse-desc">Domains that host, distribute, or command malicious software designed to compromise the security or privacy of users systems, steal data, or cause financial damage.</p>
           </div>
         </div>
         <div class="abuse-item reveal">
           <span class="abuse-num font-mono">02</span>
           <div class="abuse-content">
-            <div class="abuse-title font-display">🤖 Botnet Infrastructure</div>
-            <p class="abuse-desc">Domains used as command-and-control servers for networks of infected computers (botnets), which can be directed to launch attacks, send spam, or mine cryptocurrency without the device owner's knowledge.</p>
+            <div class="abuse-title font-display">Botnet Infrastructure</div>
+            <p class="abuse-desc">Domains used as command and control servers for networks of infected computers (botnets), which can be directed to launch attacks, send spam, or mine cryptocurrency without the device owner's knowledge.</p>
           </div>
         </div>
         <div class="abuse-item reveal">
           <span class="abuse-num font-mono">03</span>
           <div class="abuse-content">
-            <div class="abuse-title font-display">🎣 Phishing</div>
-            <p class="abuse-desc">Fraudulent websites impersonating legitimate businesses  banks, government agencies, and popular services — to trick users into surrendering their credentials, personal data, or money.</p>
+            <div class="abuse-title font-display"> Phishing</div>
+            <p class="abuse-desc">Fraudulent websites impersonating legitimate businesses  banks, government agencies, and popular services  to trick users into surrendering their credentials, personal data, or money.</p>
           </div>
         </div>
         <div class="abuse-item reveal">
           <span class="abuse-num font-mono">04</span>
           <div class="abuse-content">
-            <div class="abuse-title font-display">🔀 Pharming</div>
+            <div class="abuse-title font-display">Pharming</div>
             <p class="abuse-desc">Attacks that manipulate DNS resolution to silently redirect users from legitimate websites to fraudulent ones, even when the correct URL is typed without any visible warning.</p>
           </div>
         </div>
         <div class="abuse-item reveal">
           <span class="abuse-num font-mono">05</span>
           <div class="abuse-content">
-            <div class="abuse-title font-display">📨 Spam Operations</div>
+            <div class="abuse-title font-display"> Spam Operations</div>
             <p class="abuse-desc">Domains registered specifically to send unsolicited bulk email at scale, circumventing spam filters and flooding inboxes with fraudulent offers, scams, or harmful links.</p>
           </div>
         </div>
@@ -869,25 +869,21 @@ footer{
   </div>
   <div class="steps-visual">
     <div class="step-card reveal">
-      <div class="step-icon">📋</div>
       <div class="step-num font-mono">01</div>
       <div class="step-title font-display">Submit Your Report</div>
       <p class="step-body">Fill in the two-step form with the offending domain, your contact details, the category of abuse, and a description of what you observed. Attach screenshots, logs, or PDFs as supporting evidence  up to three files, 3 MB each.  You receive a unique reference / ticket ID number immediately upon submission to track progress.</p>
     </div>
     <div class="step-card reveal">
-      <div class="step-icon">🔍</div>
       <div class="step-num font-mono">02</div>
       <div class="step-title font-display">NiRA Reviews &amp; Investigation</div>
       <p class="step-body">Our technical team reviews each submission, verifies the domain falls under the .ng registry, and classifies the severity of the reported abuse.</p>
     </div>
     <div class="step-card reveal">
-      <div class="step-icon">📬</div>
       <div class="step-num font-mono">03</div>
       <div class="step-title font-display">Registrar is Notified</div>
       <p class="step-body">NiRA formally notifies the accredited registrar responsible for the domain, providing the abuse evidence and requesting remediation within a defined window under the Registry–Registrar Agreement.</p>
     </div>
     <div class="step-card reveal">
-      <div class="step-icon">✅</div>
       <div class="step-num font-mono">04</div>
       <div class="step-title font-display">Action &amp; Resolution</div>
       <p class="step-body">The registrar takes appropriate action — which may include suspending the domain, locking DNS propagation, or requiring the registrant to remediate the abusive content. NiRA monitors compliance and, where necessary, escalates to direct registry-level suspension.</p>

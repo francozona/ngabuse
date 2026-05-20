@@ -208,7 +208,7 @@
   </header> -->
 
   <nav class="relative">
-  <div class="nav-logo">
+  <a href="/" class="nav-logo">
     <div class="nav-logo-mark">
         <img class="" src="/logo.png"/> 
     </div>
@@ -269,15 +269,12 @@
             <h1 class="font-display text-2xl font-800 text-gray-900 leading-tight">Report DNS Abuse</h1>
             <p class="text-sm text-gray-500 mt-0.5">Tell us about the abusive domain</p>
           </div>
-          <div class="w-12 h-12 rounded-xl bg-nira-light flex items-center justify-center flex-shrink-0">
-            <svg class="w-6 h-6 text-nira-green" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253"/></svg>
-          </div>
         </div>
 
         <!-- Reporter Section -->
         <div class="mb-6">
           <p class="text-[11px] font-display font-700 text-nira-green uppercase tracking-widest mb-3 flex items-center gap-2">
-            <span class="w-4 h-px bg-nira-green/40 inline-block"></span> Reporter Info
+             Reporter Info
           </p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <!-- Name -->
@@ -302,9 +299,9 @@
         <!-- Domain Section -->
         <div class="mb-6">
           <p class="text-[11px] font-display font-700 text-nira-green uppercase tracking-widest mb-3 flex items-center gap-2">
-            <span class="w-4 h-px bg-nira-green/40 inline-block"></span> Domain Details
+            Domain Details
           </p>
-          <!-- Domain + TLD side by side -->
+          <!-- Domain + TLD side by side
           <div class="flex gap-2 mb-3">
             <div class="floating-label-group flex-1">
               <input type="text" x-model="form.domain_name" placeholder=" "
@@ -327,13 +324,13 @@
                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
               </div>
             </div>
-          </div>
+          </div> -->
           <!-- Domain preview pill -->
           <div x-show="form.domain_name && form.tld" class="flex items-center gap-2 mb-3">
             <span class="text-xs text-gray-400">Reporting:</span>
             <span class="chip">
               <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"/></svg>
-              <span x-text="form.domain_name + form.tld"></span>
+              <span x-text="form.url"></span>
             </span>
           </div>
           <!-- URL -->
@@ -349,7 +346,7 @@
         <!-- Abuse Section -->
         <div class="mb-6">
           <p class="text-[11px] font-display font-700 text-nira-green uppercase tracking-widest mb-3 flex items-center gap-2">
-            <span class="w-4 h-px bg-nira-green/40 inline-block"></span> Abuse Details
+           Abuse Details
           </p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
             <!-- Date observed -->
