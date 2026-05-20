@@ -171,7 +171,7 @@ tailwind.config = {
       </div>
       <div>
         <p class="font-display font-900 text-white leading-tight">NiRA .ng</p>
-        <p class="text-[14px] leading-tight" style="color:rgba(255,255,255,0.65)">Abuse Manager Admin</p>
+        <p class="text-[14px] leading-tight" style="color:rgba(255,255,255,0.65)">DNS Abuse Admin</p>
       </div>
     </div>
   </div>

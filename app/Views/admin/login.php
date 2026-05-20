@@ -62,7 +62,7 @@
 
                     <div>
                         <h1 class="font-display text-3xl font-bold tracking-tight">
-                            NiRA Abuse Manager
+                            DNS Abuse Management
                         </h1>
 
                         <p class="text-green-100/60 text-sm mt-1">

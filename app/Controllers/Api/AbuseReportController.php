@@ -148,6 +148,7 @@ class AbuseReportController extends BaseController
                 ]);
         }
 
+        $name = $post['name'];
         $emailService = \Config\Services::email();
         $message = '
 <!DOCTYPE html>
@@ -187,7 +188,7 @@ class AbuseReportController extends BaseController
                         <td style="padding:40px 35px;color:#333333;">
 
                             <p style="margin-top:0;font-size:16px;">
-                                Dear User,
+                                Dear '.$name.',
                             </p>
 
                             <p style="font-size:15px;line-height:1.7;">
@@ -209,6 +210,10 @@ class AbuseReportController extends BaseController
                                     </td>
                                 </tr>
                             </table>
+
+                            <p style="font-size:15px;line-height:1.7;">
+                               Kindly use this url to track your complaint progress.
+                            </p>
 
                             <p style="font-size:15px;line-height:1.7;">
                                 Our team will review your submission and contact you if additional information is required.

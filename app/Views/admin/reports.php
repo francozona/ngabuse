@@ -272,12 +272,12 @@
         <p class="text-[10px] font-display font-700 text-gray-400 uppercase tracking-wider mb-3">Update Status</p>
         <div class="grid grid-cols-2 gap-2">
   
-        <a :href="`/report/OPEN/${selectedReport.id}`" target="_blank"
+        <a :href="`/report/OPEN/${selectedReport.id}`"  
           class="text-xs font-display font-700 px-3 py-2.5 rounded-xl bg-blue-50 text-blue-700 hover:bg-blue-100 transition-all border border-blue-200/50">
           See More
         </a>
 
-        <button @click="selectedReport = null" target="_blank"
+        <button @click="selectedReport = null" 
           class="text-xs font-display font-700 px-3 py-2.5 rounded-xl bg-nira-light text-nira-dark hover:bg-green-100 transition-all border border-nira-green/20">
           Cancel
         </button>

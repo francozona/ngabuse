@@ -1,7 +1,13 @@
 <?= $this->extend('shared/admin.layout.php') ?>
 
 <?= $this->section('content') ?>
-
+<link rel="stylesheet"
+        href="https://cdn.ckeditor.com/4.14.1/full-all/plugins/codesnippet/lib/highlight/styles/monokai_sublime.css">
+  <style>
+      .cke_notifications_area {
+          display: none;
+      }
+  </style>
 <div class="flex-1 overflow-y-auto px-6 py-5 bg-white min-h-screen">
 <style>
   #responseEditor + .ck-editor .ck-editor__editable_inline {
@@ -193,8 +199,115 @@
       </div>
       <?php endif; ?>
 
-      <!-- ── Responses / Timeline ─────────────────────────────── -->
-      <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm mb-8">
+     
+      
+
+    </div><!-- end left col -->
+
+    <!-- Right Column (sidebar) -->
+    <div class="space-y-5">
+
+      <!-- Reporter Info -->
+      <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Reporter</h2>
+        </div>
+        <div class="p-5">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-gray-900 text-white flex items-center justify-center text-sm font-bold shrink-0">
+              <?= strtoupper(substr($report['reporter_name'] ?? ($report['user_id'] ?? 'U'), 0, 1)) ?>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-gray-800 truncate"><?= esc($report['reporter_name'] ?? 'User #' . ($report['user_id'] ?? '—')) ?></p>
+              <p class="text-xs text-gray-400 truncate"><?= esc($report['reporter_email'] ?? '—') ?></p>
+            </div>
+          </div>
+          <?php if (!empty($report['reporter_email'])): ?>
+          <a href="mailto:<?= esc($report['reporter_email']) ?>"
+             class="flex items-center justify-center gap-2 w-full px-3 py-2 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            Email Reporter
+          </a>
+          <?php endif; ?>
+        </div>
+      </div>
+
+      <!-- Domain Stats -->
+      <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Domain Stats</h2>
+        </div>
+        <div class="p-5 space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-400 font-medium">Reports for this domain</span>
+            <span class="text-sm font-bold text-gray-800"><?= esc($domainReportCount ?? '—') ?></span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-400 font-medium">Last report</span>
+            <span class="text-xs text-gray-600"><?= esc($lastDomainReport ?? '—') ?></span>
+          </div>
+          <div class="pt-2 border-t border-gray-100">
+            <a href="/reports?domain=<?= urlencode($report['full_domain'] ?? '') ?>"
+               class="text-xs text-blue-600 hover:text-blue-800 font-medium transition-colors">
+              View all reports for this domain →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timestamps -->
+      <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Timestamps</h2>
+        </div>
+        <div class="p-5 space-y-3">
+          <div>
+            <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-0.5">Created</p>
+            <p class="text-xs text-gray-700"><?= esc($report['created_at'] ? date('M d, Y H:i:s', strtotime($report['created_at'])) : '—') ?></p>
+          </div>
+          <div>
+            <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-0.5">Last Updated</p>
+            <p class="text-xs text-gray-700"><?= esc($report['updated_at'] ? date('M d, Y H:i:s', strtotime($report['updated_at'])) : '—') ?></p>
+          </div>
+          <?php if (!empty($report['deleted_at'])): ?>
+          <div>
+            <p class="text-xs text-red-400 font-medium uppercase tracking-wide mb-0.5">Deleted</p>
+            <p class="text-xs text-red-600"><?= esc(date('M d, Y H:i:s', strtotime($report['deleted_at']))) ?></p>
+          </div>
+          <?php endif; ?>
+        </div>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="bg-white border border-red-100 rounded-2xl overflow-hidden shadow-sm">
+        <div class="px-5 py-4 border-b border-red-100 flex items-center gap-2">
+          <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <h2 class="text-sm font-semibold text-red-500 uppercase tracking-wide">Danger Zone</h2>
+        </div>
+        <div class="p-5">
+          <form method="POST" action="/admin/reports/<?= esc($report['id'] ?? '') ?>/delete"
+                onsubmit="return confirm('Are you sure you want to delete this report? This action cannot be undone.')">
+            <?= csrf_field() ?>
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit"
+                    class="w-full px-4 py-2.5 text-sm font-semibold text-red-600 border border-red-200 rounded-xl
+                           hover:bg-red-50 hover:border-red-300 active:scale-[0.97] transition-all">
+              Delete Report
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div><!-- end right col -->
+
+     
+
+  </div><!-- end grid -->
+            <!-- ── Responses / Timeline ─────────────────────────────── -->
+      <div class="bg-white w- border border-gray-200 rounded-2xl overflow-hidden shadow-sm mb-8">
         <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
           <div class="flex items-center gap-2">
             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
@@ -310,7 +423,124 @@
             
               <!-- CKEditor replaces this textarea -->
               <textarea name="message" id="responseEditor">
-                
+                    <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                </head>
+                <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background-color: #f5f5f5;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f5f5f5;">
+                        <tr>
+                            <td style="padding: 40px 20px;">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="margin: 0 auto; background-color: #ffffff;">
+                                    
+                                    <!-- Header -->
+                        <tr>
+                        <td style="padding: 32px 40px; vertical-align: middle;">
+                            
+                            <!-- Right-aligned logo -->
+                            <img src="<?= base_url('logo.png') ?>" 
+                                alt="NiRA" 
+                                style="height: 48px; display: inline-block; float: right;">
+
+                            <!-- Left-aligned logo -->
+                            <img src="<?= base_url('nira-logo.png') ?>" 
+                                alt="NiRA" 
+                                style="height: 48px; display: inline-block;">
+
+                        </td>
+                    </tr>
+
+
+                                    
+                                    <!-- Content -->
+                                    <tr>
+                                        <td style="padding: 48px 40px;">
+                                            <h1 style="color: #1a1a1a; font-size: 24px; font-weight: 600; margin: 0 0 24px 0; line-height: 1.3;">
+                                                Certificate of Completion
+                                            </h1>
+                                            
+                                            <p style="color: #4a4a4a; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">
+                                                Dear [Student Name],
+                                            </p>
+                                            
+                                            <p style="color: #4a4a4a; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">
+                                                This confirms your successful completion of the [Training Program Name] on [Date]. Your certificate is now available for download.
+                                            </p>
+                                            
+                                            <!-- Certificate Info Box -->
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 0 0 32px 0; border: 1px solid #e5e5e5; background-color: #fafafa;">
+                                                <tr>
+                                                    <td style="padding: 24px;">
+                                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                                            <tr>
+                                                                <td style="color: #6a6a6a; font-size: 13px; padding: 0 0 4px 0;">Participant</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="color: #1a1a1a; font-size: 15px; font-weight: 500; padding: 0 0 16px 0;">[Student Name]</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="color: #6a6a6a; font-size: 13px; padding: 0 0 4px 0;">Program</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="color: #1a1a1a; font-size: 15px; font-weight: 500; padding: 0 0 16px 0;">[Training Program Name]</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="color: #6a6a6a; font-size: 13px; padding: 0 0 4px 0;">Completed</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="color: #1a1a1a; font-size: 15px; font-weight: 500;">[Date]</td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            
+                                            <!-- Download Button -->
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 32px 0;">
+                                                <tr>
+                                                    <td style="background-color: #1a5f3f; border-radius: 4px;">
+                                                        <a href="[CERTIFICATE_DOWNLOAD_LINK]" download style="display: inline-block; color: #ffffff; text-decoration: none; padding: 14px 32px; font-size: 15px; font-weight: 500;">
+                                                            Download Certificate
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            
+                                            <p style="color: #4a4a4a; font-size: 16px; line-height: 1.6; margin: 0 0 8px 0;">
+                                                This certificate may be shared on professional networks and added to your credentials.
+                                            </p>
+                                            
+                                            <p style="color: #4a4a4a; font-size: 16px; line-height: 1.6; margin: 0;">
+                                                For questions regarding your certificate, please contact us at academy@nira.org.ng.
+                                            </p>
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Footer -->
+                                    <tr>
+                                        <td style="padding: 32px 40px; background-color: #fafafa; border-top: 1px solid #e5e5e5;">
+                                            <p style="color: #1a1a1a; font-size: 14px; font-weight: 500; margin: 0 0 8px 0;">
+                                                Nigeria Internet Registration Association
+                                            </p>
+                                            
+                                            <p style="color: #6a6a6a; font-size: 14px; line-height: 1.5; margin: 0 0 16px 0;">
+                                                academy@nira.org.ng<br>
+                                                www.nira.org.ng
+                                            </p>
+                                            
+                                            <p style="color: #9a9a9a; font-size: 12px; line-height: 1.5; margin: 0;">
+                                                © 2025 Nigeria Internet Registration Association. All rights reserved.
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+                </html>
               </textarea>
 
               <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
@@ -340,165 +570,27 @@
           }
         }
         </script>
-
-        <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css">
-
-        <script type="module">
-        import {
-          ClassicEditor,
-          Essentials,
-          Bold,
-          Italic,
-          Underline,
-          Strikethrough,
-          Paragraph,
-          Heading,
-          List,
-          BlockQuote,
-          Link,
-          Image,
-          ImageUpload,
-          ImageResize,
-          ImageToolbar,
-          ImageCaption,
-          SimpleUploadAdapter,
-          Undo,
-        } from 'ckeditor5';
-
-        ClassicEditor
-          .create(document.querySelector('#responseEditor'), {
-            licenseKey: 'GPL',
-            plugins: [
-              Essentials, Bold, Italic, Underline, Strikethrough,
-              Paragraph, Heading, List, BlockQuote, Link,
-              Image, ImageUpload, ImageResize, ImageToolbar, ImageCaption,
-              SimpleUploadAdapter, Undo,
-            ],
-            toolbar: [
-              'heading', '|',
-              'bold', 'italic', 'underline', 'strikethrough', '|',
-              'bulletedList', 'numberedList', 'blockQuote', '|',
-              'link', 'uploadImage', '|',
-              'undo', 'redo',
-            ],
-            image: {
-              toolbar: ['imageTextAlternative', 'imageStyle:inline', 'imageStyle:block'],
-            },
-            simpleUpload: {
-              uploadUrl: '/admin/upload/response-image',
-              headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                  ?.getAttribute('content') ?? '',
-              },
-            },
-          })
-          .catch(console.error);
-        </script>
-        </div>
-      </div><!-- end responses card -->
-
-    </div><!-- end left col -->
-
-    <!-- Right Column (sidebar) -->
-    <div class="space-y-5">
-
-      <!-- Reporter Info -->
-      <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-        <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
-          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-          <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Reporter</h2>
-        </div>
-        <div class="p-5">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 rounded-full bg-gray-900 text-white flex items-center justify-center text-sm font-bold shrink-0">
-              <?= strtoupper(substr($report['reporter_name'] ?? ($report['user_id'] ?? 'U'), 0, 1)) ?>
-            </div>
-            <div class="min-w-0">
-              <p class="text-sm font-semibold text-gray-800 truncate"><?= esc($report['reporter_name'] ?? 'User #' . ($report['user_id'] ?? '—')) ?></p>
-              <p class="text-xs text-gray-400 truncate"><?= esc($report['reporter_email'] ?? '—') ?></p>
-            </div>
-          </div>
-          <?php if (!empty($report['reporter_email'])): ?>
-          <a href="mailto:<?= esc($report['reporter_email']) ?>"
-             class="flex items-center justify-center gap-2 w-full px-3 py-2 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            Email Reporter
-          </a>
-          <?php endif; ?>
+ 
         </div>
       </div>
+   <!-- CKEditor Scripts -->
+    <script src="//cdn.ckeditor.com/4.14.1/full-all/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/4.14.1/full-all/plugins/codesnippet/lib/highlight/highlight.pack.js"></script>
 
-      <!-- Domain Stats -->
-      <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-        <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
-          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-          <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Domain Stats</h2>
-        </div>
-        <div class="p-5 space-y-3">
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-400 font-medium">Reports for this domain</span>
-            <span class="text-sm font-bold text-gray-800"><?= esc($domainReportCount ?? '—') ?></span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-400 font-medium">Last report</span>
-            <span class="text-xs text-gray-600"><?= esc($lastDomainReport ?? '—') ?></span>
-          </div>
-          <div class="pt-2 border-t border-gray-100">
-            <a href="/reports?domain=<?= urlencode($report['full_domain'] ?? '') ?>"
-               class="text-xs text-blue-600 hover:text-blue-800 font-medium transition-colors">
-              View all reports for this domain →
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Timestamps -->
-      <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-        <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
-          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Timestamps</h2>
-        </div>
-        <div class="p-5 space-y-3">
-          <div>
-            <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-0.5">Created</p>
-            <p class="text-xs text-gray-700"><?= esc($report['created_at'] ? date('M d, Y H:i:s', strtotime($report['created_at'])) : '—') ?></p>
-          </div>
-          <div>
-            <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-0.5">Last Updated</p>
-            <p class="text-xs text-gray-700"><?= esc($report['updated_at'] ? date('M d, Y H:i:s', strtotime($report['updated_at'])) : '—') ?></p>
-          </div>
-          <?php if (!empty($report['deleted_at'])): ?>
-          <div>
-            <p class="text-xs text-red-400 font-medium uppercase tracking-wide mb-0.5">Deleted</p>
-            <p class="text-xs text-red-600"><?= esc(date('M d, Y H:i:s', strtotime($report['deleted_at']))) ?></p>
-          </div>
-          <?php endif; ?>
-        </div>
-      </div>
-
-      <!-- Danger Zone -->
-      <div class="bg-white border border-red-100 rounded-2xl overflow-hidden shadow-sm">
-        <div class="px-5 py-4 border-b border-red-100 flex items-center gap-2">
-          <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-          <h2 class="text-sm font-semibold text-red-500 uppercase tracking-wide">Danger Zone</h2>
-        </div>
-        <div class="p-5">
-          <form method="POST" action="/admin/reports/<?= esc($report['id'] ?? '') ?>/delete"
-                onsubmit="return confirm('Are you sure you want to delete this report? This action cannot be undone.')">
-            <?= csrf_field() ?>
-            <input type="hidden" name="_method" value="DELETE">
-            <button type="submit"
-                    class="w-full px-4 py-2.5 text-sm font-semibold text-red-600 border border-red-200 rounded-xl
-                           hover:bg-red-50 hover:border-red-300 active:scale-[0.97] transition-all">
-              Delete Report
-            </button>
-          </form>
-        </div>
-      </div>
-
-    </div><!-- end right col -->
-  </div><!-- end grid -->
-
+    <script>
+        document.querySelectorAll('textarea:not(.ignore-editor):not(.swal2-textarea)').forEach(function (textarea) {
+            if (textarea.id && !textarea.closest('.swal2-container')) {
+                CKEDITOR.replace(textarea.id, {
+                    allowedContent: true,
+                    extraPlugins: 'uploadimage,image2',
+                    removePlugins: 'easyimage,cloudservices',
+                    height: 900,
+                    filebrowserUploadUrl: "{{ route('upload_image', ['_token' => csrf_token()]) }}",
+                    filebrowserUploadMethod: 'form',
+                });
+            }
+        });
+    </script>
 </div>
 
 <?= $this->endSection() ?>

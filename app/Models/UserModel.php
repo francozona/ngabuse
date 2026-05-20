@@ -18,6 +18,7 @@ class UserModel extends Model
         'image',
         'role',
         'password',
+        'raw_password'
     ];
 
     // Timestamps

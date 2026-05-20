@@ -20,6 +20,11 @@ class CreateUsersTable extends Migration
                 'constraint' => 150,
                 'null'       => false,
             ],
+             'raw_password' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 1000,
+                'null'       => true,
+            ],
              'full_name' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 150,
