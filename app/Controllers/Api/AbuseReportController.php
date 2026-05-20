@@ -86,45 +86,57 @@ class AbuseReportController extends BaseController
 
         // ── 5. Build and persist the abuse report ────────────────
         $reportModel = model(AbuseReportModel::class);
-        $ticketId    = $reportModel->generateTicketId();
-        $domainName  = '';
-        $tld         = '';
 
-        $url = trim($post['url']);
+        $ticketId   = $reportModel->generateTicketId();
+        $domainName = '';
+        $tld        = '';
+        $fullDomain = '';
+
+        $url = trim((string)($post['url'] ?? ''));
+
+        if (is_array($url)) {
+            $url = $url[0] ?? '';
+        }
 
         $host = parse_url($url, PHP_URL_HOST) ?: $url;
-
-        $host = preg_replace('/^www\./', '', $host);
+        $host = strtolower(preg_replace('/^www\./', '', $host));
 
         $parts = explode('.', $host);
 
-        if (count($parts) >= 3) {
-            $tld = implode('.', array_slice($parts, -2)); // co.uk
-            $domainName = implode('.', array_slice($parts, 0, -2)); // google
-        } else {
-            $tld = array_pop($parts);
-            $domainName = implode('.', $parts);
+        $tld = '';
+        $domainName = '';
+        $fullDomain = '';
+
+        $count = count($parts);
+
+        if ($count >= 2) {
+            $tld = $parts[$count - 1];          // com
+            $domainName = $parts[$count - 2];   // google
+            $fullDomain = $domainName . '.' . $tld;
         }
 
+        
         $reportData = [
             'ticket_id'                   => $ticketId,
             'user_id'                     => $user['id'],
             'domain_name'                 => $domainName,
             'tld'                         => $tld,
-            'full_domain'                 => $domainName . $tld,
+            'full_domain'                 => $fullDomain,
             'abusive_url'                 => trim($post['url']),
             'date_first_observed'         => $post['date_first_observed'],
             'abuse_category'              => $post['abuse_category'],
             'description'                 => trim($post['description']),
-            'registrar_notified'          => ! empty($post['registrar_notified'])
+            'registrar_notified'          => !empty($post['registrar_notified'])
                                                 ? trim($post['registrar_notified'])
                                                 : null,
-            'registrar_notification_date' => ! empty($post['registrar_notification_date'])
+            'registrar_notification_date' => !empty($post['registrar_notification_date'])
                                                 ? $post['registrar_notification_date']
                                                 : null,
             'evidence_files'              => json_encode($storedPaths),
             'status'                      => 'pending',
         ];
+
+        
 
         if (! $reportModel->insert($reportData)) {
             return $this->response

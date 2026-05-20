@@ -326,7 +326,7 @@
             </div>
           </div> -->
           <!-- Domain preview pill -->
-          <div x-show="form.domain_name && form.tld" class="flex items-center gap-2 mb-3">
+          <div x-show="form.url" class="flex items-center gap-2 mb-3">
             <span class="text-xs text-gray-400">Reporting:</span>
             <span class="chip">
               <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"/></svg>
@@ -445,7 +445,7 @@
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-xs text-gray-400 font-display font-semibold uppercase tracking-wide">Reporting domain</p>
-            <p class="text-sm font-display font-700 text-gray-800 truncate" x-text="form.domain_name + form.tld"></p>
+            <p class="text-sm font-display font-700 text-gray-800 truncate" x-text="form.url"></p>
           </div>
           <span class="chip shrink-0" x-text="form.abuse_category"></span>
         </div>
@@ -571,7 +571,7 @@
         <div class="text-left bg-gray-50 rounded-xl p-4 mb-6 space-y-2.5">
           <div class="flex justify-between text-sm">
             <span class="text-gray-400 font-display">Domain</span>
-            <span class="font-display font-700 text-gray-800" x-text="form.domain_name + form.tld"></span>
+            <span class="font-display font-700 text-gray-800" x-text="form.url"></span>
           </div>
           <div class="h-px bg-gray-100"></div>
           <div class="flex justify-between text-sm">
@@ -631,7 +631,7 @@ function abuseForm() {
       'Other forms of DNS Abuse': { bg: 'bg-gray-100 text-gray-700', icon: '⚠️', desc: 'Other DNS Abuse' },
     },
     form: {
-      name: '', email: '', domain_name: '', tld: '', url: '',
+      name: '', email: '', url: '',
       date_first_observed: '', abuse_category: '', description: '',
       registrar_notified: '', registrar_notification_date: ''
     },
@@ -648,10 +648,7 @@ function abuseForm() {
       const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!this.form.email.trim())        this.errors.email = 'Email is required';
       else if (!emailRe.test(this.form.email)) this.errors.email = 'Enter a valid email address';
-      if (!this.form.domain_name.trim())  this.errors.domain_name = 'Domain name is required';
-      if (!this.form.tld)                 this.errors.tld = 'Select a TLD';
       if (!this.form.url.trim())          this.errors.url = 'URL is required';
-      else if (!this.form.url.startsWith('https://')) this.errors.url = 'URL must begin with https://';
       if (!this.form.date_first_observed) this.errors.date_first_observed = 'Date is required';
       if (!this.form.abuse_category)      this.errors.abuse_category = 'Select an abuse category';
       if (!this.form.description.trim())  this.errors.description = 'Please describe the abuse';
@@ -718,8 +715,6 @@ function abuseForm() {
         // Text fields
         fd.append('name',                         this.form.name.trim());
         fd.append('email',                        this.form.email.trim());
-        fd.append('domain_name',                  this.form.domain_name.trim());
-        fd.append('tld',                          this.form.tld);
         fd.append('url',                          this.form.url.trim());
         fd.append('date_first_observed',          this.form.date_first_observed);
         fd.append('abuse_category',               this.form.abuse_category);
@@ -756,7 +751,7 @@ function abuseForm() {
             this.errors = this.mapServerErrors(json.errors);
 
             // If there are step-1 errors, take the user back
-            const step1Keys = ['name','email','domain_name','tld','url',
+            const step1Keys = ['name','email','url',
                                'date_first_observed','abuse_category','description'];
             const hasStep1Error = step1Keys.some(k => this.errors[k]);
             if (hasStep1Error) this.step = 1;
@@ -824,7 +819,7 @@ function abuseForm() {
       this.ticketId = '';
       this.showRegistrar = false;
       this.form = {
-        name: '', email: '', domain_name: '', tld: '', url: '',
+        name: '', email: '', url: '',
         date_first_observed: '', abuse_category: '', description: '',
         registrar_notified: '', registrar_notification_date: ''
       };

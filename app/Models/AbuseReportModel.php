@@ -43,9 +43,6 @@ class AbuseReportModel extends Model
     protected $validationRules = [
         'ticket_id'           => 'required|max_length[40]|is_unique[abuse_reports.ticket_id]',
         'user_id'             => 'required|integer|is_not_unique[users.id]',
-        'domain_name'         => 'required|max_length[253]',
-        'tld'                 => 'required|max_length[20]',
-        'full_domain'         => 'required|max_length[273]',
         'abusive_url'         => 'required|valid_url_strict',
         'date_first_observed' => 'required|valid_date',
         'abuse_category'      => 'required|in_list[Malware,Botnets,Phishing,Pharming,Spam,Other forms of DNS Abuse]',
