@@ -18,12 +18,7 @@
           </div>
           <p class="font-display font-800 text-3xl text-gray-900 leading-none mb-1" x-text="s.value"></p>
           <p class="text-xs text-gray-500 font-display font-600" x-text="s.label"></p>
-          <!-- Mini spark -->
-          <div class="flex items-end gap-0.5 mt-3 h-6">
-            <template x-for="(v, j) in s.spark" :key="j">
-              <div class="flex-1 rounded-sm opacity-60 transition-all" :style="`height:${v}%;background:#179e4f`"></div>
-            </template>
-          </div>
+           
         </div>
       </template>
     </div>
