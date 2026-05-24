@@ -567,14 +567,14 @@ $message = "
 
     <!-- HEADER -->
     <tr>
-        <td style='background:#179e4f;padding:30px;text-align:center;'>
+        <td style='background:#fff;padding:30px;text-align:center;'>
 
             <!-- LOGO -->
             <img src='https://nira.org.ng/wp-content/uploads/2022/01/nira-logo.fw_.png'
                  alt='NiRA Logo'
                  style='max-height:70px;margin-bottom:15px;'>
 
-            <h1 style='margin:0;color:#ffffff;font-size:22px;'>
+            <h1 style='margin:0;color:#000000;font-size:22px;'>
                 Abuse Report Update
             </h1>
 

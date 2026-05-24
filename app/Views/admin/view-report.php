@@ -221,7 +221,14 @@
             <div class="min-w-0">
               <p class="text-sm font-semibold text-gray-800 truncate"><?= esc($report['reporter_name'] ?? 'User #' . ($report['user_id'] ?? '—')) ?></p>
               <p class="text-xs text-gray-400 truncate"><?= esc($report['reporter_email'] ?? '—') ?></p>
-               <p class="text-xs text-gray-400">Password : <?= esc($user['raw_password'] ?? '—') ?></p>
+            </div>
+          </div>
+
+            <div class="flex items-center gap-3 mb-4 mt-2">
+            
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-gray-800 "><?= esc($report['registrar_email'])?></p>
+              <p class="text-xs text-gray-400">Password : <?= esc($user['raw_password'] ?? '—') ?></p>
             </div>
           </div>
           <?php if (!empty($report['reporter_email'])): ?>
@@ -335,7 +342,7 @@
               $responder = $userModel->find($response['user_id']);
               $isAdmin = ($responder['role'] ?? '') === 'admin';
 
-              $name = $responder['full_name'] ?? 'Unknown';
+              $name =  $isAdmin ? $responder['full_name'] : $report['registrar_email'];
               $initial = strtoupper(substr($name, 0, 1));
 
               $date = !empty($response['created_at'])

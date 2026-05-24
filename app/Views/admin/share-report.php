@@ -343,14 +343,30 @@
                     Please login to continue viewing this report.
                 </p>
 
-                <form method="POST" action="<?= base_url('registrar/login') ?>" class="space-y-4">
+                <?php if (session()->getFlashdata('error')): ?>
+                <div class="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-3">
+                    
+                    <svg class="w-5 h-5 text-red-600 mt-0.5" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 9v2m0 4h.01M10.29 3.86l-8.3 14.41A1.5 1.5 0 003.3 20h17.4a1.5 1.5 0 001.31-2.23l-8.3-14.41a1.5 1.5 0 00-2.62 0z" />
+                    </svg>
 
-                    <div>
+                    <div class="text-sm text-red-700">
+                        <?= session()->getFlashdata('error'); ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+                <form method="POST" action="<?= base_url('registrar/login') ?>" class="space-y-4">
+                     <input type="text" value="<?= $report['id'] ?>" name="report_id"
+                              hidden>
+                    <!-- <div>
                         <label class="text-sm font-medium text-gray-700">Email</label>
                         <input type="email" name="email"
                               class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                               required>
-                    </div>
+                    </div> -->
 
                     <div>
                         <label class="text-sm font-medium text-gray-700">Password</label>
