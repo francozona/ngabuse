@@ -231,7 +231,7 @@
                 <?= $isAdmin ? 'bg-gray-900 text-white' : 'bg-blue-100 text-blue-700' ?>">
 
                 <?php if ($hasImage): ?>
-                  <img src="<?= base_url('uploads/avatars/' . $avatar) ?>"
+                  <img src="<?= base_url($avatar) ?>"
                       class="w-full h-full object-cover"
                       alt="avatar">
                 <?php else: ?>
@@ -284,6 +284,7 @@
           </div>
           <?php endif; ?>
 
+          <?php if ($type == "registrar"): ?>
           <!-- ── Reply Box ───────────────────────────────── -->
          <div class="mt-6 pt-5 border-t border-gray-100">
            <form method="POST" action="/admin/reports/<?= esc($report['id'] ?? '') ?>/respond">
@@ -301,129 +302,12 @@
             
               <!-- CKEditor replaces this textarea -->
               <textarea name="message" id="responseEditor">
-                    <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                </head>
-                <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background-color: #f5f5f5;">
-                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f5f5f5;">
-                        <tr>
-                            <td style="padding: 40px 20px;">
-                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="margin: 0 auto; background-color: #ffffff;">
-                                    
-                                    <!-- Header -->
-                        <tr>
-                        <td style="padding: 32px 40px; vertical-align: middle;">
-                            
-                            <!-- Right-aligned logo -->
-                            <img src="<?= base_url('logo.png') ?>" 
-                                alt="NiRA" 
-                                style="height: 48px; display: inline-block; float: right;">
-
-                            <!-- Left-aligned logo -->
-                            <img src="<?= base_url('nira-logo.png') ?>" 
-                                alt="NiRA" 
-                                style="height: 48px; display: inline-block;">
-
-                        </td>
-                    </tr>
-
-
-                                    
-                                    <!-- Content -->
-                                    <tr>
-                                        <td style="padding: 48px 40px;">
-                                            <h1 style="color: #1a1a1a; font-size: 24px; font-weight: 600; margin: 0 0 24px 0; line-height: 1.3;">
-                                                Certificate of Completion
-                                            </h1>
-                                            
-                                            <p style="color: #4a4a4a; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">
-                                                Dear [Student Name],
-                                            </p>
-                                            
-                                            <p style="color: #4a4a4a; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">
-                                                This confirms your successful completion of the [Training Program Name] on [Date]. Your certificate is now available for download.
-                                            </p>
-                                            
-                                            <!-- Certificate Info Box -->
-                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 0 0 32px 0; border: 1px solid #e5e5e5; background-color: #fafafa;">
-                                                <tr>
-                                                    <td style="padding: 24px;">
-                                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                                                            <tr>
-                                                                <td style="color: #6a6a6a; font-size: 13px; padding: 0 0 4px 0;">Participant</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style="color: #1a1a1a; font-size: 15px; font-weight: 500; padding: 0 0 16px 0;">[Student Name]</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style="color: #6a6a6a; font-size: 13px; padding: 0 0 4px 0;">Program</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style="color: #1a1a1a; font-size: 15px; font-weight: 500; padding: 0 0 16px 0;">[Training Program Name]</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style="color: #6a6a6a; font-size: 13px; padding: 0 0 4px 0;">Completed</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style="color: #1a1a1a; font-size: 15px; font-weight: 500;">[Date]</td>
-                                                            </tr>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                            
-                                            <!-- Download Button -->
-                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 0 32px 0;">
-                                                <tr>
-                                                    <td style="background-color: #1a5f3f; border-radius: 4px;">
-                                                        <a href="[CERTIFICATE_DOWNLOAD_LINK]" download style="display: inline-block; color: #ffffff; text-decoration: none; padding: 14px 32px; font-size: 15px; font-weight: 500;">
-                                                            Download Certificate
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                            
-                                            <p style="color: #4a4a4a; font-size: 16px; line-height: 1.6; margin: 0 0 8px 0;">
-                                                This certificate may be shared on professional networks and added to your credentials.
-                                            </p>
-                                            
-                                            <p style="color: #4a4a4a; font-size: 16px; line-height: 1.6; margin: 0;">
-                                                For questions regarding your certificate, please contact us at academy@nira.org.ng.
-                                            </p>
-                                        </td>
-                                    </tr>
-                                    
-                                    <!-- Footer -->
-                                    <tr>
-                                        <td style="padding: 32px 40px; background-color: #fafafa; border-top: 1px solid #e5e5e5;">
-                                            <p style="color: #1a1a1a; font-size: 14px; font-weight: 500; margin: 0 0 8px 0;">
-                                                Nigeria Internet Registration Association
-                                            </p>
-                                            
-                                            <p style="color: #6a6a6a; font-size: 14px; line-height: 1.5; margin: 0 0 16px 0;">
-                                                academy@nira.org.ng<br>
-                                                www.nira.org.ng
-                                            </p>
-                                            
-                                            <p style="color: #9a9a9a; font-size: 12px; line-height: 1.5; margin: 0;">
-                                                © 2025 Nigeria Internet Registration Association. All rights reserved.
-                                            </p>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                </body>
-                </html>
+                     
               </textarea>
 
               <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
                 <label class="flex items-center gap-2 text-sm text-gray-500 cursor-pointer select-none">
-                  <input type="checkbox" name="notify_reporter" value="1"
+                  <input type="checkbox" checked name="notify_reporter" value="1"
                         class="w-4 h-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900 cursor-pointer">
                   Notify reporter via email
                 </label>
@@ -438,7 +322,54 @@
               </div>
             </form>
           </div>
+         <?php endif; ?>
 
+         <?php if ($type === "registrar" && !$auth): ?>
+
+        <div class="fixed inset-0 z-50 flex items-center justify-center">
+
+            <!-- Blur Background -->
+            <div class="absolute inset-0 bg-black/50 backdrop-blur-md"></div>
+
+            <!-- Modal -->
+            <div class="relative bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 z-10">
+
+                <h2 class="flex flex-row text-xl font-bold text-gray-800 mb-2">
+                  <img class="w-10 h-8" src="/logo.png"/>
+                    Registrar Login Required
+                </h2>
+
+                <p class="text-sm text-gray-500 mb-6">
+                    Please login to continue viewing this report.
+                </p>
+
+                <form method="POST" action="<?= base_url('registrar/login') ?>" class="space-y-4">
+
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" name="email"
+                              class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                              required>
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" name="password"
+                              class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                              required>
+                    </div>
+
+                    <button type="submit"
+                            class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 rounded-lg transition">
+                       Submit Credentials
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+
+        <?php endif; ?>
           <!-- CKEditor 5 with SimpleUploadAdapter via importmap -->
         <script type="importmap">
         {
@@ -451,7 +382,7 @@
  
         </div>
       </div>
-   <!-- CKEditor Scripts -->
+   <!-- CKEditor Scripts
     <script src="//cdn.ckeditor.com/4.14.1/full-all/ckeditor.js"></script>
     <script src="https://cdn.ckeditor.com/4.14.1/full-all/plugins/codesnippet/lib/highlight/highlight.pack.js"></script>
 
@@ -468,7 +399,51 @@
                 });
             }
         });
-    </script>
+    </script> -->
+
+    <!-- CKEditor 5 -->
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+
+<script>
+document.querySelectorAll('textarea:not(.ignore-editor):not(.swal2-textarea)').forEach(function (textarea) {
+
+    if (textarea.id && !textarea.closest('.swal2-container')) {
+
+        ClassicEditor
+            .create(textarea, {
+                ckfinder: {
+                    uploadUrl: "<?= base_url('upload-image') ?>"
+                },
+                toolbar: [
+                    'heading',
+                    '|',
+                    'bold',
+                    'italic',
+                    'link',
+                    'bulletedList',
+                    'numberedList',
+                    '|',
+                    'outdent',
+                    'indent',
+                    '|',
+                    'uploadImage',
+                    'blockQuote',
+                    'insertTable',
+                    'mediaEmbed',
+                    'undo',
+                    'redo',
+                    'codeBlock'
+                ]
+            })
+            .then(editor => {
+                console.log('Editor initialized:', textarea.id);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+});
+</script>
 </div>
 
 <?= $this->endSection() ?>

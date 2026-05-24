@@ -161,7 +161,7 @@ tailwind.config = {
 <body class="bg-slate-100 h-screen overflow-hidden flex">
 
 <!-- ════════ SIDEBAR ════════ -->
-<aside x-data="appData()" class="w-64 flex-shrink-0 flex flex-col h-screen overflow-hidden" style="background:#179e4f">
+<aside x-data="appData()" class="w-64 flex-shrink-0 flex flex-col h-screen overflow-hidden" style="background:#1f771f;">
   <!-- Logo -->
   <div class="px-5 py-6 border-b" style="border-color:rgba(255,255,255,0.2)">
     <div class="flex items-center gap-3">
@@ -171,7 +171,7 @@ tailwind.config = {
       </div>
       <div>
         <p class="font-display font-900 text-white leading-tight">NiRA .ng</p>
-        <p class="text-[14px] leading-tight" style="color:rgba(255,255,255,0.65)">.NG DNS Abuse Admin</p>
+        <p class="text-[14px] leading-tight" style="color:rgba(255,255,255,0.65)">.ng DNS Abuse Admin</p>
       </div>
     </div>
   </div>

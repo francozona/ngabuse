@@ -26,7 +26,10 @@ $routes->get('admin/login',   'AuthController::login');
 $routes->post('admin/login',  'AuthController::attempt');
 $routes->get('admin/logout',  'AuthController::logout');
 
- $routes->get('/domain-abuse/(:segment)/(:segment)', 'AbuseController::share_report/$1/$2');
+$routes->get('/domain-abuse/(:segment)/(:segment)', 'AbuseController::share_report/$1/$2');
+
+$routes->post('upload-image', 'AbuseController::uploadImage');
+$routes->post('registrar/login', 'AbuseController::authRegistrar');
 
 $routes->group('', ['namespace' => 'App\Controllers','filter' => 'auth'], function($routes) {
     /**Admin */

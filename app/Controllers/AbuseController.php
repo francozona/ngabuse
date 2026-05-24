@@ -180,14 +180,39 @@ class AbuseController extends BaseController
         ]);
     }
 
+    public function uploadImage()
+    {
+        $file = $this->request->getFile('upload');
+
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+
+            $newName = $file->getRandomName();
+
+            $file->move(FCPATH . 'uploads/', $newName);
+
+            return $this->response->setJSON([
+                'uploaded' => true,
+                'url' => base_url('uploads/' . $newName)
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'error' => [
+                'message' => 'Image upload failed'
+            ]
+        ]);
+    }
+
     public function share_report($type, $id): string
     {
         $reportModel = new \App\Models\AbuseReportModel();
 
+        $auth = session()->get('auth_registrar');
+
         $report = $reportModel->where('ticket_id', $id)->first();
 
-        if (! $report) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        if (!$report) {
+            return redirect()->back();
         }
 
         $statusMap = [
@@ -196,6 +221,8 @@ class AbuseController extends BaseController
              'resolved'     => 'ACTIONED',
              'rejected'     => 'CLOSED',
         ];
+
+        $passed = $type;
 
         $type = strtoupper($type);
 
@@ -231,6 +258,8 @@ class AbuseController extends BaseController
 
         return view('admin/share-report.php', [
             'report'            => $report,
+            'auth'              => $auth,
+            'type'              => $passed,
             'responses'         => $responses,
             'domainReportCount' => $domainReportCount,
             'lastDomainReport'  => $lastDomainReport,
@@ -246,6 +275,10 @@ class AbuseController extends BaseController
         if (! $report) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
+
+        $userModel = new \App\Models\UserModel();
+        
+        $user = $userModel->find($report['user_id']);
 
         $statusMap = [
              'pending'      => 'OPEN',
@@ -288,6 +321,7 @@ class AbuseController extends BaseController
 
         return view('admin/view-report.php', [
             'report'            => $report,
+            'user'              => $user,
             'responses'         => $responses,
             'domainReportCount' => $domainReportCount,
             'lastDomainReport'  => $lastDomainReport,
@@ -444,12 +478,22 @@ $message = "
 </html>
 ";
 
-        $emailService
-            ->setTo($user['email'])
-            ->setSubject("{$report['ticket_id']} - Ticket {$statusText}")
-            ->setMessage($message)
-            ->setMailType('html')
-            ->send();
+        try 
+        {
+
+          $emailService
+                ->setTo($user['email'])
+                ->setSubject("{$report['ticket_id']} - Ticket {$statusText}")
+                ->setMessage($message)
+                ->setMailType('html')
+                ->send();
+
+        } 
+        catch (\Throwable $e) {
+
+            log_message('error', 'Email exception: ' . $e->getMessage());
+
+        }
 
         return redirect()->back()->with('success', 'Status updated successfully.');
     }

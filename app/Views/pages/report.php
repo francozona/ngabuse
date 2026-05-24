@@ -199,7 +199,7 @@
         <img class="" src="/logo.png"/> 
     </div>
     <div>
-      <div class="nav-logo-text font-display" style="color:#179e4f;">.NG DNS ABUSE</div>
+      <div class="nav-logo-text font-display" style="color:#179e4f;">.ng DNS ABUSE</div>
     </div>
   </div>
   <div class="nav-links">

@@ -78,9 +78,11 @@ class AbuseReportController extends BaseController
 
         // ── 3. Upsert reporter into `users` ──────────────────────
         $userModel = model(UserModel::class);
+        $password = substr(str_shuffle('ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789'), 0, 8);
         $user      = $userModel->firstOrCreate(
-            trim($post['email']),
-            trim($post['name'])
+            trim($post['email']), 
+            trim($post['name']),
+            $password,
         );
 
         // ── 4. Store evidence files ──────────────────────────────
@@ -207,12 +209,12 @@ class AbuseReportController extends BaseController
 
         <!-- Header -->
         <tr>
-            <td style="background:#179e4f;padding:30px;text-align:center;">
+            <td style="background:#fff;padding:30px;text-align:center;">
             <div style="margin-bottom:15px;background:white;padding:10px;border-radius:10px;">
                 <img src="https://nira.org.ng/wp-content/uploads/2022/01/nira-logo.fw_.png"
                     alt="NiRA Logo" style="max-height:70px;">
             </div>
-            <h1 style="margin:0;color:#ffffff;font-size:24px;">Abuse Report Ticket Opened</h1>
+            <h1 style="margin:0;color:#000000;font-size:24px;">Abuse Report Ticket Opened</h1>
             </td>
         </tr>
 
@@ -279,12 +281,23 @@ class AbuseReportController extends BaseController
     </body>
     </html>';
 
-        $emailService
+        try 
+        {
+
+          $emailService
             ->setTo($post['email'])
             ->setSubject("{$ticketId} - Ticket open for your abuse report")
             ->setMessage($message)
             ->setMailType('html')
             ->send();
+
+        } 
+        catch (\Throwable $e) {
+
+            log_message('error', 'Email exception: ' . $e->getMessage());
+
+        }
+        
 
 
         $reported_domain = $fullDomain;             
@@ -301,13 +314,13 @@ $message_registrar = '
 
       <!-- Header -->
       <tr>
-        <td style="background:#179e4f;padding:30px;text-align:center;">
+        <td style="background:#fff;padding:30px;text-align:center;">
           <div style="margin-bottom:15px;background:white;padding:10px;border-radius:10px;">
             <img src="https://nira.org.ng/wp-content/uploads/2022/01/nira-logo.fw_.png"
                  alt="NiRA Logo" style="max-height:70px;">
           </div>
-          <h1 style="margin:0;color:#ffffff;font-size:24px;">New Abuse Complaint Filed</h1>
-          <p style="margin:8px 0 0 0;color:#fecaca;font-size:14px;">Action may be required on your end</p>
+          <h1 style="margin:0;color:#000000;font-size:24px;">New Abuse Complaint Filed</h1>
+          <p style="margin:8px 0 0 0;color:gray;font-size:14px;">Action may be required on your end</p>
         </td>
       </tr>
 
@@ -351,6 +364,20 @@ $message_registrar = '
 
             </td></tr>
           </table>
+
+          <p style="margin:0 0 14px 0;font-size:13px;font-weight:bold;color:#179e4f;
+                         text-transform:uppercase;letter-spacing:1px;">Login Details</p>
+            <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;color:#374151;">
+                <tr>
+                  <td style="padding:6px 0;color:#6b7280;width:40%;">Email</td>
+                  <td style="padding:6px 0;font-weight:bold;color:#111827;">' . $registrar_email. '</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0;color:#6b7280;">Password</td>
+                  <td style="padding:6px 0;font-weight:bold;color:#111827;">' . $password . '</td>
+                </tr>
+               
+              </table>
 
           <p style="font-size:15px;line-height:1.7;">
             You can view the full complaint details and update the ticket status using the button below:
@@ -406,15 +433,25 @@ $message_registrar = '
 </body>
 </html>';
 
-        $emailService
+       
+
+
+         try 
+        {
+
+          $emailService
             ->setTo($registrar_email)
             ->setSubject("{$ticketId} - New Abuse Ticket Open")
             ->setMessage($message_registrar)
             ->setMailType('html')
             ->send();
 
+        } 
+        catch (\Throwable $e) {
 
+            log_message('error', 'Email exception: ' . $e->getMessage());
 
+        }
 
         // ── 6. Success response ──────────────────────────────────
         return $this->response

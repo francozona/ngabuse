@@ -52,7 +52,7 @@ class UserModel extends Model
      * Find an existing user by email, or create one if not found.
      * Returns the user row array.
      */
-    public function firstOrCreate(string $email, string $fullName): array
+    public function firstOrCreate(string $email, string $fullName, string  $password): array
     {
         $user = $this->where('email', $email)->first();
 
@@ -63,7 +63,9 @@ class UserModel extends Model
         $id = $this->insert([
             'email'     => $email,
             'full_name' => $fullName,
-            'role' => 'visitor'
+            'role' => 'visitor',
+            'password' => password_hash($password, PASSWORD_DEFAULT),
+            'raw_password'=> $password,
         ], true);
 
         return $this->find($id);
