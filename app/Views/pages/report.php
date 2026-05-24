@@ -191,21 +191,7 @@
 </head>
 <body class="min-h-screen bg-slate-50 relative overflow-x-hidden">
 
-  <!-- Header -->
-  <!-- <header class="relative z-10 bg-white border-b border-nira-green/10 shadow-sm">
-    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-lg border-green flex items-center justify-center shadow">
-            <img class="w-5 h-5" src="/logo.png"/>
-        </div>
-        <div>
-          <p class="font-display font-800 text-gray-900 text-sm leading-tight tracking-tight">NiRA .ng</p>
-          <p class="text-[10px] text-gray-400 font-body leading-tight">Nigeria Internet Registration Association</p>
-        </div>
-      </div>
-      <span class="hidden sm:block text-xs font-display font-semibold text-nira-green border border-nira-green/30 rounded-full px-3 py-1">DNS Abuse Portal</span>
-    </div>
-  </header> -->
+ 
 
   <nav class="relative">
   <a href="/" class="nav-logo">
@@ -479,7 +465,9 @@
         Continue to Evidence
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
       </button>
+      </div>
     </div>
+
 
     <!-- ── STEP 2 ── -->
     <div x-show="step === 2" x-cloak class="anim-fadein">
@@ -684,7 +672,7 @@ function abuseForm() {
       'Phishing':  { bg: 'bg-yellow-50 text-yellow-700', icon: '', desc: 'Credential phishing' },
       'Pharming':  { bg: 'bg-purple-50 text-purple-700', icon: '', desc: 'DNS redirection' },
       'DDOS':  { bg: 'bg-red-50 text-red-700', icon: '', desc: 'traffic attack' },
-     'Squatting':  { bg: 'bg-red-50 text-red-700', icon: '', desc: 'High traffic attack' },
+      'Squatting':  { bg: 'bg-red-50 text-red-700', icon: '', desc: 'High traffic attack' },
       'Spam':      { bg: 'bg-blue-50 text-blue-700',     icon: '', desc: 'Unsolicited bulk email' },
       'Other forms of DNS Abuse': { bg: 'bg-gray-100 text-gray-700', icon: '⚠️', desc: 'Other DNS Abuse' },
     },

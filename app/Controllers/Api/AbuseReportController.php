@@ -84,13 +84,20 @@ class AbuseReportController extends BaseController
         // ── 4. Store evidence files ──────────────────────────────
         $storedPaths = $this->storeFiles();
 
+        $ngZones = [
+            'com.ng',
+            'org.ng',
+            'gov.ng',
+            'edu.ng',
+            'mobi.ng',
+            'net.ng',
+            'sch.ng',
+            'name.ng'
+        ];
         // ── 5. Build and persist the abuse report ────────────────
         $reportModel = model(AbuseReportModel::class);
 
         $ticketId   = $reportModel->generateTicketId();
-        $domainName = '';
-        $tld        = '';
-        $fullDomain = '';
 
         $url = trim((string)($post['url'] ?? ''));
 
@@ -102,17 +109,46 @@ class AbuseReportController extends BaseController
         $host = strtolower(preg_replace('/^www\./', '', $host));
 
         $parts = explode('.', $host);
-
-        $tld = '';
-        $domainName = '';
-        $fullDomain = '';
-
         $count = count($parts);
 
-        if ($count >= 2) {
-            $tld = $parts[$count - 1];          // com
-            $domainName = $parts[$count - 2];   // google
-            $fullDomain = $domainName . '.' . $tld;
+        $domainName = '';
+        $tld = '';
+        $fullDomain = '';
+        $isSubdomain = false;
+
+
+        if ($count >= 3) {
+
+            $lastTwo = $parts[$count - 2] . '.' . $parts[$count - 1];
+
+            if (in_array($lastTwo, $ngZones, true)) {
+                $tld = $lastTwo;
+                $domainName = $parts[$count - 3];
+
+                if ($count > 3) {
+                    $isSubdomain = true;
+                }
+
+                $fullDomain = $domainName . '.' . $tld;
+
+            } 
+            else {
+                
+                $tld = $parts[$count - 1];
+                $domainName = $parts[$count - 2];
+
+                if ($count > 2) {
+                    $isSubdomain = true;
+                }
+
+                $fullDomain = $domainName . '.' . $tld;
+            }
+
+        } 
+        elseif ($count === 2) {
+            $domainName = $parts[0];
+            $tld = $parts[1];
+            $fullDomain = $host;
         }
 
         
@@ -147,6 +183,10 @@ class AbuseReportController extends BaseController
                     'errors'  => $reportModel->errors(),
                 ]);
         }
+        
+
+        $url_reporter = "/domain-abuse/track/".$ticketId;
+        $url_registrar = "/domain-abuse/registrar/".$ticketId;
 
         $name = $post['name'];
         $emailService = \Config\Services::email();
@@ -212,7 +252,7 @@ class AbuseReportController extends BaseController
                             </table>
 
                             <p style="font-size:15px;line-height:1.7;">
-                               Kindly use this url to track your complaint progress.
+                               Kindly use this <a href="'.$url_reporter.'"> URL link </a> to track your complaint progress.
                             </p>
 
                             <p style="font-size:15px;line-height:1.7;">
@@ -263,6 +303,19 @@ class AbuseReportController extends BaseController
             ->setMessage($message)
             ->setMailType('html')
             ->send();
+
+
+        $message_registrar = "";
+
+        $emailService
+            ->setTo($post['email'])
+            ->setSubject("{$ticketId} - New Abuse Ticket Open")
+            ->setMessage($message_registrar)
+            ->setMailType('html')
+            ->send();
+
+
+
 
         // ── 6. Success response ──────────────────────────────────
         return $this->response

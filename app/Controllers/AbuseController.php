@@ -180,6 +180,63 @@ class AbuseController extends BaseController
         ]);
     }
 
+    public function share_report($type, $id): string
+    {
+        $reportModel = new \App\Models\AbuseReportModel();
+
+        $report = $reportModel->where('ticket_id', $id)->first();
+
+        if (! $report) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $statusMap = [
+             'pending'      => 'OPEN',
+             'under_review' => 'UNDER_REVIEW',
+             'resolved'     => 'ACTIONED',
+             'rejected'     => 'CLOSED',
+        ];
+
+        $type = strtoupper($type);
+
+        if (array_key_exists($type, $statusMap)) {
+            $reportModel->update($report['id'], [
+                'status' => $statusMap[$type],
+            ]);
+
+             $report = $reportModel->findWithReporter((int) $id);
+        }
+
+        $domainReportCount = $reportModel
+            ->where('full_domain', $report['full_domain'])
+            ->countAllResults();
+
+        $lastDomainReportRow = $reportModel
+            ->select('created_at')
+            ->where('full_domain', $report['full_domain'])
+            ->where('id !=', $report['id'])
+            ->orderBy('created_at', 'DESC')
+            ->first();
+
+        $lastDomainReport = $lastDomainReportRow
+            ? date('M d, Y', strtotime($lastDomainReportRow['created_at']))
+            : 'No other reports';
+        
+        $responseModel = new \App\Models\AbuseReportResponseModel();
+
+        $responses = $responseModel
+            ->where('report_id', $id)
+            ->orderBy('created_at', 'ASC')
+            ->findAll();
+
+        return view('admin/share-report.php', [
+            'report'            => $report,
+            'responses'         => $responses,
+            'domainReportCount' => $domainReportCount,
+            'lastDomainReport'  => $lastDomainReport,
+        ]);
+    }
+
     public function view_report($type, $id): string
     {
         $reportModel = new \App\Models\AbuseReportModel();

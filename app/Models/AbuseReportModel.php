@@ -67,17 +67,26 @@ class AbuseReportModel extends Model
      * Generate a unique ticket ID in the format:
      *   NiRA-ABUSE-YYYYMMDD-XXXX  (XXXX = zero-padded random 4-digit number)
      */
-    public function generateTicketId(): string
+   public function generateTicketId(): string
     {
-        do {
-            $date     = date('Ymd');
-            $suffix   = str_pad(random_int(1, 9999), 4, '0', STR_PAD_LEFT);
-            $ticketId = "NiRA-ABUSE-{$date}-{$suffix}";
-        } while ($this->where('ticket_id', $ticketId)->countAllResults() > 0);
+        $date   = date('Ymd');
+        $prefix = "NiRA-ABUSE-{$date}-";
 
-        return $ticketId;
+        $lastTicket = $this
+            ->where('ticket_id LIKE', $prefix . '%')
+            ->orderBy('ticket_id', 'DESC')
+            ->first();
+
+        $nextNumber = 1;
+
+        if ($lastTicket && !empty($lastTicket['ticket_id'])) {
+            $parts = explode('-', $lastTicket['ticket_id']);
+            $lastNumber = (int) end($parts);
+            $nextNumber = $lastNumber + 1;
+        }
+
+        return $prefix . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
     }
-
     // ─────────────────────────────────────────────────────────────
     // Convenience scopes
     // ─────────────────────────────────────────────────────────────

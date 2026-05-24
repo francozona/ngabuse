@@ -96,7 +96,7 @@
           <thead>
             <tr class="border-b border-slate-100 bg-slate-50/50">
               <th class="text-left text-[10px] font-display font-700 text-gray-400 uppercase tracking-wider px-5 py-3 w-8">
-                <input type="checkbox" class="rounded">
+                 
               </th>
               <th class="text-left text-[10px] font-display font-700 text-gray-400 uppercase tracking-wider px-3 py-3">Ticket ID</th>
               <th class="text-left text-[10px] font-display font-700 text-gray-400 uppercase tracking-wider px-3 py-3">Domain</th>
@@ -115,7 +115,7 @@
                   :style="`animation-delay:${i*0.04}s`"
                   @click="selectReport(r)">
                 <td class="px-5 py-3.5" @click.stop>
-                  <input type="checkbox" class="rounded">
+                   
                 </td>
                 <td class="px-3 py-3.5">
                   <span class="font-display font-700 text-xs text-nira-dark" x-text="r.ticket"></span>

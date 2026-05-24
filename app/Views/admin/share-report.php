@@ -1,4 +1,4 @@
-<?= $this->extend('shared/admin.layout.php') ?>
+<?= $this->extend('shared/report.layout.php') ?>
 
 <?= $this->section('content') ?>
 <link rel="stylesheet"
@@ -18,7 +18,8 @@
   <div class="mb-6 flex items-center justify-between">
     <div>
       <div class="flex items-center gap-2 text-sm text-gray-400 mb-1">
-        <a href="/admin/reports" class="hover:text-gray-600 transition-colors">Abuse Reports</a>
+        
+        <a href="/" class="hover:text-gray-600 transition-colors">.ng Abuse Report</a>
         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         <span class="text-gray-600 font-medium"><?= esc($report['ticket_id'] ?? 'N/A') ?></span>
       </div>
@@ -41,33 +42,11 @@
         <span class="w-1.5 h-1.5 rounded-full <?= $dotClass ?>"></span>
         <?= $statusLabel ?>
       </span>
-
-      <!-- Update Status Dropdown (Alpine.js) -->
-      <div class="relative" x-data="{ open: false }">
-        <button @click="open = !open"
-                class="inline-flex items-center gap-1.5 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors">
-          Update Status
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <div x-show="open" @click.outside="open = false"
-             class="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-xl shadow-lg z-10 overflow-hidden">
-          <?php foreach (['pending' => 'Open', 'under_review' => 'Under Review', 'resolved' => 'Actioned', 'rejected' => 'Rejected'] as $val => $label): ?>
-          <form method="POST" action="/admin/reports/<?= esc($report['id'] ?? '') ?>/status">
-            <?= csrf_field() ?>
-            <input type="hidden" name="status" value="<?= $val ?>">
-            <button type="submit"
-                    class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors <?= $status === $val ? 'font-semibold bg-gray-50' : '' ?>">
-              <?= $label ?>
-            </button>
-          </form>
-          <?php endforeach; ?>
-        </div>
-      </div>
     </div>
   </div>
 
   <!-- ── Main Grid ────────────────────────────────────────────── -->
-  <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 py-4">
+  <div class="grid grid-cols-1 gap-6 py-4">
 
     <!-- Left Column (spans 2) -->
     <div class="xl:col-span-2 space-y-5">
@@ -203,107 +182,6 @@
       
 
     </div><!-- end left col -->
-
-    <!-- Right Column (sidebar) -->
-    <div class="space-y-5">
-
-      <!-- Reporter Info -->
-      <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-        <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
-          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-          <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Reporter</h2>
-        </div>
-        <div class="p-5">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 rounded-full bg-gray-900 text-white flex items-center justify-center text-sm font-bold shrink-0">
-              <?= strtoupper(substr($report['reporter_name'] ?? ($report['user_id'] ?? 'U'), 0, 1)) ?>
-            </div>
-            <div class="min-w-0">
-              <p class="text-sm font-semibold text-gray-800 truncate"><?= esc($report['reporter_name'] ?? 'User #' . ($report['user_id'] ?? '—')) ?></p>
-              <p class="text-xs text-gray-400 truncate"><?= esc($report['reporter_email'] ?? '—') ?></p>
-            </div>
-          </div>
-          <?php if (!empty($report['reporter_email'])): ?>
-          <a href="mailto:<?= esc($report['reporter_email']) ?>"
-             class="flex items-center justify-center gap-2 w-full px-3 py-2 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            Email Reporter
-          </a>
-          <?php endif; ?>
-        </div>
-      </div>
-
-      <!-- Domain Stats -->
-      <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-        <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
-          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-          <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Domain Stats</h2>
-        </div>
-        <div class="p-5 space-y-3">
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-400 font-medium">Reports for this domain</span>
-            <span class="text-sm font-bold text-gray-800"><?= esc($domainReportCount ?? '—') ?></span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-xs text-gray-400 font-medium">Last report</span>
-            <span class="text-xs text-gray-600"><?= esc($lastDomainReport ?? '—') ?></span>
-          </div>
-          <div class="pt-2 border-t border-gray-100">
-            <a href="/reports?domain=<?= urlencode($report['full_domain'] ?? '') ?>"
-               class="text-xs text-blue-600 hover:text-blue-800 font-medium transition-colors">
-              View all reports for this domain →
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Timestamps -->
-      <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-        <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
-          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Timestamps</h2>
-        </div>
-        <div class="p-5 space-y-3">
-          <div>
-            <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-0.5">Created</p>
-            <p class="text-xs text-gray-700"><?= esc($report['created_at'] ? date('M d, Y H:i:s', strtotime($report['created_at'])) : '—') ?></p>
-          </div>
-          <div>
-            <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-0.5">Last Updated</p>
-            <p class="text-xs text-gray-700"><?= esc($report['updated_at'] ? date('M d, Y H:i:s', strtotime($report['updated_at'])) : '—') ?></p>
-          </div>
-          <?php if (!empty($report['deleted_at'])): ?>
-          <div>
-            <p class="text-xs text-red-400 font-medium uppercase tracking-wide mb-0.5">Deleted</p>
-            <p class="text-xs text-red-600"><?= esc(date('M d, Y H:i:s', strtotime($report['deleted_at']))) ?></p>
-          </div>
-          <?php endif; ?>
-        </div>
-      </div>
-
-      <!-- Danger Zone -->
-      <!-- <div class="bg-white border border-red-100 rounded-2xl overflow-hidden shadow-sm">
-        <div class="px-5 py-4 border-b border-red-100 flex items-center gap-2">
-          <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-          <h2 class="text-sm font-semibold text-red-500 uppercase tracking-wide">Danger Zone</h2>
-        </div>
-        <div class="p-5">
-          <form method="POST" action="/admin/reports/<?= esc($report['id'] ?? '') ?>/delete"
-                onsubmit="return confirm('Are you sure you want to delete this report? This action cannot be undone.')">
-            <?= csrf_field() ?>
-            <input type="hidden" name="_method" value="DELETE">
-            <button type="submit"
-                    class="w-full px-4 py-2.5 text-sm font-semibold text-red-600 border border-red-200 rounded-xl
-                           hover:bg-red-50 hover:border-red-300 active:scale-[0.97] transition-all">
-              Delete Report
-            </button>
-          </form>
-        </div>
-      </div> -->
-
-    </div><!-- end right col -->
-
-     
 
   </div><!-- end grid -->
             <!-- ── Responses / Timeline ─────────────────────────────── -->
