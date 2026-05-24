@@ -25,6 +25,12 @@ class CreateAbuseReportsTable extends Migration
                 'null'       => false,
             ],
 
+            'registrar_email' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 400,
+                'null'       => true,
+            ],
+
             // Foreign key → users.id  (reporter)
             'user_id' => [
                 'type'     => 'INT',

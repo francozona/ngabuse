@@ -17,6 +17,7 @@ class AbuseReportModel extends Model
         'user_id',
         'domain_name',
         'tld',
+        'registrar_email',
         'full_domain',
         'abusive_url',
         'date_first_observed',

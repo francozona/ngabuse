@@ -60,8 +60,10 @@ class AbuseReportController extends BaseController
                 ]);
         }
 
+
         $post = $this->request->getPost();
 
+        
         // ── 2. Validate evidence file uploads ────────────────────
         $fileErrors = $this->validateFiles();
         if ($fileErrors !== null) {
@@ -151,6 +153,7 @@ class AbuseReportController extends BaseController
             $fullDomain = $host;
         }
 
+        $registrar_email = $this->get_whois_abuse_email($fullDomain);
         
         $reportData = [
             'ticket_id'                   => $ticketId,
@@ -158,6 +161,7 @@ class AbuseReportController extends BaseController
             'domain_name'                 => $domainName,
             'tld'                         => $tld,
             'full_domain'                 => $fullDomain,
+            'registrar_email'             => $registrar_email,
             'abusive_url'                 => trim($post['url']),
             'date_first_observed'         => $post['date_first_observed'],
             'abuse_category'              => $post['abuse_category'],
@@ -185,118 +189,96 @@ class AbuseReportController extends BaseController
         }
         
 
-        $url_reporter = "/domain-abuse/track/".$ticketId;
-        $url_registrar = "/domain-abuse/registrar/".$ticketId;
 
         $name = $post['name'];
         $emailService = \Config\Services::email();
-        $message = '
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Abuse Report Ticket</title>
-</head>
-<body style="margin:0;padding:0;background:#f4f6f8;font-family:Arial,sans-serif;">
+        $base_url      = base_url();
+        $url_reporter  = $base_url . "domain-abuse/track/"     . $ticketId;
+        $url_registrar = $base_url . "domain-abuse/registrar/" . $ticketId;
 
+    $message = '
+    <!DOCTYPE html>
+    <html>
+    <head><meta charset="UTF-8"><title>Abuse Report Ticket</title></head>
+    <body style="margin:0;padding:0;background:#f4f6f8;font-family:Arial,sans-serif;">
     <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6f8;padding:30px 0;">
+    <tr><td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
+
+        <!-- Header -->
         <tr>
-            <td align="center">
-
-                <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
-
-                    <!-- Header -->
-                    <tr>
-                        <td style="background:#179e4f;padding:30px;text-align:center;">
-
-                            <!-- LOGO SPACE -->
-                            <div style="margin-bottom:15px;background:white;padding:10px;border-radius:10px;">
-                                <img src=\'https://nira.org.ng/wp-content/uploads/2022/01/nira-logo.fw_.png\' 
-                                     alt=\'NiRA Logo\' 
-                                     style=\'max-height:70px;\'>
-                            </div>
-
-                            <h1 style="margin:0;color:#ffffff;font-size:24px;">
-                                Abuse Report Ticket Opened
-                            </h1>
-
-                        </td>
-                    </tr>
-
-                    <!-- Body -->
-                    <tr>
-                        <td style="padding:40px 35px;color:#333333;">
-
-                            <p style="margin-top:0;font-size:16px;">
-                                Dear '.$name.',
-                            </p>
-
-                            <p style="font-size:15px;line-height:1.7;">
-                                Your abuse report has been successfully received and a support ticket has been opened.
-                            </p>
-
-                            <table cellpadding="0" cellspacing="0" style="margin:25px 0;width:100%;background:#f8fafc;border-radius:8px;">
-                                <tr>
-                                    <td style="padding:18px;">
-
-                                        <p style="margin:0 0 10px 0;font-size:13px;color:#6b7280;">
-                                            TICKET ID
-                                        </p>
-
-                                        <p style="margin:0;font-size:24px;font-weight:bold;color:#179e4f;">
-                                            '.$ticketId.'
-                                        </p>
-
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <p style="font-size:15px;line-height:1.7;">
-                               Kindly use this <a href="'.$url_reporter.'"> URL link </a> to track your complaint progress.
-                            </p>
-
-                            <p style="font-size:15px;line-height:1.7;">
-                                Our team will review your submission and contact you if additional information is required.
-                            </p>
-
-                            <p style="font-size:15px;line-height:1.7;">
-                                Please keep your ticket ID safe for future reference.
-                            </p>
-
-                            <div style="margin-top:35px;">
-                                <a href="https://nira.org.ng"
-                                   style="background:#179e4f;color:#ffffff;text-decoration:none;padding:14px 24px;border-radius:8px;display:inline-block;font-size:14px;font-weight:bold;">
-                                    Visit NiRA
-                                </a>
-                            </div>
-
-                        </td>
-                    </tr>
-
-                    <!-- Footer -->
-                    <tr>
-                        <td style="padding:25px 35px;background:#f9fafb;border-top:1px solid #e5e7eb;">
-
-                            <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.6;">
-                                This email was sent by the Nigeria Internet Registration Association (NiRA).
-                            </p>
-
-                            <p style="margin:10px 0 0 0;font-size:12px;color:#9ca3af;">
-                                © '.date('Y').' NiRA. All rights reserved.
-                            </p>
-
-                        </td>
-                    </tr>
-
-                </table>
-
+            <td style="background:#179e4f;padding:30px;text-align:center;">
+            <div style="margin-bottom:15px;background:white;padding:10px;border-radius:10px;">
+                <img src="https://nira.org.ng/wp-content/uploads/2022/01/nira-logo.fw_.png"
+                    alt="NiRA Logo" style="max-height:70px;">
+            </div>
+            <h1 style="margin:0;color:#ffffff;font-size:24px;">Abuse Report Ticket Opened</h1>
             </td>
         </tr>
-    </table>
 
-</body>
-</html>
-';   
+        <!-- Body -->
+        <tr>
+            <td style="padding:40px 35px;color:#333333;">
+            <p style="margin-top:0;font-size:16px;">Dear ' . $name . ',</p>
+
+            <p style="font-size:15px;line-height:1.7;">
+                Your abuse report has been successfully received and a support ticket has been opened.
+            </p>
+
+            <!-- Ticket ID box -->
+            <table cellpadding="0" cellspacing="0" style="margin:25px 0;width:100%;background:#f8fafc;border-radius:8px;border-left:4px solid #179e4f;">
+                <tr><td style="padding:18px;">
+                <p style="margin:0 0 6px 0;font-size:13px;color:#6b7280;text-transform:uppercase;letter-spacing:1px;">Ticket ID</p>
+                <p style="margin:0;font-size:26px;font-weight:bold;color:#179e4f;">' . $ticketId . '</p>
+                </td></tr>
+            </table>
+
+            <p style="font-size:15px;line-height:1.7;">
+                You can track the progress of your complaint at any time using the button below:
+            </p>
+
+            <div style="margin:25px 0;">
+                <a href="' . $url_reporter . '"
+                style="background:#179e4f;color:#ffffff;text-decoration:none;padding:14px 28px;
+                        border-radius:8px;display:inline-block;font-size:14px;font-weight:bold;">
+                Track My Complaint
+                </a>
+            </div>
+
+            <p style="font-size:15px;line-height:1.7;">
+                Our team will review your submission and reach out if additional information is required.
+                Please keep your ticket ID safe for future reference.
+            </p>
+
+            <div style="margin-top:35px;">
+                <a href="https://nira.org.ng"
+                style="background:#ffffff;color:#179e4f;text-decoration:none;padding:12px 24px;
+                        border-radius:8px;display:inline-block;font-size:14px;font-weight:bold;
+                        border:2px solid #179e4f;">
+                Visit NiRA
+                </a>
+            </div>
+            </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+            <td style="padding:25px 35px;background:#f9fafb;border-top:1px solid #e5e7eb;">
+            <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.6;">
+                This email was sent by the Nigeria Internet Registration Association (NiRA).
+            </p>
+            <p style="margin:10px 0 0 0;font-size:12px;color:#9ca3af;">
+                © ' . date('Y') . ' NiRA. All rights reserved.
+            </p>
+            </td>
+        </tr>
+
+        </table>
+    </td></tr>
+    </table>
+    </body>
+    </html>';
+
         $emailService
             ->setTo($post['email'])
             ->setSubject("{$ticketId} - Ticket open for your abuse report")
@@ -305,10 +287,127 @@ class AbuseReportController extends BaseController
             ->send();
 
 
-        $message_registrar = "";
+        $reported_domain = $fullDomain;             
+        $abuse_category  = $post['abuse_type'] ?? 'Abuse';  
+
+$message_registrar = '
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>New Abuse Complaint</title></head>
+<body style="margin:0;padding:0;background:#f4f6f8;font-family:Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6f8;padding:30px 0;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
+
+      <!-- Header -->
+      <tr>
+        <td style="background:#b91c1c;padding:30px;text-align:center;">
+          <div style="margin-bottom:15px;background:white;padding:10px;border-radius:10px;">
+            <img src="https://nira.org.ng/wp-content/uploads/2022/01/nira-logo.fw_.png"
+                 alt="NiRA Logo" style="max-height:70px;">
+          </div>
+          <h1 style="margin:0;color:#ffffff;font-size:24px;">New Abuse Complaint Filed</h1>
+          <p style="margin:8px 0 0 0;color:#fecaca;font-size:14px;">Action may be required on your end</p>
+        </td>
+      </tr>
+
+      <!-- Body -->
+      <tr>
+        <td style="padding:40px 35px;color:#333333;">
+
+          <p style="margin-top:0;font-size:16px;">Dear Registrar,</p>
+
+          <p style="font-size:15px;line-height:1.7;">
+            A domain abuse complaint has been submitted to NiRA regarding a domain registered under your account.
+            Please review the details below and take appropriate action within <strong>5 business days</strong>.
+          </p>
+
+          <!-- Complaint details box -->
+          <table cellpadding="0" cellspacing="0" style="margin:25px 0;width:100%;background:#fef2f2;
+                 border-radius:8px;border-left:4px solid #b91c1c;">
+            <tr><td style="padding:20px;">
+
+              <p style="margin:0 0 14px 0;font-size:13px;font-weight:bold;color:#b91c1c;
+                         text-transform:uppercase;letter-spacing:1px;">Complaint Details</p>
+
+              <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;color:#374151;">
+                <tr>
+                  <td style="padding:6px 0;color:#6b7280;width:40%;">Ticket ID</td>
+                  <td style="padding:6px 0;font-weight:bold;color:#111827;">' . $ticketId . '</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0;color:#6b7280;">Reported Domain</td>
+                  <td style="padding:6px 0;font-weight:bold;color:#111827;">' . $reported_domain . '</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0;color:#6b7280;">Abuse Category</td>
+                  <td style="padding:6px 0;font-weight:bold;color:#111827;">' . $abuse_category . '</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0;color:#6b7280;">Date Filed</td>
+                  <td style="padding:6px 0;font-weight:bold;color:#111827;">' . date('d M Y, H:i') . ' UTC</td>
+                </tr>
+              </table>
+
+            </td></tr>
+          </table>
+
+          <p style="font-size:15px;line-height:1.7;">
+            You can view the full complaint details and update the ticket status using the button below:
+          </p>
+
+          <div style="margin:25px 0;">
+            <a href="' . $url_registrar . '"
+               style="background:#b91c1c;color:#ffffff;text-decoration:none;padding:14px 28px;
+                      border-radius:8px;display:inline-block;font-size:14px;font-weight:bold;">
+              View Complaint &amp; Respond
+            </a>
+          </div>
+
+          <!-- What to do box -->
+          <table cellpadding="0" cellspacing="0" style="margin:25px 0;width:100%;background:#f8fafc;
+                 border-radius:8px;border:1px solid #e5e7eb;">
+            <tr><td style="padding:20px;">
+              <p style="margin:0 0 12px 0;font-size:13px;font-weight:bold;color:#374151;
+                         text-transform:uppercase;letter-spacing:1px;">Expected Actions</p>
+              <ul style="margin:0;padding-left:18px;font-size:14px;color:#374151;line-height:2;">
+                <li>Investigate the reported domain for the alleged abuse</li>
+                <li>Notify or suspend the domain registrant if abuse is confirmed</li>
+                <li>Update the ticket status on the NiRA Abuse Portal</li>
+                <li>Contact NiRA if you require further information</li>
+              </ul>
+            </td></tr>
+          </table>
+
+          <p style="font-size:14px;line-height:1.7;color:#6b7280;">
+            Failure to respond within the stipulated timeframe may result in NiRA taking direct registry-level action
+            on the reported domain in accordance with the NiRA Abuse Policy.
+          </p>
+
+        </td>
+      </tr>
+
+      <!-- Footer -->
+      <tr>
+        <td style="padding:25px 35px;background:#f9fafb;border-top:1px solid #e5e7eb;">
+          <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.6;">
+            This notification was sent by the Nigeria Internet Registration Association (NiRA) Abuse Management System.
+          </p>
+          <p style="margin:6px 0 0 0;font-size:12px;color:#9ca3af;">
+            © ' . date('Y') . ' NiRA. All rights reserved. &nbsp;|&nbsp;
+            <a href="https://nira.org.ng" style="color:#9ca3af;">nira.org.ng</a>
+          </p>
+        </td>
+      </tr>
+
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>';
 
         $emailService
-            ->setTo($post['email'])
+            ->setTo($registrar_email)
             ->setSubject("{$ticketId} - New Abuse Ticket Open")
             ->setMessage($message_registrar)
             ->setMailType('html')
@@ -447,5 +546,80 @@ class AbuseReportController extends BaseController
         }
 
         return $storedPaths;
+    }
+
+    /**
+     * Query the NiRA RDAP endpoint and return the Registrar Abuse Contact Email.
+     * 
+     * RDAP path: https://whois.nic.net.ng/domain/{domain}
+     * Abuse email lives at: entities[registrar] -> entities[abuse] -> vcardArray email
+     *
+     * @param  string $domain  e.g. "eventbox.ng"
+     * @return string|null     Abuse email, or null on failure
+     */
+    public function get_whois_abuse_email(string $domain): ?string
+    {
+        $domain = strtolower(trim($domain));
+        $url    = "https://whois.nic.net.ng/domain/{$domain}";
+
+        // Use CI's built-in curl or file_get_contents with context
+        $context = stream_context_create([
+            'http' => [
+                'method'  => 'GET',
+                'header'  => "Accept: application/rdap+json\r\n",
+                'timeout' => 10,
+            ],
+            'ssl' => [
+                'verify_peer'      => true,
+                'verify_peer_name' => true,
+            ],
+        ]);
+
+        $raw = @file_get_contents($url, false, $context);
+
+        if ($raw === false) {
+            log_message('error', "RDAP: failed to fetch {$url}");
+            return null;
+        }
+
+        $data = json_decode($raw, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE || empty($data['entities'])) {
+            log_message('error', "RDAP: invalid JSON or missing entities for {$domain}");
+            return null;
+        }
+
+        // Walk top-level entities to find the registrar
+        foreach ($data['entities'] as $entity) {
+            $roles = $entity['roles'] ?? [];
+
+            if (! in_array('registrar', $roles, true)) {
+                continue;
+            }
+
+            // Inside the registrar entity, find the abuse sub-entity
+            foreach ($entity['entities'] ?? [] as $sub_entity) {
+                $sub_roles = $sub_entity['roles'] ?? [];
+
+                if (! in_array('abuse', $sub_roles, true)) {
+                    continue;
+                }
+
+                // Extract email from vcardArray
+                // vcardArray[1] is an array of vcard properties
+                foreach ($sub_entity['vcardArray'][1] ?? [] as $vcard_prop) {
+                    // Each prop: [ "type", {params}, "value_type", "value" ]
+                    if (isset($vcard_prop[0], $vcard_prop[3])
+                        && $vcard_prop[0] === 'email'
+                        && filter_var($vcard_prop[3], FILTER_VALIDATE_EMAIL)
+                    ) {
+                        return $vcard_prop[3]; // e.g. "abuseteam@whogohost.com"
+                    }
+                }
+            }
+        }
+
+        log_message('info', "RDAP: no abuse email found for {$domain}");
+        return null;
     }
 }
