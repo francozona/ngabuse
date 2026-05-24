@@ -294,14 +294,14 @@ $message_registrar = '
 <!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"><title>New Abuse Complaint</title></head>
-<body style="margin:0;padding:0;background:#f4f6f8;font-family:Arial,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6f8;padding:30px 0;">
+<body style="margin:0;padding:0;background:#fff;font-family:Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#fff;padding:30px 0;">
   <tr><td align="center">
     <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
 
       <!-- Header -->
       <tr>
-        <td style="background:#b91c1c;padding:30px;text-align:center;">
+        <td style="background:#179e4f;padding:30px;text-align:center;">
           <div style="margin-bottom:15px;background:white;padding:10px;border-radius:10px;">
             <img src="https://nira.org.ng/wp-content/uploads/2022/01/nira-logo.fw_.png"
                  alt="NiRA Logo" style="max-height:70px;">
@@ -324,10 +324,10 @@ $message_registrar = '
 
           <!-- Complaint details box -->
           <table cellpadding="0" cellspacing="0" style="margin:25px 0;width:100%;background:#fef2f2;
-                 border-radius:8px;border-left:4px solid #b91c1c;">
+                 border-radius:8px;border-left:4px solid #179e4f;">
             <tr><td style="padding:20px;">
 
-              <p style="margin:0 0 14px 0;font-size:13px;font-weight:bold;color:#b91c1c;
+              <p style="margin:0 0 14px 0;font-size:13px;font-weight:bold;color:#179e4f;
                          text-transform:uppercase;letter-spacing:1px;">Complaint Details</p>
 
               <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;color:#374151;">
@@ -358,7 +358,7 @@ $message_registrar = '
 
           <div style="margin:25px 0;">
             <a href="' . $url_registrar . '"
-               style="background:#b91c1c;color:#ffffff;text-decoration:none;padding:14px 28px;
+               style="background:#179e4f;color:#ffffff;text-decoration:none;padding:14px 28px;
                       border-radius:8px;display:inline-block;font-size:14px;font-weight:bold;">
               View Complaint &amp; Respond
             </a>
