@@ -213,7 +213,7 @@
         <img class="" src="/logo.png"/> 
     </div>
     <div>
-      <div class="nav-logo-text font-display" style="color:#179e4f;">DNS ABUSE</div>
+      <div class="nav-logo-text font-display" style="color:#179e4f;">.NG DNS ABUSE</div>
     </div>
   </div>
   <div class="nav-links">
@@ -334,19 +334,56 @@
             </span>
           </div>
           <!-- URL -->
-          <div class="floating-label-group mb-3">
-            <input type="url" x-model="form.url" placeholder=" "
-              class="w-full border border-gray-200 rounded-xl bg-white px-3.5 text-sm text-gray-800 transition-all"
-              :class="errors.url ? 'border-red-400' : ''">
+         <div class="floating-label-group mb-3"
+            x-data="{
+                isValidNgUrl(url) {
+                    try {
+                        const parsed = new URL(url);
+ 
+                        return parsed.hostname.toLowerCase().includes('.ng');
+                    } 
+                    catch {
+                        return false;
+                    }
+                }
+            }">
+
+            <input
+                type="url"
+                x-model="form.url"
+                placeholder=" "
+                class="w-full border border-gray-200 rounded-xl bg-white px-3.5 text-sm text-gray-800 transition-all"
+                :class="errors.url ? 'border-red-400' : ''"
+                @input="
+                    if(form.url && !isValidNgUrl(form.url)) {
+                        errors.url = 'Only .ng domains or subdomains are allowed';
+                    } else {
+                        errors.url = '';
+                    }
+                "
+            >
+
             <label>Abusive URL * (https://…)</label>
-            <p x-show="errors.url" class="text-xs text-red-500 mt-1 ml-1" x-text="errors.url"></p>
-          </div>
+
+            <p
+                x-show="errors.url"
+                class="text-xs text-red-500 mt-1 ml-1"
+                x-text="errors.url">
+            </p>
+        </div>
         </div>
 
         <!-- Abuse Section -->
         <div class="mb-6">
-          <p class="text-[11px] font-display font-700 text-nira-green uppercase tracking-widest mb-3 flex items-center gap-2">
-           Abuse Details
+          <p class="text-[11px] flex font-display font-700 text-nira-green uppercase tracking-widest mb-3 flex items-center gap-2">
+           Abuse Details &nbsp; <!-- Category badge -->
+          <div x-show="form.abuse_category" class="mb-2">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold"
+                 :class="categoryMeta[form.abuse_category]?.bg || 'bg-gray-100 text-gray-700'">
+              <span x-text="categoryMeta[form.abuse_category]?.icon"></span>
+              <span x-text="categoryMeta[form.abuse_category]?.desc || form.abuse_category"></span>
+            </div>
+          </div>
           </p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
             <!-- Date observed -->
@@ -360,41 +397,60 @@
             </div>
             <!-- Category -->
             <div class="floating-label-group">
+    
               <select x-model="form.abuse_category"
-                class="w-full border border-gray-200 rounded-xl bg-white px-3.5 text-sm text-gray-800 transition-all appearance-none"
-                :class="errors.abuse_category ? 'border-red-400' : ''">
-                <option value=""></option>
-                <template x-for="c in categories" :key="c">
-                  <option :value="c" x-text="c"></option>
-                </template>
+                  class="w-full border border-gray-200 rounded-xl bg-white px-3.5 text-sm text-gray-800 transition-all appearance-none"
+                  :class="errors.abuse_category ? 'border-red-400' : ''">
+
+                  <option value=""></option>
+
+                  <template x-for="c in categories" :key="c">
+                      <option :value="c" x-text="c"></option>
+                  </template>
               </select>
+
               <label>Abuse Category *</label>
+
               <div class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2">
-                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                  </svg>
               </div>
-              <p x-show="errors.abuse_category" class="text-xs text-red-500 mt-1 ml-1" x-text="errors.abuse_category"></p>
-            </div>
+
+              <p x-show="errors.abuse_category"
+                class="text-xs text-red-500 mt-1 ml-1"
+                x-text="errors.abuse_category">
+              </p>
           </div>
 
-          <!-- Category badge -->
-          <div x-show="form.abuse_category" class="mb-3">
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold"
-                 :class="categoryMeta[form.abuse_category]?.bg || 'bg-gray-100 text-gray-700'">
-              <span x-text="categoryMeta[form.abuse_category]?.icon"></span>
-              <span x-text="categoryMeta[form.abuse_category]?.desc || form.abuse_category"></span>
-            </div>
+          <!-- Show extra input -->
+          <div class="floating-label-group mt-3"
+              x-show="form.abuse_category === 'Other forms of DNS Abuse'"
+              x-transition>
+
+              <input
+                  type="text"
+                  placeholder=" "
+                  x-model="form.other_abuse_category"
+                  @input="form.abuse_category = form.other_abuse_category"
+                  class="w-full border border-gray-200 rounded-xl bg-white px-3.5 text-sm text-gray-800 transition-all"
+              >
+
+              <label>Specify DNS Abuse Type *</label>
           </div>
 
+         
+
+        
+        </div>
           <!-- Description -->
-          <div class="floating-label-group">
+          <div class="floating-label-group mb-3">
             <textarea x-model="form.description" rows="3" placeholder=" "
               class="w-full border border-gray-200 rounded-xl bg-white px-3.5 text-sm text-gray-800 transition-all resize-none"
               :class="errors.description ? 'border-red-400' : ''"></textarea>
             <label>Description of Abuse Activity *</label>
             <p x-show="errors.description" class="text-xs text-red-500 mt-1 ml-1" x-text="errors.description"></p>
           </div>
-        </div>
-
         <!-- Optional Registrar Section -->
         <div>
           <button @click="showRegistrar = !showRegistrar"
@@ -595,10 +651,10 @@
             class="flex-1 border border-nira-green/30 text-nira-green hover:bg-nira-xlight font-display font-700 rounded-xl py-3.5 text-sm transition-all">
             Submit Another Report
           </button>
-          <a href="https://register.ng" target="_blank"
+          <!-- <a href="https://register.ng" target="_blank"
             class="flex-1 bg-nira-green hover:bg-nira-dark text-white font-display font-700 rounded-xl py-3.5 text-sm flex items-center justify-center transition-all shadow-md shadow-nira-green/30">
             Back to NiRA
-          </a>
+          </a> -->
         </div>
       </div>
     </div>
@@ -607,7 +663,7 @@
 
   <!-- Footer -->
   <footer class="relative z-10 text-center py-8 text-xs text-gray-400 font-body">
-    © 2026 Nigeria Internet Registration Association (NiRA) · <a href="https://register.ng" class="hover:text-nira-green transition-colors">register.ng</a>
+    © 2026 Nigeria Internet Registration Association (NiRA) 
   </footer>
 
 <script>
@@ -621,17 +677,19 @@ function abuseForm() {
     today: new Date().toISOString().split('T')[0],
     steps: ['Domain Details', 'Upload Evidence', 'Confirmation'],
     tlds: ['.ng', '.com.ng', '.org.ng', '.gov.ng', '.edu.ng', '.net.ng', '.sch.ng', '.name.ng', '.mobi.ng', '.mil.ng', '.i.ng'],
-    categories: ['Malware', 'Botnets', 'Phishing', 'Pharming', 'Spam', 'Other forms of DNS Abuse'],
+    categories: ['Malware', 'Botnets', 'Phishing', 'Pharming', 'Squatting (cyber/typo)','DDOS', 'Spam', 'Other forms of DNS Abuse'],
     categoryMeta: {
-      'Malware':   { bg: 'bg-red-50 text-red-700',       icon: '🦠', desc: 'Malicious software' },
-      'Botnets':   { bg: 'bg-orange-50 text-orange-700', icon: '🤖', desc: 'Botnet infrastructure' },
-      'Phishing':  { bg: 'bg-yellow-50 text-yellow-700', icon: '🎣', desc: 'Credential phishing' },
-      'Pharming':  { bg: 'bg-purple-50 text-purple-700', icon: '🔀', desc: 'DNS redirection' },
-      'Spam':      { bg: 'bg-blue-50 text-blue-700',     icon: '📨', desc: 'Unsolicited bulk email' },
+      'Malware':   { bg: 'bg-red-50 text-red-700',       icon: '', desc: 'Malicious software' },
+      'Botnets':   { bg: 'bg-orange-50 text-orange-700', icon: '', desc: 'Botnet infrastructure' },
+      'Phishing':  { bg: 'bg-yellow-50 text-yellow-700', icon: '', desc: 'Credential phishing' },
+      'Pharming':  { bg: 'bg-purple-50 text-purple-700', icon: '', desc: 'DNS redirection' },
+      'DDOS':  { bg: 'bg-red-50 text-red-700', icon: '', desc: 'traffic attack' },
+     'Squatting':  { bg: 'bg-red-50 text-red-700', icon: '', desc: 'High traffic attack' },
+      'Spam':      { bg: 'bg-blue-50 text-blue-700',     icon: '', desc: 'Unsolicited bulk email' },
       'Other forms of DNS Abuse': { bg: 'bg-gray-100 text-gray-700', icon: '⚠️', desc: 'Other DNS Abuse' },
     },
     form: {
-      name: '', email: '', url: '',
+      name: '', email: '', url: '', 
       date_first_observed: '', abuse_category: '', description: '',
       registrar_notified: '', registrar_notification_date: ''
     },

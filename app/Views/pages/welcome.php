@@ -489,14 +489,14 @@ section{padding:100px 6vw}
   transition:border-color .2s,box-shadow .2s;
 }
 .step-card:hover{border-color:var(--g);box-shadow:0 8px 30px rgba(23,158,79,0.1)}
-.step-card:first-child{
+/* .step-card:first-child{
   grid-column:span 2;
   background:var(--ink);
   border-color:transparent;
 }
 .step-card:first-child .step-num{color:rgba(255,255,255,0.15)}
 .step-card:first-child .step-title{color:#fff}
-.step-card:first-child .step-body{color:rgba(255,255,255,0.5)}
+.step-card:first-child .step-body{color:rgba(255,255,255,0.5)} */
 .step-num{
   font-family:'DM Mono',monospace;font-weight:500;
   font-size:48px;color:var(--line);
@@ -514,7 +514,7 @@ section{padding:100px 6vw}
   display:flex;align-items:center;justify-content:center;
   font-size:18px;
 }
-.step-card:first-child .step-icon{background:rgba(255,255,255,0.07)}
+ 
 
 /* ─── REGISTRARS ─── */
 .reg-section{background:var(--ink)}
@@ -645,7 +645,7 @@ footer{
         <img class="" src="/logo.png"/> 
     </div>
     <div>
-      <div class="nav-logo-text font-display">DNS ABUSE</div>
+      <div class="nav-logo-text font-display">.NG DNS ABUSE</div>
     </div>
   </a>
   <div class="nav-links">
@@ -663,14 +663,11 @@ footer{
 <!-- ══ HERO ══ -->
 <section class="hero">
   <div class="hero-left">
-    <div class="hero-badge">
-      <div class="hero-badge-dot"></div>
-      <span>Official .ng Domain Authority</span>
-    </div>
+     
     <h1 class="hero-h1 font-display">
-      Nigeria's<br>
-      <em>Internet</em><br>
-      Identity Hub
+      Your<br>
+      <em>Nigerian</em><br>
+      Identity Online
     </h1>
     <p class="hero-desc">
       NiRA manages the .ng country-code top-level domain, enforces internet policy across Nigeria, and operates a dedicated portal to report and eliminate DNS abuse under the .ng namespace.
@@ -830,31 +827,7 @@ footer{
   </div>
 </section> 
  
-<!-- ══ ROLES ══ -->
-<section class="roles-section">
-  <div class="reveal">
-    <div class="section-tag font-mono">What We Do</div>
-    <h2 class="section-h2 font-display">Registry, Policy<br>& Protection</h2>
-    <p class="section-lead" style="max-width:520px">NiRA operates across three critical pillars that collectively safeguard Nigeria's internet identity and the millions of people who rely on .ng domains daily.</p>
-  </div>
-  <div class="roles-grid">
-    <div class="role-card reveal">
-      <div class="role-icon">🌐</div>
-      <div class="role-title font-display">Domain Registry</div>
-      <p class="role-desc">NiRA maintains the authoritative registry database for all .ng second-level domains. We coordinate with accredited registrars to ensure every registration is valid, properly delegated, and correctly routed through the global DNS.</p>
-    </div>
-    <div class="role-card reveal">
-      <div class="role-icon">⚖️</div>
-      <div class="role-title font-display">Policy Governance</div>
-      <p class="role-desc">We formulate and enforce registration policies, dispute-resolution procedures, and compliance frameworks in alignment with ICANN guidelines. NiRA ensures the .ng namespace operates under a fair, transparent rules-based system.</p>
-    </div>
-    <div class="role-card reveal">
-      <div class="role-icon">🛡️</div>
-      <div class="role-title font-display">Abuse Prevention</div>
-      <p class="role-desc">Through this DNS Abuse Portal, NiRA investigates reports of malicious activity on .ng domains — including phishing, malware, botnets, and pharming — and works with registrars to suspend or remediate offending domains promptly.</p>
-    </div>
-  </div>
-</section>
+ 
 
 <!-- ══ HOW IT WORKS ══ -->
 <section id="how" class="how-section">
@@ -920,7 +893,7 @@ footer{
           How long does it take to resolve a report?
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
         </div>
-        <div class="faq-a">NiRA investigate reports within one business day. Once forwarded to the registrar, the response timeline depends on the severity: critical abuse (active phishing, malware) is typically escalated for action within 24–48 hours; other cases may take up to 5 business days.</div>
+        <div class="faq-a">NiRA investigate reports within one business day. Once forwarded to the registrar, the response timeline depends on the severity: critical abuse (active phishing, malware) is typically escalated for action within 24–48 hours.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q font-display">
@@ -941,7 +914,7 @@ footer{
           Will the domain registrant know I reported them?
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
         </div>
-        <div class="faq-a">Your personal details are never shared with the registrant. NiRA communicates with the registrar — not the domain owner — and your identity is treated as confidential throughout the investigation process.</div>
+        <div class="faq-a">Your personal information as a reporter is never shared publicly</div>
       </div>
     </div>
     <div class="faq-contact reveal">

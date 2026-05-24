@@ -62,7 +62,7 @@
 
                     <div>
                         <h1 class="font-display text-3xl font-bold tracking-tight">
-                            DNS Abuse Management
+                            .NG DNS Abuse
                         </h1>
 
                         <p class="text-green-100/60 text-sm mt-1">
@@ -84,17 +84,7 @@
                 </div>
             </div>
 
-            <!-- Footer -->
-            <div class="flex items-center gap-6 text-sm text-green-50/40">
-                <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-                    Secure Session
-                </div>
-
-                <div>256-bit Encryption</div>
-
-                <div>NiRA Internal Network</div>
-            </div>
+             
         </div>
     </div>
 
