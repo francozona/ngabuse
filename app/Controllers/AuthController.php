@@ -42,6 +42,9 @@ class AuthController extends BaseController
             'registrar_id'   => $user['id']
         ]);
 
+        session()->markAsTempdata('auth_registrar', 600);
+        session()->markAsTempdata('registrar_id', 600);
+
         return redirect()->to('/domain-abuse/registrar/'.$report['ticket_id'])->with('success', 'Login successful');
     }
     public function login()

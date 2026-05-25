@@ -99,7 +99,7 @@
             <label class="block text-xs font-medium text-gray-600 mb-1">Profile Image</label>
             <?php if (!empty($editUser['image'])): ?>
               <div class="flex items-center gap-3 mb-2">
-                <img src="/uploads/users/<?= esc($editUser['image']) ?>"
+                <img src="<?= esc($editUser['image']) ?>"
                      class="h-10 w-10 rounded-full object-cover border border-gray-200" alt="">
                 <span class="text-xs text-gray-400">Current image</span>
               </div>
@@ -164,7 +164,7 @@
                     <td class="px-6 py-3">
                       <div class="flex items-center gap-3">
                         <?php if (!empty($user['image'])): ?>
-                          <img src="/uploads/users/<?= esc($user['image']) ?>"
+                          <img src="<?= esc($user['image']) ?>"
                                class="h-8 w-8 rounded-full object-cover border border-gray-200 shrink-0" alt="">
                         <?php else: ?>
                           <div class="h-8 w-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold shrink-0">

@@ -110,33 +110,7 @@
         </div>
       </div>
 
-      <!-- Registrar Notification Card -->
-      <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-        <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
-          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-          <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Registrar Notification</h2>
-        </div>
-        <div class="p-5 grid grid-cols-2 gap-4">
-          <div>
-            <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-1">Registrar Notified?</p>
-            <?php if (!empty($report['registrar_notified'])): ?>
-              <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                Yes
-              </span>
-            <?php else: ?>
-              <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-400">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                No
-              </span>
-            <?php endif; ?>
-          </div>
-          <div>
-            <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-1">Notification Date</p>
-            <p class="text-sm text-gray-800"><?= esc($report['registrar_notification_date'] ? date('M d, Y', strtotime($report['registrar_notification_date'])) : '—') ?></p>
-          </div>
-        </div>
-      </div>
+      
 
       <!-- Evidence Files Card -->
     <?php

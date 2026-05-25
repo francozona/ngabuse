@@ -2,6 +2,7 @@
 $image = session()->get('admin_image');
 $name  = session()->get('admin_name') ?? 'Admin';
 $email = session()->get('admin_email') ?? '';
+$role = session()->get('admin_role') ?? '';
  $uri = service('uri')->getSegment(1); 
 function active($path, $uri) {
     return $path === $uri ? 'active' : '';
@@ -34,7 +35,7 @@ foreach ($statusCounts as $row) {
 <meta charset="UTF-8"/>
 <meta name="csrf-token" content="<?= csrf_hash() ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>NiRA — Abuse Reports Dashboard</title>
+<title>NiRA - Abuse Reports Dashboard</title>
 <link rel="icon" href="/logo.png" type="image/png" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -227,13 +228,7 @@ tailwind.config = {
             <span class="w-2 h-2 rounded-full flex-shrink-0" style="background:#10b981"></span>
 
             <span>Actioned</span>
-
-            <?php if ($counts['resolved'] > 0): ?>
-                <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full"
-                      style="background:#e4f5ec;color:#0d6b35">
-                    <?= $counts['resolved'] ?>
-                </span>
-            <?php endif; ?>
+  
 
         </a>
 
@@ -255,10 +250,13 @@ tailwind.config = {
    
 
     <p class="text-[9px] font-display font-700 uppercase tracking-widest px-3 mt-4 mb-2" style="color:#9dbda8">Admin</p>
+    <?php if ($role == 'admin'): ?>
     <a href="/admin/users" class="sidebar-item  <?= active('admin', $uri) ?>">
       <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
       Users
     </a>
+    <?php endif; ?>
+
     <a href="/admin/logout" class="sidebar-item">
    <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
     Logout

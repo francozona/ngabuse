@@ -15,6 +15,10 @@ class UserController extends BaseController
 
     public function users(): string
     {
+        $role = session()->get('admin_role') ?? '';
+
+        if($role !== 'admin') return redirect()->back();
+
         return view('admin/users.php', [
             'users'    => $this->userModel->where('role !=', 'visitor')->orderBy('created_at', 'DESC')->findAll(),
             'editUser' => null,
@@ -24,13 +28,17 @@ class UserController extends BaseController
 
     public function edit(int $id)
     {
+         $role = session()->get('admin_role') ?? '';
+
+        if($role !== 'admin') return redirect()->back();
+
         $user = $this->userModel->find($id);
         if (!$user) {
             return redirect()->to('/admin/users')->with('error', 'User not found.');
         }
 
         return view('admin/users.php', [
-            'users'    => $this->userModel->orderBy('created_at', 'DESC')->findAll(),
+            'users'    => $this->userModel->where('role !=', 'visitor')->orderBy('created_at', 'DESC')->findAll(),
             'editUser' => $user,
             'errors'   => [],
         ]);
@@ -38,6 +46,10 @@ class UserController extends BaseController
 
     public function save()
     {
+         $role = session()->get('admin_role') ?? '';
+
+        if($role !== 'admin') return redirect()->back();
+
         $id       = $this->request->getPost('id');
         $isUpdate = !empty($id);
 
@@ -89,6 +101,10 @@ class UserController extends BaseController
 
     public function delete(int $id)
     {
+         $role = session()->get('admin_role') ?? '';
+
+        if($role !== 'admin') return redirect()->back();
+        
         $this->userModel->delete($id);
         return redirect()->to('/admin/users')->with('success', 'User deleted.');
     }

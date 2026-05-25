@@ -44,7 +44,7 @@ $routes->group('', ['namespace' => 'App\Controllers','filter' => 'auth'], functi
     $routes->get('admin/users',          'UserController::users');
     $routes->post('admin/users/save',    'UserController::save');
     $routes->get('admin/users/edit/(:num)', 'UserController::edit/$1');
-    $routes->post('admin/users/delete/(:num)', 'UserController::delete/$1');
+    //$routes->post('admin/users/delete/(:num)', 'UserController::delete/$1');
 
 });
 

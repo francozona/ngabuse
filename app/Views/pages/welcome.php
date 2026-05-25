@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>NiRA Abuse Manager — Nigeria Internet Registration Association</title>
+<title>NiRA Abuse Manager - Nigeria Internet Registration Association</title>
 <link rel="icon" href="/logo.png" type="image/png" />
  <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -670,7 +670,7 @@ footer{
       Identity Online
     </h1>
     <p class="hero-desc">
-      NiRA manages the .ng country-code top-level domain, enforces internet policy across Nigeria, and operates a dedicated portal to report and eliminate DNS abuse under the .ng namespace.
+      NiRA manages the .ng country code top level domain, enforces internet policy across Nigeria, and operates a dedicated portal to report and eliminate DNS abuse under the .ng namespace.
     </p>
     <div class="hero-actions">
       <a href="/report" class="btn-primary font-display">

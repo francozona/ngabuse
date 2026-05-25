@@ -34,7 +34,7 @@ foreach ($statusCounts as $row) {
 <meta charset="UTF-8"/>
 <meta name="csrf-token" content="<?= csrf_hash() ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>NiRA — Abuse Reports Dashboard</title>
+<title>NiRA - Abuse Reports Dashboard</title>
 <link rel="icon" href="/logo.png" type="image/png" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
