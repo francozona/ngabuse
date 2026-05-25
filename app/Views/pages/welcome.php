@@ -755,7 +755,7 @@ footer{
 <!-- ══ DNS ABUSE ══ -->
 <section id="dns-abuse" class="dns-section">
   <div class="reveal">
-    <div class="section-tag font-mono">DNS Abuse</div>
+    <!-- <div class="section-tag font-mono">DNS Abuse</div> -->
     <h2 class="section-h2 font-display">Understanding<br>DNS Abuse</h2>
   </div>
   <div class="dns-intro-grid">
@@ -804,7 +804,7 @@ footer{
     <div class="dns-aside">
       <div class="dns-info-card reveal">
         <h4 class="font-display"><span>⚡</span> Why Report Quickly?</h4>
-        <p>DNS abuse campaigns are often time-sensitive. Phishing sites are frequently active for under 24 hours before being replaced. Fast reporting gives NiRA and registrars the best chance to take action before significant harm occurs.</p>
+        <p>DNS abuse campaigns are often time sensitive. Phishing sites are frequently active for under 24 hours before being replaced. Fast reporting gives NiRA and registrars the best chance to take action before significant harm occurs.</p>
       </div>
       <div class="dns-info-card reveal">
         <h4 class="font-display"><span>🔍</span> What Happens to Reports?</h4>
@@ -833,7 +833,7 @@ footer{
 <section id="how" class="how-section">
   <div class="how-header">
     <div class="reveal">
-      <div class="section-tag font-mono">Process</div>
+      <!-- <div class="section-tag font-mono">Process</div> -->
       <h2 class="section-h2 font-display">How the Report Process Works</h2>
     </div>
     <div class="reveal">
@@ -854,12 +854,12 @@ footer{
     <div class="step-card reveal">
       <div class="step-num font-mono">03</div>
       <div class="step-title font-display">Registrar is Notified</div>
-      <p class="step-body">NiRA formally notifies the accredited registrar responsible for the domain, providing the abuse evidence and requesting remediation within a defined window under the Registry–Registrar Agreement.</p>
+      <p class="step-body">NiRA formally notifies the accredited registrar responsible for the domain, providing the abuse evidence and requesting remediation within a defined window under the Registry Registrar Agreement.</p>
     </div>
     <div class="step-card reveal">
       <div class="step-num font-mono">04</div>
       <div class="step-title font-display">Action &amp; Resolution</div>
-      <p class="step-body">The registrar takes appropriate action — which may include suspending the domain, locking DNS propagation, or requiring the registrant to remediate the abusive content. NiRA monitors compliance and, where necessary, escalates to direct registry-level suspension.</p>
+      <p class="step-body">The registrar takes appropriate action which may include suspending the domain, locking DNS propagation, or requiring the registrant to remediate the abusive content. NiRA monitors compliance and, where necessary, escalates to direct registry level suspension.</p>
     </div>
   </div>
 </section>
@@ -869,7 +869,7 @@ footer{
 <!-- ══ FAQ ══ -->
 <section id="faq">
   <div class="reveal">
-    <div class="section-tag font-mono">FAQ</div>
+    <!-- <div class="section-tag font-mono">FAQ</div> -->
     <h2 class="section-h2 font-display">Common Questions</h2>
   </div>
   <div class="faq-grid">
