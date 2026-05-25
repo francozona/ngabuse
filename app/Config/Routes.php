@@ -31,7 +31,7 @@ $routes->get('/whois/(:segment)',  'Api\AbuseReportController::get_whois_abuse_e
 
 $routes->post('upload-image', 'AbuseController::uploadImage');
 $routes->post('registrar/login', 'AuthController::authRegistrar');
-$routes->post('/registrar/reports/(:num)/respond', 'AbuseController::add_response/$1');
+$routes->post('/registrar/reports/(:num)/respond', 'AbuseController::add_registrar_response/$1');
 
 $routes->group('', ['namespace' => 'App\Controllers','filter' => 'auth'], function($routes) {
     /**Admin */

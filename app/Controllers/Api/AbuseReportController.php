@@ -196,7 +196,7 @@ class AbuseReportController extends BaseController
         $emailService = \Config\Services::email();
         $base_url      = base_url();
         $url_reporter  = $base_url . "domain-abuse/track/"     . $ticketId;
-        $url_registrar = $base_url . "domain-abuse/registrar/" . $ticketId;
+        $report = $reportModel->where("ticket_id", $ticketId)->first();
 
     $message = '
     <!DOCTYPE html>
@@ -302,8 +302,9 @@ class AbuseReportController extends BaseController
 
         $reported_domain = $fullDomain;             
         $abuse_category  = $post['abuse_type'] ?? 'Abuse';  
+        $url_nira = base_url().'report/OPEN/'.$report['id'];
 
-$message_registrar = '
+$message_nira = '
 <!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"><title>New Abuse Complaint</title></head>
@@ -328,11 +329,11 @@ $message_registrar = '
       <tr>
         <td style="padding:40px 35px;color:#333333;">
 
-          <p style="margin-top:0;font-size:16px;">Dear Registrar,</p>
+          <p style="margin-top:0;font-size:16px;">Dear Amin,</p>
 
           <p style="font-size:15px;line-height:1.7;">
-            A domain abuse complaint has been submitted to NiRA regarding a domain registered under your account.
-            Please review the details below and take appropriate action within <strong>5 business days</strong>.
+            A domain abuse complaint has been submitted to NiRA regarding a domain registered under .ng
+            Please review the details below and take appropriate action.
           </p>
 
           <!-- Complaint details box -->
@@ -365,51 +366,17 @@ $message_registrar = '
             </td></tr>
           </table>
 
-          <p style="margin:0 0 14px 0;font-size:13px;font-weight:bold;color:#179e4f;
-                         text-transform:uppercase;letter-spacing:1px;">Login Details</p>
-            <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;color:#374151;">
-                <tr>
-                  <td style="padding:6px 0;color:#6b7280;width:40%;">Email</td>
-                  <td style="padding:6px 0;font-weight:bold;color:#111827;">' . $registrar_email. '</td>
-                </tr>
-                <tr>
-                  <td style="padding:6px 0;color:#6b7280;">Password</td>
-                  <td style="padding:6px 0;font-weight:bold;color:#111827;">' . $password . '</td>
-                </tr>
-               
-              </table>
-
           <p style="font-size:15px;line-height:1.7;">
             You can view the full complaint details and update the ticket status using the button below:
           </p>
 
           <div style="margin:25px 0;">
-            <a href="' . $url_registrar . '"
+            <a href="'. $url_nira .'"
                style="background:#179e4f;color:#ffffff;text-decoration:none;padding:14px 28px;
                       border-radius:8px;display:inline-block;font-size:14px;font-weight:bold;">
               View Complaint &amp; Respond
             </a>
           </div>
-
-          <!-- What to do box -->
-          <table cellpadding="0" cellspacing="0" style="margin:25px 0;width:100%;background:#f8fafc;
-                 border-radius:8px;border:1px solid #e5e7eb;">
-            <tr><td style="padding:20px;">
-              <p style="margin:0 0 12px 0;font-size:13px;font-weight:bold;color:#374151;
-                         text-transform:uppercase;letter-spacing:1px;">Expected Actions</p>
-              <ul style="margin:0;padding-left:18px;font-size:14px;color:#374151;line-height:2;">
-                <li>Investigate the reported domain for the alleged abuse</li>
-                <li>Notify or suspend the domain registrant if abuse is confirmed</li>
-                <li>Update the ticket status on the NiRA Abuse Portal</li>
-                <li>Contact NiRA if you require further information</li>
-              </ul>
-            </td></tr>
-          </table>
-
-          <p style="font-size:14px;line-height:1.7;color:#6b7280;">
-            Failure to respond within the stipulated timeframe may result in NiRA taking direct registry-level action
-            on the reported domain in accordance with the NiRA Abuse Policy.
-          </p>
 
         </td>
       </tr>
@@ -441,8 +408,8 @@ $message_registrar = '
 
           $emailService
             ->setTo($registrar_email)
-            ->setSubject("{$ticketId} - New Abuse Ticket Open")
-            ->setMessage($message_registrar)
+            ->setSubject("{$ticketId} - New Abuse Ticket Created")
+            ->setMessage($message_nira)
             ->setMailType('html')
             ->send();
 

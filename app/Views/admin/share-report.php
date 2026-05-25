@@ -186,7 +186,7 @@
               $responder = $userModel->find($response['user_id']);
               $isAdmin = ($responder['role'] ?? '') === 'admin';
 
-              $name = $responder['full_name'] ?? 'Unknown';
+              $name = $responder['role'] == 'admin' ? $responder['full_name']  : $report['registrar_email'];
               $initial = strtoupper(substr($name, 0, 1));
 
               $date = !empty($response['created_at'])
@@ -265,7 +265,7 @@
               <?= csrf_field() ?>
 
             <p class="text-sm font-semibold text-gray-700 mb-3">Add CC</p>
-
+            <input type="text"  hidden name="user_id" value="<?= session()->get('registrar_id') ?>"/>
             <textarea
               name="cc_emails"
               class="rounded border mb-4 border-gray-300 text-gray-900 focus:ring-gray-900 focus:border-gray-900 w-full p-3 text-sm"
@@ -281,7 +281,7 @@
 
               <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
                 <label class="flex items-center gap-2 text-sm text-gray-500 cursor-pointer select-none">
-                  <input type="checkbox" checked name="notify_reporter" value="1"
+                  <input type="checkbox"  name="notify_reporter" value="0"
                         class="w-4 h-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900 cursor-pointer">
                   Notify reporter via email
                 </label>
