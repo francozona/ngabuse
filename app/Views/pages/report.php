@@ -360,7 +360,7 @@
         </div>
 
         <!-- Abuse Section -->
-        <div class="mb-6">
+        <div x-data ="{ seeOthers: false}" class="mb-6">
           <p class="text-[11px] flex font-display font-700 text-nira-green uppercase tracking-widest mb-3 flex items-center gap-2">
            Abuse Details &nbsp; <!-- Category badge -->
           <div x-show="form.abuse_category" class="mb-2">
@@ -384,16 +384,18 @@
             <!-- Category -->
             <div class="floating-label-group">
     
-              <select x-model="form.abuse_category"
-                  class="w-full border border-gray-200 rounded-xl bg-white px-3.5 text-sm text-gray-800 transition-all appearance-none"
-                  :class="errors.abuse_category ? 'border-red-400' : ''">
+            <select
+                x-model="form.abuse_category"
+                @change="seeOthers = (form.abuse_category === 'Other forms of DNS Abuse')"
+                class="w-full border border-gray-200 rounded-xl bg-white px-3.5 text-sm text-gray-800 transition-all appearance-none"
+                :class="errors.abuse_category ? 'border-red-400' : ''"
+            >
+                <option value=""></option>
 
-                  <option value=""></option>
-
-                  <template x-for="c in categories" :key="c">
-                      <option :value="c" x-text="c"></option>
-                  </template>
-              </select>
+                <template x-for="c in categories" :key="c">
+                    <option :value="c" x-text="c"></option>
+                </template>
+            </select>
 
               <label>Abuse Category *</label>
 
@@ -411,7 +413,7 @@
 
           <!-- Show extra input -->
           <div class="floating-label-group mt-3"
-              x-show="form.abuse_category === 'Other forms of DNS Abuse'"
+              x-show="seeOthers"
               x-transition>
 
               <input
@@ -510,7 +512,7 @@
               <svg class="w-7 h-7 text-nira-green" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
             </div>
             <p class="font-display font-700 text-gray-700 mb-1">Drop files here or click to browse</p>
-            <p class="text-xs text-gray-400">PDF, PNG, JPG · Max 5 MB each · Up to 3 files</p>
+            <p class="text-xs text-gray-400">PDF, PNG, JPG · Max 5 MB each </p>
           </div>
 
           <div x-show="files.length > 0" class="text-left space-y-2" @click.stop>
@@ -549,14 +551,11 @@
         <p x-show="errors.files" class="text-xs text-red-500 mt-2 ml-1" x-text="errors.files"></p>
 
         <!-- Guidelines -->
-        <div class="mt-5 grid grid-cols-3 gap-2">
+        <div class="mt-5 grid grid-cols-2 gap-2">
+         
           <div class="p-3 rounded-xl bg-gray-50 text-center">
-            <p class="text-lg font-display font-800 text-nira-green">≤3</p>
-            <p class="text-[10px] text-gray-500 font-display font-600 uppercase tracking-wide">files max</p>
-          </div>
-          <div class="p-3 rounded-xl bg-gray-50 text-center">
-            <p class="text-lg font-display font-800 text-nira-green">3 MB</p>
-            <p class="text-[10px] text-gray-500 font-display font-600 uppercase tracking-wide">per file</p>
+            <p class="text-lg font-display font-800 text-nira-green">5 MB</p>
+            <p class="text-[10px] text-gray-500 font-display font-600 uppercase tracking-wide">file upload</p>
           </div>
           <div class="p-3 rounded-xl bg-gray-50 text-center">
             <p class="text-lg font-display font-800 text-nira-green">PNG·JPG·PDF</p>
@@ -730,7 +729,7 @@ function abuseForm() {
     handleFiles(fileList) {
       const allowed = ['application/pdf', 'image/png', 'image/jpeg'];
       const incoming = Array.from(fileList).filter(f => allowed.includes(f.type));
-      const remaining = 3 - this.files.length;
+      const remaining = 15 - this.files.length;
       this.files = [...this.files, ...incoming.slice(0, remaining)];
       if (this.errors.files) delete this.errors.files;
     },

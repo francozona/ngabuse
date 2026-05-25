@@ -140,7 +140,7 @@ class AbuseController extends BaseController
                     $isAdmin = ($r['role'] ?? '') === 'admin';
 
                     $timeline[] = [
-                        'event' => ($isAdmin ? 'Admin response' : 'Staff response') . ': ' . strip_tags($r['message']),
+                        'event' => ($isAdmin ? 'Admin ' : 'Registrar ') . ': ' . strip_tags($r['message']),
                         'time'  => date('M d, Y H:i', strtotime($r['created_at'])),
                         'color' => $isAdmin ? '#111827' : '#179e4f',
                     ];

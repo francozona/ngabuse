@@ -510,15 +510,23 @@ $message_nira = '
             return 'At least one evidence file is required.';
         }
 
-        if (count($files) > self::MAX_FILES) {
-            return 'You may upload a maximum of ' . self::MAX_FILES . ' files.';
-        }
+        // if (count($files) > self::MAX_FILES) {
+        //     return 'You may upload a maximum of ' . self::MAX_FILES . ' files.';
+        // }
 
-        foreach ($files as $file) {
-            if ($file->getSizeByUnit('b') > self::MAX_FILE_SIZE) {
-                return "File \"{$file->getName()}\" exceeds the 3 MB limit.";
+        $totalSize = 0;
+
+        foreach ($files as $file) 
+        {
+            // Add current file size to total
+            $totalSize += $file->getSizeByUnit('b');
+
+            // Check cumulative size
+            if ($totalSize > self::MAX_FILE_SIZE) {
+                return "Total uploaded files exceed the 5 MB limit.";
             }
 
+            // MIME type check
             if (! in_array($file->getMimeType(), self::ALLOWED_MIME_TYPES, true)) {
                 return "File \"{$file->getName()}\" is not an allowed type (PNG, JPG, PDF).";
             }
