@@ -10,7 +10,7 @@ class AuthController extends BaseController
    public function authRegistrar()
     {
         $report_id = $this->request->getPost('report_id');
-        //$email     = trim($this->request->getPost('email'));
+        $email     = trim($this->request->getPost('email'));
         $password  = $this->request->getPost('password');
 
         $reportModel = new AbuseReportModel();
@@ -22,9 +22,9 @@ class AuthController extends BaseController
             return redirect()->back()->with('error', 'Report not found');
         }
 
-        // if ($report['registrar_email'] !== $email) {
-        //     return redirect()->back()->with('error', 'Unauthorized email');
-        // }
+        if ($report['registrar_email'] !== $email) {
+            return redirect()->back()->with('error', 'Unauthorized email');
+        }
 
         $user = $userModel->where('id', $report['user_id'])->first();
 

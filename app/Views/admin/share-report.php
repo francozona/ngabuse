@@ -287,7 +287,7 @@
           <?php if ($type == "registrar"): ?>
           <!-- ── Reply Box ───────────────────────────────── -->
          <div class="mt-6 pt-5 border-t border-gray-100">
-           <form method="POST" action="/admin/reports/<?= esc($report['id'] ?? '') ?>/respond">
+           <form method="POST" action="/registrar/reports/<?= esc($report['id'] ?? '') ?>/respond">
               <?= csrf_field() ?>
 
             <p class="text-sm font-semibold text-gray-700 mb-3">Add CC</p>
@@ -361,12 +361,12 @@
                 <form method="POST" action="<?= base_url('registrar/login') ?>" class="space-y-4">
                      <input type="text" value="<?= $report['id'] ?>" name="report_id"
                               hidden>
-                    <!-- <div>
+                    <div>
                         <label class="text-sm font-medium text-gray-700">Email</label>
                         <input type="email" name="email"
                               class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                               required>
-                    </div> -->
+                    </div>
 
                     <div>
                         <label class="text-sm font-medium text-gray-700">Password</label>

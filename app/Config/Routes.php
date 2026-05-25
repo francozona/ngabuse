@@ -27,9 +27,11 @@ $routes->post('admin/login',  'AuthController::attempt');
 $routes->get('admin/logout',  'AuthController::logout');
 
 $routes->get('/domain-abuse/(:segment)/(:segment)', 'AbuseController::share_report/$1/$2');
+$routes->get('/whois/(:segment)',  'Api\AbuseReportController::get_whois_abuse_email/$1');
 
 $routes->post('upload-image', 'AbuseController::uploadImage');
 $routes->post('registrar/login', 'AuthController::authRegistrar');
+$routes->post('/registrar/reports/(:num)/respond', 'AbuseController::add_response/$1');
 
 $routes->group('', ['namespace' => 'App\Controllers','filter' => 'auth'], function($routes) {
     /**Admin */

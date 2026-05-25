@@ -510,7 +510,7 @@
               <svg class="w-7 h-7 text-nira-green" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
             </div>
             <p class="font-display font-700 text-gray-700 mb-1">Drop files here or click to browse</p>
-            <p class="text-xs text-gray-400">PDF, PNG, JPG · Max 3 MB each · Up to 3 files</p>
+            <p class="text-xs text-gray-400">PDF, PNG, JPG · Max 5 MB each · Up to 3 files</p>
           </div>
 
           <div x-show="files.length > 0" class="text-left space-y-2" @click.stop>

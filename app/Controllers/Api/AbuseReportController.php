@@ -23,8 +23,8 @@ class AbuseReportController extends BaseController
     // Allowed MIME types for evidence uploads
     private const ALLOWED_MIME_TYPES = ['image/png', 'image/jpeg', 'application/pdf'];
 
-    // Max file size in bytes (3 MB)
-    private const MAX_FILE_SIZE = 3 * 1024 * 1024;
+    // Max file size in bytes (5 MB)
+    private const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
     // Max number of evidence files
     private const MAX_FILES = 3;

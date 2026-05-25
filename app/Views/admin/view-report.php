@@ -180,7 +180,7 @@
         <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
           <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
           <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Evidence Files</h2>
-          <span class="ml-auto text-xs text-gray-400 font-medium"><?= $user['raw_password'] ?> </span>
+          <span class="ml-auto text-xs text-gray-400 font-medium"><?= count($evidenceFiles) ?> </span>
         </div>
         <div class="p-5 space-y-2">
           <?php foreach ($evidenceFiles as $i => $file): ?>
@@ -223,19 +223,38 @@
               <p class="text-xs text-gray-400 truncate"><?= esc($report['reporter_email'] ?? '—') ?></p>
             </div>
           </div>
-
-            <div class="flex items-center gap-3 mb-4 mt-2">
-            
-            <div class="min-w-0">
-              <p class="text-sm font-semibold text-gray-800 "><?= esc($report['registrar_email'])?></p>
-              <p class="text-xs text-gray-400">Password : <?= esc($user['raw_password'] ?? '—') ?></p>
-            </div>
-          </div>
           <?php if (!empty($report['reporter_email'])): ?>
           <a href="mailto:<?= esc($report['reporter_email']) ?>"
              class="flex items-center justify-center gap-2 w-full px-3 py-2 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             Email Reporter
+          </a>
+          <?php endif; ?>
+        </div>
+      </div>
+
+
+      <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Domain Registrar</h2>
+        </div>
+        <div class="p-5">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-gray-900 text-white flex items-center justify-center text-sm font-bold shrink-0">
+              <?= strtoupper(substr($report['registrar_email'] ?? ('NIRA Registrar'), 0, 1)) ?>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm font-semibold text-gray-800 truncate"><?= esc($report['registrar_email'] ?? '—') ?></p>
+              <p class="text-xs text-gray-400 truncate"> <?= esc($user['raw_password'] ?? '—') ?></p>
+            </div>
+          </div>
+
+          <?php if (!empty($report['registrar_email'])): ?>
+          <a href="mailto:<?= esc($report['registrar_email']) ?>"
+             class="flex items-center justify-center gap-2 w-full px-3 py-2 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            Email Registrar
           </a>
           <?php endif; ?>
         </div>
