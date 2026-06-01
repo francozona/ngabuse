@@ -807,7 +807,6 @@ $message = "
 
         return redirect()->to("/report/VIEW/{$id}")->with('success', 'Response sent successfully.');
     }
-
      public function add_registrar_response($id) 
     {
 
@@ -815,7 +814,6 @@ $message = "
         $responseModel = new \App\Models\AbuseReportResponseModel();
 
         
-        // Make sure the report exists
         $report = $reportModel->where('id', $id)->first();
         
         if (!$report) {
@@ -826,16 +824,18 @@ $message = "
         $ccEmails = $this->request->getPost('cc_emails');
         $user_id = $this->request->getPost('user_id');
 
-            if (empty($message)) {
-                return redirect()->back()->with('error', 'Response message cannot be empty.');
-            }
+        if(!$user_id) return redirect()->back()->with('error','Authentication Required');
 
-            // Save the response
-            $responseModel->insert([
-                'report_id' => $id,
-                'user_id'   => $user_id,
-                'message'   => $message,  
-            ]);
+        if (empty($message)) {
+            return redirect()->back()->with('error', 'Response message cannot be empty.');
+        }
+
+        // Save the response
+        $responseModel->insert([
+            'report_id' => $id,
+            'user_id'   => $user_id,
+            'message'   => $message,  
+        ]);
 
             if ($this->request->getPost('notify_reporter')) {
                 
