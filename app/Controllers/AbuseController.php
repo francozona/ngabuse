@@ -807,6 +807,7 @@ $message = "
 
         return redirect()->to("/report/VIEW/{$id}")->with('success', 'Response sent successfully.');
     }
+
      public function add_registrar_response($id) 
     {
 
@@ -964,6 +965,7 @@ $message = "
 
         return redirect()->to("/domain-abuse/registrar/{$report['ticket_id']}")->with('success', 'Response sent successfully.');
     }
+
     public function upload_response_image()
     {
         $file = $this->request->getFile('upload');
@@ -995,12 +997,12 @@ $message = "
             'url' => $url
         ]);
     }
-    
+
     public function login(): string
     {
         return view('admin/login.php');
     }
-
+    
     public function logout(): string
     {
         return view('admin/home.php');
