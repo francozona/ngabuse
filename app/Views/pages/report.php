@@ -199,7 +199,7 @@
         <img class="" src="/logo.png"/> 
     </div>
     <div>
-      <div class="nav-logo-text font-display" style="color:#179e4f;">.ng DNS ABUSE</div>
+      <div class="nav-logo-text font-display" style="color:#179e4f;">DNS ABUSE</div>
     </div>
   </div>
   <div class="nav-links">
@@ -382,20 +382,20 @@
               <p x-show="errors.date_first_observed" class="text-xs text-red-500 mt-1 ml-1" x-text="errors.date_first_observed"></p>
             </div>
             <!-- Category -->
-            <div class="floating-label-group">
+            <div x-show="!seeOthers" class="floating-label-group">
     
-            <select
-                x-model="form.abuse_category"
-                @change="seeOthers = (form.abuse_category === 'Other forms of DNS Abuse')"
-                class="w-full border border-gray-200 rounded-xl bg-white px-3.5 text-sm text-gray-800 transition-all appearance-none"
-                :class="errors.abuse_category ? 'border-red-400' : ''"
-            >
-                <option value=""></option>
+              <select
+                  x-model="form.abuse_category"
+                  @change="seeOthers = (form.abuse_category === 'Other forms of DNS Abuse')"
+                  class="w-full border border-gray-200 rounded-xl bg-white px-3.5 text-sm text-gray-800 transition-all appearance-none"
+                  :class="errors.abuse_category ? 'border-red-400' : ''"
+              >
+                  <option value=""></option>
 
-                <template x-for="c in categories" :key="c">
-                    <option :value="c" x-text="c"></option>
-                </template>
-            </select>
+                  <template x-for="c in categories" :key="c">
+                      <option :value="c" x-text="c"></option>
+                  </template>
+              </select>
 
               <label>Abuse Category *</label>
 
@@ -412,19 +412,19 @@
           </div>
 
           <!-- Show extra input -->
-          <div class="floating-label-group mt-3"
+          <div class="floating-label-group"
               x-show="seeOthers"
               x-transition>
 
               <input
                   type="text"
                   placeholder=" "
-                  x-model="form.other_abuse_category"
-                  @input="form.abuse_category = form.other_abuse_category"
-                  class="w-full border border-gray-200 rounded-xl bg-white px-3.5 text-sm text-gray-800 transition-all"
+                  x-model="form.abuse_category"
+                   class="w-full border border-gray-200 rounded-xl bg-white px-3.5 text-sm text-gray-800 transition-all"
               >
 
               <label>Specify DNS Abuse Type *</label>
+              
           </div>
 
          

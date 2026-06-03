@@ -31,7 +31,7 @@
         $status = $report['status'] ?? 'pending';
         $statusConfig = [
           'pending'      => ['bg-amber-50 text-amber-700 ring-amber-200',        'bg-amber-400',   'Open'],
-          'under_review' => ['bg-blue-50 text-blue-700 ring-blue-200',           'bg-blue-400',    'Under Review'],
+          'assigned_to_registrar' => ['bg-blue-50 text-blue-700 ring-blue-200',           'bg-blue-400',    'Assigned To Registrar'],
           'resolved'     => ['bg-emerald-50 text-emerald-700 ring-emerald-200',  'bg-emerald-400', 'Closed'],
           'rejected'     => ['bg-red-50 text-red-700 ring-red-200',              'bg-red-400',     'Rejected'],
         ];
@@ -51,7 +51,7 @@
         </button>
         <div x-show="open" @click.outside="open = false"
              class="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-xl shadow-lg z-10 overflow-hidden">
-          <?php foreach (['pending' => 'Open', 'under_review' => 'Under Review', 'resolved' => 'Actioned', 'rejected' => 'Rejected'] as $val => $label): ?>
+          <?php foreach (['pending' => 'Open', 'assigned_to_registrar' => 'Assign To Registrar', 'resolved' => 'Actioned', 'rejected' => 'Rejected'] as $val => $label): ?>
           <form method="POST" action="/admin/reports/<?= esc($report['id'] ?? '') ?>/status">
             <?= csrf_field() ?>
             <input type="hidden" name="status" value="<?= $val ?>">
@@ -235,10 +235,39 @@
 
 
       <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-        <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
-          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-          <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Domain Registrar</h2>
-        </div>
+     <div class="px-5 py-4 border-b border-gray-100 flex items-center">
+    
+    <div class="flex items-center gap-2">
+        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+        </svg>
+
+        <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+            Domain Registrar
+        </h2>
+    </div>
+
+    <a href="/admin/refresh-abuse-registrar/<?= esc($report['id']) ?>" 
+       class="ml-auto inline-flex items-center justify-center text-gray-500 hover:text-gray-700">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             width="20" 
+             height="20" 
+             viewBox="0 0 24 24" 
+             fill="none" 
+             stroke="currentColor" 
+             stroke-width="2" 
+             stroke-linecap="round" 
+             stroke-linejoin="round">
+            <path d="M21 2v6h-6"></path>
+            <path d="M3 12a9 9 0 0 1 15.55-6.36L21 8"></path>
+            <path d="M3 22v-6h6"></path>
+            <path d="M21 12a9 9 0 0 1-15.55 6.36L3 16"></path>
+        </svg>
+
+    </a>
+
+</div>
         <div class="p-5">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-10 h-10 rounded-full bg-gray-900 text-white flex items-center justify-center text-sm font-bold shrink-0">

@@ -19,7 +19,7 @@ $statusCounts = $reportModel
 // Convert to easy array
 $counts = [
     'pending' => 0,
-    'under_review' => 0,
+    'assigned_to_registrar' => 0,
     'resolved' => 0,
     'rejected' => 0,
 ];
@@ -208,16 +208,16 @@ tailwind.config = {
 
         </a>
 
-        <a href="/reports?status=under_review" class="sidebar-item cursor-pointer flex items-center gap-2">
+        <a href="/reports?status=assigned_to_registrar" class="sidebar-item cursor-pointer flex items-center gap-2">
 
             <span class="w-2 h-2 rounded-full flex-shrink-0" style="background:#3b82f6"></span>
 
-            <span>In Review</span>
+            <span>Assigned To Registrar</span>
 
-            <?php if ($counts['under_review'] > 0): ?>
+            <?php if ($counts['assigned_to_registrar'] > 0): ?>
                 <span class="ml-auto text-[10px] font-display font-700 px-1.5 py-0.5 rounded-full"
                       style="background:#e4f5ec;color:#0d6b35">
-                    <?= $counts['under_review'] ?>
+                    <?= $counts['assigned_to_registrar'] ?>
                 </span>
             <?php endif; ?>
 
@@ -249,7 +249,7 @@ tailwind.config = {
     
    
 
-    <p class="text-[9px] font-display font-700 uppercase tracking-widest px-3 mt-4 mb-2" style="color:#9dbda8">Admin</p>
+    <p class="text-[9px] font-display font-700 uppercase tracking-widest px-3 py-3 mb-2" style="color:#9dbda8">Admin</p>
     <?php if ($role == 'admin'): ?>
     <a href="/admin/users" class="sidebar-item  <?= active('admin', $uri) ?>">
       <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
@@ -332,7 +332,7 @@ function appData() {
       },
       {
         key: 'in_review',
-        label: 'In Review',
+        label: 'Assigned',
         color: '#3b82f6'
       },
       {

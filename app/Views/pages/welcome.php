@@ -645,7 +645,7 @@ footer{
         <img class="" src="/logo.png"/> 
     </div>
     <div>
-      <div class="nav-logo-text font-display">.ng DNS ABUSE</div>
+      <div class="nav-logo-text font-display">DNS ABUSE</div>
     </div>
   </a>
   <div class="nav-links">

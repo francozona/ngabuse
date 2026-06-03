@@ -18,7 +18,7 @@ $statusCounts = $reportModel
 // Convert to easy array
 $counts = [
     'pending' => 0,
-    'under_review' => 0,
+    'assigned_to_registrar' => 0,
     'resolved' => 0,
     'rejected' => 0,
 ];
@@ -207,7 +207,7 @@ function appData() {
       },
       {
         key: 'in_review',
-        label: 'In Review',
+        label: 'Assigned',
         color: '#3b82f6'
       },
       {

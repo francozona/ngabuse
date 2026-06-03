@@ -69,16 +69,8 @@ class CreateAbuseReportsTable extends Migration
                 'null' => false,
             ],
             'abuse_category' => [
-                'type'       => 'ENUM',
-                'constraint' => [
-                    'Malware',
-                    'Botnets',
-                    'Phishing',
-                    'Pharming',
-                    'Spam',
-                    'Other forms of DNS Abuse',
-                ],
-                'null' => false,
+                'type'       => 'TEXT',
+                'null' => true,
             ],
             'description' => [
                 'type' => 'TEXT',
@@ -109,7 +101,7 @@ class CreateAbuseReportsTable extends Migration
             // ── Report status ────────────────────────────────
             'status' => [
                 'type'       => 'ENUM',
-                'constraint' => ['pending', 'under_review', 'resolved', 'rejected'],
+                'constraint' => ['pending', 'assigned_to_registrar', 'resolved', 'rejected'],
                 'default'    => 'pending',
                 'null'       => false,
             ],

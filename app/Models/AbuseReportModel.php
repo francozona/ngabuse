@@ -46,9 +46,9 @@ class AbuseReportModel extends Model
         'user_id'             => 'required|integer|is_not_unique[users.id]',
         'abusive_url'         => 'required|valid_url_strict',
         'date_first_observed' => 'required|valid_date',
-        'abuse_category'      => 'required|in_list[Malware,Botnets,Phishing,Pharming,Spam,Other forms of DNS Abuse]',
+        'abuse_category'      => 'required',
         'description'         => 'required|min_length[10]',
-        'status'              => 'in_list[pending,under_review,resolved,rejected]',
+        'status'              => 'in_list[pending,assigned_to_registrar,resolved,rejected]',
     ];
 
     protected $validationMessages = [

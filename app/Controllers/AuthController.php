@@ -11,7 +11,7 @@ class AuthController extends BaseController
     {
         $report_id = $this->request->getPost('report_id');
         $email     = trim($this->request->getPost('email'));
-        $password  = $this->request->getPost('password');
+        $password  = trim($this->request->getPost('password'));
 
         $reportModel = new AbuseReportModel();
         $userModel   = new UserModel();
@@ -31,7 +31,7 @@ class AuthController extends BaseController
         if (!$user) {
             return redirect()->back()->with('error', 'User not found');
         }
-
+       
         if ($user['raw_password'] !== $password) {
             return redirect()->back()->with('error', 'Invalid password');
         }

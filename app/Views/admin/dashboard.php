@@ -79,7 +79,7 @@ function dashboard() {
             'reporterEmail' => $r['reporter_email'],
             'status'        => strtoupper(str_replace('_', '_', match($r['status']) {
                                     'pending'      => 'OPEN',
-                                    'under_review' => 'UNDER_REVIEW',
+                                    'assigned_to_registrar' => 'ASSIGNED_TO_REGISTRAR',
                                     'resolved'     => 'ACTIONED',
                                     'rejected'     => 'CLOSED',
                                     default        => 'CLOSED',
@@ -114,7 +114,7 @@ function dashboard() {
     stats: [
       { label:'Total Reports',  value: <?= $stats['total'] ?>,    trend:14, color:'green', iconBg:'bg-nira-light', icon:'📋', spark:[40,55,45,70,60,80,65,90] },
       { label:'Open Cases',     value: <?= $stats['open'] ?>,     trend:-3, color:'amber', iconBg:'bg-amber-50',  icon:'🔓', spark:[50,60,40,55,70,45,65,50] },
-      { label:'In Review',      value: <?= $stats['in_review'] ?>,trend: 8, color:'blue',  iconBg:'bg-blue-50',   icon:'🔍', spark:[30,45,60,40,70,55,65,75] },
+      { label:'Assigned',      value: <?= $stats['in_review'] ?>,trend: 8, color:'blue',  iconBg:'bg-blue-50',   icon:'🔍', spark:[30,45,60,40,70,55,65,75] },
       { label:'Actioned Today', value: <?= $stats['actioned'] ?>, trend:22, color:'red',   iconBg:'bg-green-50',  icon:'✅', spark:[20,40,35,55,45,70,60,80] },
     ],
 
@@ -209,7 +209,7 @@ initCharts() {
         label: 'Reports',
         data: [
           this.stats[1].value,  // Open
-          this.stats[2].value,  // In Review
+          this.stats[2].value,  // Assigned
           this.stats[3].value,  // Actioned
           this.reports.filter(r => r.status === 'CLOSED').length,
         ],
@@ -282,7 +282,7 @@ initCharts() {
 
     generateReports() {
       const categories = ['Phishing','Malware','Botnets','Pharming','Spam','Phishing','Malware','Phishing'];
-      const statuses = ['OPEN','OPEN','UNDER_REVIEW','ACTIONED','CLOSED','OPEN','UNDER_REVIEW','ACTIONED'];
+      const statuses = ['OPEN','OPEN','ASSIGNED_TO_REGISTRAR','ACTIONED','CLOSED','OPEN','ASSIGNED_TO_REGISTRAR','ACTIONED'];
       const tlds = ['.ng','.com.ng','.org.ng','.gov.ng','.edu.ng','.net.ng'];
       const domains = ['fakebank','securelogin','ng-verify','paymentng','updateaccount','myprofile-ng','nigeriaforms','quickloan-ng','verifycard','loginportal','officialforms','taxrefund-ng','govportal-ng','bankverify','id-update'];
       const reporters = [
@@ -348,7 +348,7 @@ initCharts() {
     updateStats() {
       this.stats[0].value = this.reports.length;
       this.stats[1].value = this.reports.filter(r => r.status === 'OPEN').length;
-      this.stats[2].value = this.reports.filter(r => r.status === 'UNDER_REVIEW').length;
+      this.stats[2].value = this.reports.filter(r => r.status === 'ASSIGNED_TO_REGISTRAR').length;
       this.stats[3].value = this.reports.filter(r => r.status === 'ACTIONED').length;
 
       const cats = ['Phishing','Malware','Botnets','Pharming','Spam'];
@@ -411,10 +411,10 @@ initCharts() {
     },
 
     statusClass(s) {
-      return { OPEN:'badge-open', UNDER_REVIEW:'badge-review', ACTIONED:'badge-actioned', CLOSED:'badge-closed' }[s] || 'badge-closed';
+      return { OPEN:'badge-open', ASSIGNED_TO_REGISTRAR:'badge-review', ACTIONED:'badge-actioned', CLOSED:'badge-closed' }[s] || 'badge-closed';
     },
     statusLabel(s) {
-      return { OPEN:'Open', UNDER_REVIEW:'In Review', ACTIONED:'Actioned', CLOSED:'Closed' }[s] || s;
+      return { OPEN:'Open', ASSIGNED_TO_REGISTRAR:'Assigned', ACTIONED:'Actioned', CLOSED:'Closed' }[s] || s;
     },
     catClass(c) {
       return { Phishing:'cat-phishing', Malware:'cat-malware', Botnets:'cat-botnet', Pharming:'cat-pharming', Spam:'cat-spam' }[c] || 'cat-other';

@@ -23,7 +23,7 @@ class AbuseController extends BaseController
         $stats = [
             'total'       => $model->countAllResults(false),
             'open'        => $model->where('status', 'pending')->countAllResults(false),
-            'in_review'   => $model->where('status', 'under_review')->countAllResults(false),
+            'in_review'   => $model->where('status', 'assigned_to_registrar')->countAllResults(false),
             'actioned'    => $model->where('status', 'resolved')->countAllResults(false),
         ];
 
@@ -77,13 +77,13 @@ class AbuseController extends BaseController
         $stats = [
             'total'       => $model->countAllResults(false),
             'open'        => $model->where('status', 'pending')->countAllResults(false),
-            'in_review'   => $model->where('status', 'under_review')->countAllResults(false),
+            'in_review'   => $model->where('status', 'assigned_to_registrar')->countAllResults(false),
             'actioned'    => $model->where('status', 'resolved')->countAllResults(false),
         ];
 
         $statusMap = [
              'pending'      => 'OPEN',
-             'under_review' => 'UNDER_REVIEW',
+             'assigned_to_registrar' => 'ASSIGNED_TO_REGISTRAR',
              'resolved'     => 'ACTIONED',
              'rejected'     => 'CLOSED',
         ];
@@ -217,7 +217,7 @@ class AbuseController extends BaseController
 
         $statusMap = [
              'pending'      => 'OPEN',
-             'under_review' => 'UNDER_REVIEW',
+             'assigned_to_registrar' => 'ASSIGNED_TO_REGISTRAR',
              'resolved'     => 'ACTIONED',
              'rejected'     => 'CLOSED',
         ];
@@ -282,7 +282,7 @@ class AbuseController extends BaseController
 
         $statusMap = [
              'pending'      => 'OPEN',
-             'under_review' => 'UNDER_REVIEW',
+             'assigned_to_registrar' => 'ASSIGNED_TO_REGISTRAR',
              'resolved'     => 'ACTIONED',
              'rejected'     => 'CLOSED',
         ];
@@ -328,6 +328,37 @@ class AbuseController extends BaseController
         ]);
     }
 
+    public function fetch_registrar_details($id) 
+    {
+        $reportModel = new \App\Models\AbuseReportModel();
+
+        $report = $reportModel->find((int) $id);
+
+        if (! $report) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $userModel = model(\App\Models\UserModel::class);
+
+        $user = $userModel
+            ->where('id', $report['user_id'])
+            ->first();
+
+        $registrar_email = $this->get_whois_abuse_email($report['full_domain']);
+
+        $password = substr(str_replace('-', '', bin2hex(random_bytes(16))), 0, 10);
+
+        $reportModel->update($report['id'], [
+            'registrar_email' => $registrar_email,
+        ]);
+
+        $userModel->update($user['id'], [
+            'raw_password' => $password,
+        ]);
+        
+        return redirect()->back()->with('success', 'Fetched details successfully.');
+    }
+
     public function status($id) 
     {
         $reportModel = new \App\Models\AbuseReportModel();
@@ -340,19 +371,12 @@ class AbuseController extends BaseController
 
         $newStatus = $this->request->getPost('status');
 
-        if (! in_array($newStatus, ['pending', 'under_review', 'resolved', 'rejected'])) {
+        if (! in_array($newStatus, ['pending', 'assigned_to_registrar', 'resolved', 'rejected'])) {
             return redirect()->back()->with('error', 'Invalid status.');
         }
 
-        $statusLabels = [
-            'pending' => 'Opened',
-            'under_review' => 'Under Review',
-            'resolved' => 'Resolved',
-            'rejected' => 'Rejected',
-        ];
-
-        $statusText = $statusLabels[$newStatus] ?? ucfirst($newStatus);
-
+        $statusText = ucfirst($newStatus);
+ 
         $userModel = model(\App\Models\UserModel::class);
 
         $user = $userModel
@@ -364,9 +388,13 @@ class AbuseController extends BaseController
         $emailService = \Config\Services::email();
         $base_url      = base_url();
         $url_registrar = $base_url . "domain-abuse/registrar/" . $report['ticket_id'];
-
-
-        if( $newStatus == 'under_review') 
+         
+        $reportModel->update($report['id'], [
+            'status' => $newStatus,
+        ]);
+        
+    
+        if( $newStatus == 'assigned_to_registrar') 
         {
             
             $reported_domain = $report['full_domain'];             
@@ -518,10 +546,7 @@ $message_registrar = '
             }
         }
 
-        $reportModel->update($report['id'], [
-            'status' => $newStatus,
-        ]);
-        
+      
        
 
 $message = "
@@ -1006,5 +1031,71 @@ $message = "
     public function logout(): string
     {
         return view('admin/home.php');
+    }
+
+    public function get_whois_abuse_email(string $domain): ?string
+    {
+        $domain = strtolower(trim($domain));
+        $url    = "https://whois.nic.net.ng/domain/{$domain}";
+
+        // Use CI's built-in curl or file_get_contents with context
+        $context = stream_context_create([
+            'http' => [
+                'method'  => 'GET',
+                'header'  => "Accept: application/rdap+json\r\n",
+                'timeout' => 10,
+            ],
+            'ssl' => [
+                'verify_peer'      => true,
+                'verify_peer_name' => true,
+            ],
+        ]);
+
+        $raw = @file_get_contents($url, false, $context);
+
+        if ($raw === false) {
+            log_message('error', "RDAP: failed to fetch {$url}");
+            return null;
+        }
+
+        $data = json_decode($raw, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE || empty($data['entities'])) {
+            log_message('error', "RDAP: invalid JSON or missing entities for {$domain}");
+            return null;
+        }
+
+        // Walk top-level entities to find the registrar
+        foreach ($data['entities'] as $entity) {
+            $roles = $entity['roles'] ?? [];
+
+            if (! in_array('registrar', $roles, true)) {
+                continue;
+            }
+
+            // Inside the registrar entity, find the abuse sub-entity
+            foreach ($entity['entities'] ?? [] as $sub_entity) {
+                $sub_roles = $sub_entity['roles'] ?? [];
+
+                if (! in_array('abuse', $sub_roles, true)) {
+                    continue;
+                }
+
+                // Extract email from vcardArray
+                // vcardArray[1] is an array of vcard properties
+                foreach ($sub_entity['vcardArray'][1] ?? [] as $vcard_prop) {
+                    // Each prop: [ "type", {params}, "value_type", "value" ]
+                    if (isset($vcard_prop[0], $vcard_prop[3])
+                        && $vcard_prop[0] === 'email'
+                        && filter_var($vcard_prop[3], FILTER_VALIDATE_EMAIL)
+                    ) {
+                        return $vcard_prop[3]; // e.g. "abuseteam@whogohost.com"
+                    }
+                }
+            }
+        }
+
+        log_message('info', "RDAP: no abuse email found for {$domain}");
+        return null;
     }
 }

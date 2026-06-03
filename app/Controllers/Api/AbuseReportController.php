@@ -46,7 +46,7 @@ class AbuseReportController extends BaseController
             'email'            => 'required|valid_email|max_length[200]',
             'url'              => 'required|valid_url_strict',
             'date_first_observed' => 'required|valid_date',
-            'abuse_category'   => 'required|in_list[Malware,Botnets,Phishing,Pharming,Spam,Other forms of DNS Abuse]',
+            'abuse_category'   => 'required',
             'description'      => 'required|min_length[10]',
         ];
 
@@ -60,9 +60,10 @@ class AbuseReportController extends BaseController
                 ]);
         }
 
+        
 
         $post = $this->request->getPost();
-
+ 
         
         // ── 2. Validate evidence file uploads ────────────────────
         $fileErrors = $this->validateFiles();
@@ -78,7 +79,7 @@ class AbuseReportController extends BaseController
 
         // ── 3. Upsert reporter into `users` ──────────────────────
         $userModel = model(UserModel::class);
-        $password = substr(str_shuffle('ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789'), 0, 8);
+        $password = substr(str_replace('-', '', bin2hex(random_bytes(16))), 0, 10);
         $user      = $userModel->firstOrCreate(
             trim($post['email']), 
             trim($post['name']),
