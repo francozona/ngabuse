@@ -19,6 +19,12 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function (R
      $routes->get('abuse-reports', 'AbuseReportController::index');
  
     $routes->get('abuse-reports/(:segment)', 'AbuseReportController::show/$1');
+
+    /** This route will be called using the header NIRA-CRON-NETBEACON => 'Netbeacon_cron' from cron job at intervals 
+     * to populate the database 
+     * */
+    $routes->get('/check-netbeacon',  'Api\NetbeaconController::get_incident_reports');
+
 });
 
 /**Auth */
@@ -28,6 +34,7 @@ $routes->get('admin/logout',  'AuthController::logout');
 
 $routes->get('/domain-abuse/(:segment)/(:segment)', 'AbuseController::share_report/$1/$2');
 $routes->get('/whois/(:segment)',  'Api\AbuseReportController::get_whois_abuse_email/$1');
+
 
 $routes->post('upload-image', 'AbuseController::uploadImage');
 $routes->post('registrar/login', 'AuthController::authRegistrar');
