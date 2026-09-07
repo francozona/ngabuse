@@ -25,6 +25,13 @@ class CreateAbuseReportsTable extends Migration
                 'null'       => false,
             ],
 
+
+            'netbeacon_id' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 40,
+                'null'       => false,
+            ],
+
             'registrar_email' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 400,

@@ -14,6 +14,7 @@ class AbuseReportModel extends Model
 
     protected $allowedFields = [
         'ticket_id',
+        'netbeacon_id',
         'user_id',
         'domain_name',
         'tld',
