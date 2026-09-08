@@ -121,7 +121,7 @@ class NetbeaconController extends BaseController
                 }
 
                 $received += count($incidents);
-
+    dd($incidents);
                 foreach ($incidents as $incident) 
                 {
                     try 
@@ -207,6 +207,8 @@ class NetbeaconController extends BaseController
                             ),
                             'status' => $status,
                         ];
+
+                        dd($reportData);
 
                         $inserted = $this->abuseReportModel->insert($reportData);
 
