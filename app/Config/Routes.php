@@ -23,7 +23,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function (R
     /** This route will be called using the header NIRA-CRON-NETBEACON => 'Netbeacon_cron' from cron job at intervals 
      * to populate the database with new reports from netbeacon.
      * */
-    $routes->get('/check-netbeacon',  'Api\NetbeaconController::get_incident_reports');
+    $routes->get('check-netbeacon',  'NetbeaconController::get_incident_reports');
 
 });
 

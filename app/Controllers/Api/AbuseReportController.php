@@ -580,7 +580,7 @@ $message_nira = '
             'http' => [
                 'method'  => 'GET',
                 'header'  => "Accept: application/rdap+json\r\n",
-                'timeout' => 10,
+                'timeout' => 7000,
             ],
             'ssl' => [
                 'verify_peer'      => true,

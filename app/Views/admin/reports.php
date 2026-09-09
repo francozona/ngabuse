@@ -354,7 +354,9 @@ function dashboard() {
               'name' => basename($path),
               'type' => strtoupper(pathinfo($path, PATHINFO_EXTENSION)),
               'size' => '—',
-              'url'  => base_url($path),
+              'url'  =>  preg_match('/^https?:\/\//i', $path)
+                      ? $path
+                      : base_url($path),
           ], $files),
             'timeline'      => $r['timeline'] ?? [],
         ];
