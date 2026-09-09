@@ -15,6 +15,144 @@ class AbuseController extends BaseController
         return view('pages/report.php');
     }
 
+   public function attack_chart(): string
+    {
+        $model = new \App\Models\AbuseReportModel(); // swap for your actual model
+
+        [$from, $to] = $this->resolveDateRange();
+
+        $builder = $model->select('abuse_category')
+            ->where('abuse_category IS NOT NULL');
+
+        if ($from && $to) {
+            $builder->where('date_first_observed >=', $from)
+                    ->where('date_first_observed <=', $to);
+        }
+
+        $rows = $builder->findAll();
+
+        $counts = [];
+        foreach ($rows as $row) {
+            $category = trim($row['abuse_category'] ?? '') ?: 'Uncategorized';
+            $counts[$category] = ($counts[$category] ?? 0) + 1;
+        }
+        arsort($counts);
+
+        return view('admin/attack_chart.php', [
+            'labels' => array_keys($counts),
+            'values' => array_values($counts),
+            'total'  => array_sum($counts),
+            'from'   => $from,
+            'to'     => $to,
+        ]);
+    }
+
+    public function domain_chart(): string
+        {
+        $model = new \App\Models\AbuseReportModel(); // swap for your actual model
+
+        [$from, $to] = $this->resolveDateRange();
+        $limit = (int) ($this->request->getGet('limit') ?: 15);
+
+        $builder = $model->select('full_domain');
+
+        if ($from && $to) {
+            $builder->where('date_first_observed >=', $from)
+                    ->where('date_first_observed <=', $to);
+        }
+
+        $rows = $builder->findAll();
+
+        $counts = [];
+        foreach ($rows as $row) {
+            $domain = trim($row['full_domain'] ?? '');
+            if ($domain === '') {
+                continue;
+            }
+            $counts[$domain] = ($counts[$domain] ?? 0) + 1;
+        }
+        arsort($counts);
+        $counts = array_slice($counts, 0, $limit, true);
+
+        return view('admin/domain_chart.php', [
+            'labels' => array_keys($counts),
+            'values' => array_values($counts),
+            'total'  => array_sum($counts),
+            'from'   => $from,
+            'to'     => $to,
+            'limit'  => $limit,
+        ]);
+    }
+
+    /**
+     * Reads ?from=YYYY-MM-DD&to=YYYY-MM-DD&range=7|30|90 from query string.
+     * 'range' presets override explicit from/to if present.
+     * Returns [from, to] as 'Y-m-d H:i:s' strings, or [null, null] for "all time".
+     */
+    private function resolveDateRange(): array
+    {
+        $range = $this->request->getGet('range');
+        $from  = $this->request->getGet('from');
+        $to    = $this->request->getGet('to');
+
+        if ($range && $range !== 'all') {
+            $to   = date('Y-m-d 23:59:59');
+            $from = date('Y-m-d 00:00:00', strtotime("-{$range} days"));
+            return [$from, $to];
+        }
+
+        if ($from && $to) {
+            return [
+                date('Y-m-d 00:00:00', strtotime($from)),
+                date('Y-m-d 23:59:59', strtotime($to)),
+            ];
+        }
+
+        return [null, null]; // all time
+    }
+
+    public function registrar_chart(): string
+    {
+        $model = new \App\Models\AbuseReportModel(); // swap for your actual model
+
+        [$from, $to] = $this->resolveDateRange();
+
+        $builder = $model->select('registrar_email')
+            ->where('registrar_email IS NOT NULL');
+
+        if ($from && $to) {
+            $builder->where('date_first_observed >=', $from)
+                    ->where('date_first_observed <=', $to);
+        }
+
+        $reports = $builder->findAll();
+
+        $counts = [];
+
+        foreach ($reports as $report) {
+            $email = trim($report['registrar_email'] ?? '');
+
+            if ($email === '') {
+                continue;
+            }
+
+            $registrar =  $email;
+            $registrar = ucfirst(strtolower($registrar));
+
+            $counts[$registrar] = ($counts[$registrar] ?? 0) + 1;
+        }
+
+        arsort($counts);
+
+        return view('admin/registrar_chart.php', [
+            'labels' => array_keys($counts),
+            'values' => array_values($counts),
+            'total'  => array_sum($counts),
+            'from'   => $from,
+            'to'     => $to,
+        ]);
+    }
+
     public function dashboard(): string
     {
         $model = model(AbuseReportModel::class);

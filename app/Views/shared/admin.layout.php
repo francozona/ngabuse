@@ -191,6 +191,28 @@ tailwind.config = {
       All Reports
      </a>
 
+     <a href="/registrar-chart" class="sidebar-item mb-3 <?= active('registrar-chart', $uri) ?>">
+      <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 16l4-5 3 3 5-7"/>
+      </svg>
+      Registrar Chart
+    </a>
+
+    <a href="/domain-chart" class="sidebar-item mb-3 <?= active('domain-chart', $uri) ?>">
+      <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h4l3-8 4 16 3-8h4"/>
+      </svg>
+      Domain Chart
+    </a>
+
+    <a href="/attack-chart" class="sidebar-item mb-3 <?= active('attack-chart', $uri) ?>">
+      <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/>
+      </svg>
+      Attack Chart
+    </a>
+
     <p  class="text-[9px]  font-display font-700 uppercase tracking-widest py-2 mt-3 mb-2" style="color:rgba(255,255,255,0.5)">Status</p>
 
         <a href="/reports?status=pending" class="sidebar-item cursor-pointer flex items-center gap-2">

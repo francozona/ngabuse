@@ -43,6 +43,9 @@ $routes->post('/registrar/reports/(:num)/respond', 'AbuseController::add_registr
 $routes->group('', ['namespace' => 'App\Controllers','filter' => 'auth'], function($routes) {
     /**Admin */
     $routes->get('/dashboard', 'AbuseController::dashboard');
+    $routes->get('/attack-chart', 'AbuseController::attack_chart');
+    $routes->get('/domain-chart', 'AbuseController::domain_chart');
+    $routes->get('/registrar-chart', 'AbuseController::registrar_chart');
     $routes->get('/reports', 'AbuseController::all_reports');
     $routes->get('/report/(:segment)/(:segment)', 'AbuseController::view_report/$1/$2');
     $routes->post('/admin/reports/(:num)/respond', 'AbuseController::add_response/$1');

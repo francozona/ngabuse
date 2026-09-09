@@ -108,7 +108,7 @@
               type="file"
               name="image"
               accept="image/*"
-              class="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition"
+              class="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-green-50 file:text-indigo-700 hover:file:bg-green-100 transition"
             >
           </div>
 
@@ -158,7 +158,7 @@
               </thead>
               <tbody class="divide-y divide-gray-50">
                 <?php foreach ($users as $user): ?>
-                  <tr class="hover:bg-gray-50/50 transition <?= (isset($editUser) && $editUser && $editUser['id'] == $user['id']) ? 'bg-indigo-50/40' : '' ?>">
+                  <tr class="hover:bg-gray-50/50 transition <?= (isset($editUser) && $editUser && $editUser['id'] == $user['id']) ? 'bg-green-50/40' : '' ?>">
 
                     <!-- Avatar + Name -->
                     <td class="px-6 py-3">
@@ -167,7 +167,7 @@
                           <img src="<?= esc($user['image']) ?>"
                                class="h-8 w-8 rounded-full object-cover border border-gray-200 shrink-0" alt="">
                         <?php else: ?>
-                          <div class="h-8 w-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold shrink-0">
+                          <div class="h-8 w-8 rounded-full bg-green-100 text-indigo-600 flex items-center justify-center text-xs font-bold shrink-0">
                             <?= strtoupper(substr($user['full_name'], 0, 1)) ?>
                           </div>
                         <?php endif; ?>
@@ -198,7 +198,7 @@
                     <td class="px-6 py-3 text-right">
                       <div class="inline-flex items-center gap-1">
                         <a href="/admin/users/edit/<?= $user['id'] ?>"
-                           class="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition">
+                           class="inline-flex items-center rounded-md px-2.5 py-1.5 text-xs font-medium text-indigo-600 bg-green-50 hover:bg-green-100 transition">
                           Edit
                         </a>
                         <form action="/admin/users/delete/<?= $user['id'] ?>" method="post"
