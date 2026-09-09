@@ -404,7 +404,7 @@ function dashboard() {
     activeFilter: '',
     tableStatusFilter: 'all',
     currentPage: 1,
-    pageSize: 8,
+    pageSize: 100,
     selectedReport: null,
 
     init() {

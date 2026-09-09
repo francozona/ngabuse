@@ -189,7 +189,7 @@ class NetbeaconController extends BaseController
                             continue;
                         }
 
-                        if (empty($tld)) {
+                        if (!empty($tld)) {
                             $parts = explode('.', $domain);
                             
                             if (count($parts) >= 2) {
