@@ -123,14 +123,17 @@ tailwind.config = {
 .stat-card.blue::after{background:#3b82f6}
 .stat-card.red::after{background:#ef4444}
 
-/* Detail panel */
+/* Detail panel - full width on small screens, fixed width on larger ones */
 .detail-panel{
-  position:fixed;top:0;right:0;bottom:0;width:820px;z-index:50;
+  position:fixed;top:0;right:0;bottom:0;width:820px;max-width:100vw;z-index:50;
   background:#fff;box-shadow:-8px 0 40px rgba(0,0,0,.12);
   display:flex;flex-direction:column;
   transition:transform .3s cubic-bezier(.4,0,.2,1);
 }
 .detail-panel.closed{transform:translateX(100%)}
+@media (max-width: 900px){
+  .detail-panel{width:100vw}
+}
 
 /* Chart bar */
 .chart-bar{
@@ -159,22 +162,41 @@ tailwind.config = {
 .logo-glow{box-shadow:0 0 16px rgba(23,158,79,.2)}
 </style>
 </head>
-<body class="bg-slate-100 h-screen overflow-hidden flex">
+<body class="bg-slate-100 h-screen overflow-hidden flex" x-data="{ sidebarOpen: false }">
+
+<!-- ════════ MOBILE BACKDROP ════════ -->
+<div
+  x-show="sidebarOpen"
+  x-cloak
+  x-transition.opacity
+  @click="sidebarOpen = false"
+  class="fixed inset-0 bg-black/40 z-30 md:hidden"
+></div>
 
 <!-- ════════ SIDEBAR ════════ -->
-<aside x-data="appData()" class="w-64 flex-shrink-0 flex flex-col h-screen overflow-hidden" style="background:#1f771f;">
+<aside
+  x-data="appData()"
+  :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+  class="w-64 flex-shrink-0 flex flex-col h-screen overflow-hidden fixed md:static inset-y-0 left-0 z-40 transform md:translate-x-0 transition-transform duration-300 ease-in-out"
+  style="background:#1f771f;"
+  @click="sidebarOpen = false"
+>
   <!-- Logo -->
-  <div class="px-5 py-6 border-b" style="border-color:rgba(255,255,255,0.2)">
-    <div class="flex items-center gap-3">
+  <div class="px-5 py-6 border-b flex items-center justify-between flex-shrink-0" style="border-color:rgba(255,255,255,0.2)">
+    <div class="flex items-center gap-3 min-w-0">
       <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center flex-shrink-0" style="box-shadow:0 2px 12px rgba(0,0,0,0.12)">
         <!-- NiRA "N" monogram -->
           <img class="w-6 h-6" src="/logo.png"/>
       </div>
-      <div>
-        <p class="font-display font-900 text-white leading-tight">NiRA .ng</p>
-        <p class="text-[14px] leading-tight" style="color:rgba(255,255,255,0.65)">.ng DNS Abuse Admin</p>
+      <div class="min-w-0">
+        <p class="font-display font-900 text-white leading-tight truncate">NiRA .ng</p>
+        <p class="text-[14px] leading-tight truncate" style="color:rgba(255,255,255,0.65)">.ng DNS Abuse Admin</p>
       </div>
     </div>
+    <!-- Mobile close button -->
+    <button @click.stop="sidebarOpen = false" class="md:hidden flex-shrink-0 text-white/70 hover:text-white p-1 -mr-1">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
   </div>
 
   <!-- Nav -->
@@ -286,7 +308,7 @@ tailwind.config = {
   </nav>
 
   <!-- User card -->
-  <div class="px-3 py-4">
+  <div class="px-3 py-4 flex-shrink-0">
     <div class="flex items-center gap-3 px-2 py-2 rounded-xl cursor-pointer transition-all bg-slate-50">
 
       <!-- Avatar -->
@@ -320,11 +342,17 @@ tailwind.config = {
 <div class="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
 
   <!-- Top bar -->
-  <header class="bg-white border-b border-slate-200 flex items-center gap-4 px-6 py-3.5 flex-shrink-0">
+  <header class="bg-white border-b border-slate-200 flex items-center gap-2 sm:gap-4 px-3 sm:px-6 py-3 sm:py-3.5 flex-shrink-0">
+
+    <!-- Mobile menu toggle -->
+    <button @click="sidebarOpen = true" class="md:hidden -ml-1 flex-shrink-0 p-2 rounded-lg text-gray-500 hover:bg-slate-100 active:bg-slate-200">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+
     <!-- Title -->
     <div class="flex-1 min-w-0">
-      <h1 class="font-display font-800 text-gray-900 text-lg leading-tight">Abuse Management</h1>
-      <p class="text-xs text-gray-400">Manage and control reports</p>
+      <h1 class="font-display font-800 text-gray-900 text-base sm:text-lg leading-tight truncate">Abuse Management</h1>
+      <p class="text-xs text-gray-400 hidden sm:block">Manage and control reports</p>
     </div>
 
     

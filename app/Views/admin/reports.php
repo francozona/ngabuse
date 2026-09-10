@@ -82,7 +82,7 @@
                 </td>
                 <td class="px-3 py-3.5">
                   <div>
-                    <p class="text-sm font-display font-700 text-gray-800" x-text="r.domain + '.' + r.tld"></p>
+                    <p class="text-sm font-display font-700 text-gray-800" x-text="r.domain + r.tld"></p>
                     <p class="text-[10px] text-gray-400 truncate max-w-[160px]" x-text="r.url"></p>
                   </div>
                 </td>

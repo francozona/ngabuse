@@ -227,8 +227,7 @@ class NetbeaconController extends BaseController
                             $password,
                         );
 
-                        $registrar_email = $this->reportService->get_whois_abuse_email($domain);
-
+                        $registrar_email = $this->reportService->get_whois_abuse_email($domain) ?? 'tech_support@nira.org.ng';
                         
                         $reportData = [
                             'ticket_id'=> $ticketId,
