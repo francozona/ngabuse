@@ -67,8 +67,8 @@
     </div>
 
     <?php if (!empty($labels)): ?>
-    <div class="mt-6 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <table class="w-full text-sm text-left">
+    <div class="mt-6 px-3 py-3 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <table id="registrarSummaryTable" class="display w-full text-sm text-left">
             <thead class="bg-gray-50 text-gray-500 uppercase text-xs tracking-wide">
                 <tr>
                     <th class="px-4 py-3">#</th>
@@ -87,9 +87,45 @@
             </tbody>
         </table>
     </div>
-    <?php endif; ?>
+<?php endif; ?>
 </div>
+<!-- jQuery + DataTables CDN -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 
+<script>
+    $(document).ready(function () {
+    if ($('#reportsTable').length) {
+        $('#reportsTable').DataTable({
+            order: [[2, 'desc']],
+            pageLength: 25,
+            lengthMenu: [10, 25, 50, 100],
+            language: {
+                search: "Search:",
+                lengthMenu: "Show _MENU_ entries",
+                info: "Showing _START_ to _END_ of _TOTAL_ reports"
+            }
+        });
+    }
+
+    if ($('#registrarSummaryTable').length) {
+        $('#registrarSummaryTable').DataTable({
+            order: [[2, 'desc']], // sort by Reports count, descending — matches arsort() in the controller
+            pageLength: 10,
+            lengthMenu: [10, 25, 50],
+            columnDefs: [
+                { orderable: false, targets: 0 } // don't let "#" be sortable, it's just a row index
+            ],
+            language: {
+                search: "Search:",
+                lengthMenu: "Show _MENU_ entries",
+                info: "Showing _START_ to _END_ of _TOTAL_ registrars"
+            }
+        });
+    }
+});
+    </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
     const labels = <?= json_encode($labels) ?>;

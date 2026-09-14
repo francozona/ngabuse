@@ -68,8 +68,35 @@
             </div>
         <?php endforeach; ?>
     </div>
+
+    <!-- Datatable below the cards: full registrar breakdown -->
+    <div class="mt-6 px-4 py-4 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <table id="registrarSummaryTable" class="display w-full text-sm text-left">
+            <thead class="bg-gray-50 text-gray-500 uppercase text-xs tracking-wide">
+                <tr>
+                    <th class="px-4 py-3">#</th>
+                    <th class="px-4 py-3">Registrar</th>
+                    <th class="px-4 py-3 text-right">Reports</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                <?php foreach ($labels as $i => $label): ?>
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-2.5 text-gray-400"><?= $i + 1 ?></td>
+                        <td class="px-4 py-2.5 font-medium text-gray-700"><?= esc($label) ?></td>
+                        <td class="px-4 py-2.5 text-right font-semibold text-gray-800"><?= esc($values[$i]) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
     <?php endif; ?>
 </div>
+
+<!-- jQuery + DataTables CDN -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
@@ -78,6 +105,13 @@
 
     const ctx = document.getElementById('registrarChart');
     if (ctx) {
+        // Destroy any existing chart bound to this canvas before drawing a new one.
+        // Prevents duplicate/overlapping bars if this script ever re-runs on the same canvas.
+        const existingChart = Chart.getChart(ctx);
+        if (existingChart) {
+            existingChart.destroy();
+        }
+
         new Chart(ctx, {
             type: 'bar',
             data: {
@@ -111,6 +145,24 @@
             }
         });
     }
+
+    $(document).ready(function () {
+        if ($('#registrarSummaryTable').length) {
+            $('#registrarSummaryTable').DataTable({
+                order: [[2, 'desc']], // matches arsort() ordering from the controller
+                pageLength: 10,
+                lengthMenu: [10, 25, 50],
+                columnDefs: [
+                    { orderable: false, targets: 0 } // "#" is a display index, not sortable
+                ],
+                language: {
+                    search: "Search:",
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ registrars"
+                }
+            });
+        }
+    });
 </script>
 
 <?= $this->endSection() ?>

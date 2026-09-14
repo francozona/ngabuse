@@ -573,17 +573,16 @@ $message_nira = '
     public function get_whois_abuse_email(string $domain): ?string
     {
         $domain = strtolower(trim($domain));
-        $url    = "https://whois.nic.net.ng/domain/{$domain}";
+        $url = "https://whois.nic.net.ng/domain/{$domain}";
 
-        // Use CI's built-in curl or file_get_contents with context
         $context = stream_context_create([
             'http' => [
-                'method'  => 'GET',
-                'header'  => "Accept: application/rdap+json\r\n",
+                'method' => 'GET',
+                'header' => "Accept: application/rdap+json\r\n",
                 'timeout' => 7000,
             ],
             'ssl' => [
-                'verify_peer'      => true,
+                'verify_peer' => true,
                 'verify_peer_name' => true,
             ],
         ]);
@@ -602,37 +601,118 @@ $message_nira = '
             return null;
         }
 
-        // Walk top-level entities to find the registrar
+        $registrarEmail = null;
+
         foreach ($data['entities'] as $entity) {
             $roles = $entity['roles'] ?? [];
 
-            if (! in_array('registrar', $roles, true)) {
+            if (!in_array('registrar', $roles, true)) {
                 continue;
             }
 
-            // Inside the registrar entity, find the abuse sub-entity
-            foreach ($entity['entities'] ?? [] as $sub_entity) {
-                $sub_roles = $sub_entity['roles'] ?? [];
+            foreach ($entity['vcardArray'][1] ?? [] as $vcardProp) {
+                if (
+                    isset($vcardProp[0], $vcardProp[3]) &&
+                    $vcardProp[0] === 'email' &&
+                    filter_var($vcardProp[3], FILTER_VALIDATE_EMAIL)
+                ) {
+                    $registrarEmail = $vcardProp[3];
+                    break;
+                }
+            }
 
-                if (! in_array('abuse', $sub_roles, true)) {
+            foreach ($entity['entities'] ?? [] as $subEntity) {
+                $subRoles = $subEntity['roles'] ?? [];
+
+                if (!in_array('abuse', $subRoles, true)) {
                     continue;
                 }
 
-                // Extract email from vcardArray
-                // vcardArray[1] is an array of vcard properties
-                foreach ($sub_entity['vcardArray'][1] ?? [] as $vcard_prop) {
-                    // Each prop: [ "type", {params}, "value_type", "value" ]
-                    if (isset($vcard_prop[0], $vcard_prop[3])
-                        && $vcard_prop[0] === 'email'
-                        && filter_var($vcard_prop[3], FILTER_VALIDATE_EMAIL)
+                foreach ($subEntity['vcardArray'][1] ?? [] as $vcardProp) {
+                    if (
+                        isset($vcardProp[0], $vcardProp[3]) &&
+                        $vcardProp[0] === 'email' &&
+                        filter_var($vcardProp[3], FILTER_VALIDATE_EMAIL)
                     ) {
-                        return $vcard_prop[3]; // e.g. "abuseteam@whogohost.com"
+                        return $vcardProp[3];
                     }
                 }
             }
         }
 
-        log_message('info', "RDAP: no abuse email found for {$domain}");
+        if ($registrarEmail !== null) {
+            log_message('info', "RDAP: no abuse email found for {$domain}, using registrar email {$registrarEmail}");
+            return $registrarEmail;
+        }
+
+        log_message('info', "RDAP: no abuse or registrar email found for {$domain}");
+
         return null;
     }
+    // public function get_whois_abuse_email(string $domain): ?string
+    // {
+    //     $domain = strtolower(trim($domain));
+    //     $url    = "https://whois.nic.net.ng/domain/{$domain}";
+
+    //     // Use CI's built-in curl or file_get_contents with context
+    //     $context = stream_context_create([
+    //         'http' => [
+    //             'method'  => 'GET',
+    //             'header'  => "Accept: application/rdap+json\r\n",
+    //             'timeout' => 7000,
+    //         ],
+    //         'ssl' => [
+    //             'verify_peer'      => true,
+    //             'verify_peer_name' => true,
+    //         ],
+    //     ]);
+
+    //     $raw = @file_get_contents($url, false, $context);
+
+    //     if ($raw === false) {
+    //         log_message('error', "RDAP: failed to fetch {$url}");
+    //         return null;
+    //     }
+
+    //     $data = json_decode($raw, true);
+
+    //     if (json_last_error() !== JSON_ERROR_NONE || empty($data['entities'])) {
+    //         log_message('error', "RDAP: invalid JSON or missing entities for {$domain}");
+    //         return null;
+    //     }
+
+    //     // Walk top-level entities to find the registrar
+    //     foreach ($data['entities'] as $entity) {
+    //         $roles = $entity['roles'] ?? [];
+
+    //         if (! in_array('registrar', $roles, true)) {
+    //             continue;
+    //         }
+
+    //         // Inside the registrar entity, find the abuse sub-entity
+    //         foreach ($entity['entities'] ?? [] as $sub_entity) {
+    //             $sub_roles = $sub_entity['roles'] ?? [];
+
+    //             if (! in_array('abuse', $sub_roles, true)) {
+    //                 continue;
+    //             }
+
+    //             // Extract email from vcardArray
+    //             // vcardArray[1] is an array of vcard properties
+    //             foreach ($sub_entity['vcardArray'][1] ?? [] as $vcard_prop) {
+    //                 // Each prop: [ "type", {params}, "value_type", "value" ]
+    //                 if (isset($vcard_prop[0], $vcard_prop[3])
+    //                     && $vcard_prop[0] === 'email'
+    //                     && filter_var($vcard_prop[3], FILTER_VALIDATE_EMAIL)
+    //                 ) {
+    //                     return $vcard_prop[3]; // e.g. "abuseteam@whogohost.com"
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     log_message('info', "RDAP: no abuse email found for {$domain}");
+    //     return null;
+    // }
+
 }

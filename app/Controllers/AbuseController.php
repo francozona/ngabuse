@@ -132,12 +132,24 @@ class AbuseController extends BaseController
         foreach ($reports as $report) {
             $email = trim($report['registrar_email'] ?? '');
 
-            if ($email === '') {
+            if ($email === '' || strpos($email, '@') === false) {
+                continue; // skip malformed/missing emails so they don't pollute the chart
+            }
+
+            $domain = substr(strrchr($email, '@'), 1);
+
+            if (!$domain) {
                 continue;
             }
 
-            $registrar =  $email;
-            $registrar = ucfirst(strtolower($registrar));
+            $namePart = explode('.', $domain)[0];
+
+            if ($namePart === '') {
+                continue;
+            }
+
+            // Normalize case so "GoDaddy.com" and "godaddy.com" group into one bar
+            $registrar = ucfirst(strtolower($namePart));
 
             $counts[$registrar] = ($counts[$registrar] ?? 0) + 1;
         }

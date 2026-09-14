@@ -132,17 +132,28 @@ class NetbeaconController extends BaseController
     
                 foreach ($incidents as $incident) 
                 {
+                    
+
                     try 
                     {
                         $ticketId  = $this->abuseReportModel->generateTicketId();
                         $report = $incident['Report'] ?? [];
                         $custom = $report['Custom'] ?? [];
-                        $reporterInfo = $incident['ReporterInfo'];
-                        $netBeaconticketId = $custom['NetBeaconIncidentId'] ?? null;
+                        $reporterInfo = $incident['ReporterInfo'];                      
                         $domain = $custom['Domain'] ?? null;
-                        $tld = $custom['Tld'] ?? null;
+                        $tld = '.'.$custom['Tld'] ?? null;
                         $target = $report['SourceUrl'] ?? null;
                         $domainName = '';
+                        $netBeaconticketId = $custom['NetBeaconIncidentId'] ?? null;
+                        $abuseChecker = new AbuseReportModel();
+                       
+                        $abuseCheck = $abuseChecker
+                            ->where('netbeacon_id', $netBeaconticketId)
+                            ->first();
+
+                        if ($abuseCheck != null) {
+                            continue;
+                        }
 
                         if (!str_contains(strtolower($tld), '.ng')) {
                             continue;
@@ -189,13 +200,13 @@ class NetbeaconController extends BaseController
                             continue;
                         }
 
-                        if (!empty($tld)) {
-                            $parts = explode('.', $domain);
+                        // if (!empty($tld)) {
+                        //     $parts = explode('.', $domain);
                             
-                            if (count($parts) >= 2) {
-                                $tld = '.' . end($parts);
-                            }
-                        }
+                        //     if (count($parts) >= 2) {
+                        //         $tld = '.' . end($parts);
+                        //     }
+                        // }
 
                         $evidence = $custom['Evidence'] ?? [];
 
@@ -205,7 +216,7 @@ class NetbeaconController extends BaseController
 
                         $feedback = $incident['Feedback'] ?? [];
 
-                        $status = 'pending';
+                        $status = $report['Ongoing'] == true ? 'pending' : 'resolved';
 
                         // if (is_array($feedback) && !empty($feedback)) {
                         //     $latestFeedback = end($feedback);
@@ -227,7 +238,7 @@ class NetbeaconController extends BaseController
                             $password,
                         );
 
-                        $registrar_email = $this->reportService->get_whois_abuse_email($domain) ?? 'tech_support@nira.org.ng';
+                        $registrar_email = $this->reportService->get_whois_abuse_email($domain);
                         
                         $reportData = [
                             'ticket_id'=> $ticketId,
@@ -241,7 +252,7 @@ class NetbeaconController extends BaseController
                             'date_first_observed' => $report['Date'] ?? null,
                             'abuse_category' => $report['ReportType'] ?? null,
                             'description' => $report['ReporterNotes'] ?? null,
-                            'registrar_notified' => false,
+                            'registrar_notified' => '',
                             'registrar_notification_date' => null,
                             'evidence_files' => json_encode(array_column($evidence, 'PayloadUrl')),
                             'status' => $status,

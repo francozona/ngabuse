@@ -94,7 +94,7 @@
             <p class="text-sm font-medium text-gray-800"><?= esc($report['domain_name'] ?? '—') ?></p>
           </div>
           <div>
-            <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-1">TLD</p>
+            <p class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-1">ZONE</p>
             <p class="text-sm font-mono text-gray-800"><?= esc($report['tld'] ?? '—') ?></p>
           </div>
           <div>
